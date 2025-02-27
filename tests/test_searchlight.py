@@ -1,11 +1,10 @@
 """Unit tests for the searchlight patch generator."""
 
-import pytest
 import numpy as np
+import pytest
+from mne_rsa import searchlight
 from numpy.testing import assert_equal
 from scipy import sparse
-
-from mne_rsa import searchlight
 
 
 class TestSearchLight:
@@ -66,6 +65,18 @@ class TestSearchLight:
             ],
         )
 
+        # Test giving explicit spatial patches
+        s = searchlight((10, 3, 4), spatial_radius=[[0, 1], [2, 4]], temporal_radius=1)
+        assert_equal(
+            list(s),
+            [
+                (slice(None), np.array([0, 1]), slice(0, 3)),
+                (slice(None), np.array([0, 1]), slice(1, 4)),
+                (slice(None), np.array([2, 4]), slice(0, 3)),
+                (slice(None), np.array([2, 4]), slice(1, 4)),
+            ],
+        )
+
     def test_iter_spatial(self):
         """Test generating spatial searchlight patches."""
         dist = np.array([[0, 1, 2], [1, 0, 1], [2, 1, 0]])
@@ -117,6 +128,33 @@ class TestSearchLight:
                 (slice(None), np.array([0, 1])),
                 (slice(None), np.array([0, 1, 2])),
                 (slice(None), np.array([1, 2])),
+            ],
+        )
+
+        # Test using a subset of spatial patches
+        s = searchlight(
+            (10, 3),
+            dist,
+            spatial_radius=2,
+            sel_series=[1, 2],
+        )
+        assert len(s) == 2
+        assert s.shape == (2,)
+        assert_equal(
+            list(s),
+            [
+                (slice(None), np.array([0, 1, 2])),
+                (slice(None), np.array([1, 2])),
+            ],
+        )
+
+        # Test giving explicit spatial patches
+        s = searchlight((10, 3), spatial_radius=[[0, 1], [2, 4]])
+        assert_equal(
+            list(s),
+            [
+                (slice(None), np.array([0, 1])),
+                (slice(None), np.array([2, 4])),
             ],
         )
 
@@ -197,3 +235,13 @@ class TestSearchLight:
             searchlight((10,), dist=dist, temporal_radius=1)
         with pytest.raises(ValueError, match="no temporal dimension"):
             searchlight((10,), dist=dist, samples_from=1, samples_to=3)
+        with pytest.raises(ValueError, match="no temporal dimension"):
+            searchlight((10,), dist=dist, samples_from=1, samples_to=3)
+        with pytest.raises(ValueError, match=r"Temporal radius \(10\) too large"):
+            searchlight((10, 5), temporal_radius=10)
+        with pytest.raises(ValueError, match="`samples_from=10` is out of bounds"):
+            searchlight((10, 5), temporal_radius=1, samples_from=10)
+        with pytest.raises(ValueError, match="`samples_to=10` is out of bounds"):
+            searchlight((10, 5), temporal_radius=1, samples_from=1, samples_to=10)
+        with pytest.raises(ValueError, match="`samples_to=2` is smaller than"):
+            searchlight((10, 5), temporal_radius=1, samples_from=4, samples_to=2)

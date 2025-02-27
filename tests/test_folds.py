@@ -4,6 +4,7 @@ import numpy as np
 import pytest
 from mne_rsa.folds import _compute_item_means, _convert_to_one_hot, create_folds
 from numpy.testing import assert_equal
+from sklearn.model_selection import KFold
 
 
 class TestCreateFolds:
@@ -32,6 +33,15 @@ class TestCreateFolds:
         # No folding when y=None
         folds = create_folds(data, y=None)
         assert_equal(folds, [data])
+
+    def test_sklearn_split(self):
+        """Test passing a scikit-learn style Split object."""
+        data = np.array([1, 1, 1, 2, 2, 2, 3, 3, 3])
+        y = [1, 2, 3, 1, 2, 3, 1, 2, 3]
+        folds = create_folds(data, y, n_folds=KFold(2))  # non-stratified k-fold
+        assert_equal(folds, [[1.5, 1.5, 1.0], [3.0, 3.0, 2.5]])
+        folds = create_folds(data[:, np.newaxis], y, n_folds=KFold(3))
+        assert_equal(folds, [[[1], [1], [1]], [[2], [2], [2]], [[3], [3], [3]]])
 
     def test_invalid_input(self):
         """Test passing invalid input to create_folds."""

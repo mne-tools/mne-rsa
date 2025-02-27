@@ -134,7 +134,7 @@ class searchlight:
         if samples_from != 0 or samples_to != -1:
             if self.samples_dim is None:
                 raise ValueError(
-                    "Cannot select samples:"
+                    "Cannot select samples: "
                     f"the provided data shape {shape} has no "
                     "temporal dimension."
                 )
@@ -151,8 +151,8 @@ class searchlight:
                 )
             if samples_to != -1 and samples_to < samples_from:
                 raise ValueError(
-                    f"`samples_to={samples_to} is smaller "
-                    f"than `samples_from={samples_from}."
+                    f"`samples_to={samples_to}` is smaller "
+                    f"than `samples_from={samples_from}`."
                 )
         self.samples_from = samples_from
         self.samples_to = samples_to
@@ -234,12 +234,7 @@ class searchlight:
                 )
             self.patch_template[self.series_dim] = self.sel_series
         if self.samples_from != 0 or self.samples_to != -1:
-            if self.samples_dim is None:
-                raise ValueError(
-                    "Cannot select samples:"
-                    f"the provided data shape {shape} has no "
-                    "temporal dimension."
-                )
+            # Bounds checking has already been done.
             self.patch_template[self.samples_dim] = slice(
                 self.samples_from, self.samples_to
             )
