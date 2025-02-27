@@ -9,15 +9,15 @@ Authors
 Marijn van Vliet <w.m.vanvliet@gmail.com>
 """
 
-import numpy as np
-from scipy.spatial import distance
 import mne
-from mne.utils import logger
+import numpy as np
 from mne.cov import compute_whitener
+from mne.utils import logger
+from scipy.spatial import distance
 
 from .rdm import _n_items_from_rdm, rdm_array
-from .searchlight import searchlight
 from .rsa import rsa_array
+from .searchlight import searchlight
 
 
 def rsa_evokeds(
@@ -704,6 +704,24 @@ def rdm_epochs(
         raise ValueError("`picks` are not unique. Please remove duplicates.")
     samples_from, samples_to = _tmin_tmax_to_indices(epochs.times, tmin, tmax)
 
+    X = epochs.get_data(copy=False)
+
+    if dropped_as_nan:
+        if len(y) != len(epochs.drop_log):
+            raise ValueError(
+                "When using `dropped_as_nan=True` you must specify a list/array `y` "
+                "containing the event codes for all of the original epochs, such that "
+                "`len(y) == len(epochs.drop_log)`."
+            )
+        unique_ys = np.unique(y)
+        y_filtered = [y_ for i, y_ in enumerate(y) if len(epochs.drop_log[i]) == 0]
+        unique_ys_filtered = np.unique(y_filtered)
+        missing_ys = np.setdiff1d(unique_ys, unique_ys_filtered, assume_unique=True)
+        nan_rdm_indices = np.searchsorted(unique_ys, missing_ys)
+        y = y_filtered
+    else:
+        nan_rdm_indices = []
+
     # Normalize with the noise cov
     if noise_cov is not None:
         if spatial_radius is not None:
@@ -714,8 +732,8 @@ def rdm_epochs(
             noise_cov = noise_cov.as_diag()
         else:
             logger.info("    Using covariance matrix to whiten the data.")
-        W, _ = compute_whitener(noise_cov, epochs.info, picks=picks)
-        epochs._data[picks] = W @ epochs._data[picks]
+        W, _ = compute_whitener(noise_cov, epochs.info)
+        X[:, picks] = W @ np.tensordot(W, X[:, picks], axes=(1, 1)).transpose(1, 0, 2)
 
     if spatial_radius is not None:
         # Compute the distances between the sensors
@@ -725,7 +743,6 @@ def rdm_epochs(
         dist = None
 
     # Compute the RDMs
-    X = epochs.get_data(copy=False)
     patches = searchlight(
         X.shape,
         dist=dist,
@@ -743,16 +760,13 @@ def rdm_epochs(
         y=y,
         n_folds=n_folds,
     )
-    if not dropped_as_nan or epochs.drop_log_stats() == 0:
+    if not dropped_as_nan or len(nan_rdm_indices) == 0:
         yield from rdm_gen
     else:
-        nan_locations = [
-            i for i, reason in enumerate(epochs.drop_log) if len(reason) > 0
-        ]
         for rdm in rdm_gen:
             rdm = distance.squareform(rdm)
-            rdm = np.insert(rdm, nan_locations, np.nan, axis=0)
-            rdm = np.insert(rdm, nan_locations, np.nan, axis=1)
+            rdm = np.insert(rdm, nan_rdm_indices, np.nan, axis=0)
+            rdm = np.insert(rdm, nan_rdm_indices, np.nan, axis=1)
             # Can't use squareform to convert back due to the NaNs.
             yield rdm[np.triu_indices(len(rdm), 1)]
 
@@ -762,13 +776,17 @@ def _tmin_tmax_to_indices(times, tmin, tmax):
     if tmin is None:
         samples_from = 0
     else:
+        if tmin < times[0]:
+            raise ValueError(f"`{tmin=}` is before the first sample at t={times[0]}.")
         samples_from = np.searchsorted(times, tmin)
     if tmax is None:
         samples_to = len(times)
     else:
+        if tmax > times[-1]:
+            raise ValueError(f"`{tmax=}` is after the last sample at t={times[-1]}.")
         samples_to = np.searchsorted(times, tmax)
     if samples_from > samples_to:
-        raise ValueError(f"Invalid time range: {tmin} to {tmax}")
+        raise ValueError(f"`{tmax=}` is smaller than `{tmin=}`")
     return samples_from, samples_to
 
 
