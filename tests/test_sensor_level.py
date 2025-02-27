@@ -19,15 +19,23 @@ def load_epochs():
     return epochs
 
 
-class TestSensorLevelRDMs:
-    """Test making RDMs from sensor-level data."""
+def load_evokeds():
+    """Load the MNE-Sample data evokeds."""
+    path = mne.datasets.sample.data_path() / "MEG" / "sample"
+    evokeds = mne.read_evokeds(path / "sample_audvis-ave.fif")
+    evokeds = [evoked.pick("eeg").resample(100) for evoked in evokeds]
+    return evokeds
+
+
+class TestEpochRDMs:
+    """Test making RDMs from sensor-level Epoch data."""
 
     def test_rdm_single_searchlight_patch(self):
         """Test making an RDM with a single searchlight patch."""
         epochs = load_epochs()
-        rdms = list(rdm_epochs(epochs))
-        assert len(rdms) == 1
-        assert squareform(rdms[0]).shape == (4, 4)
+        rdms_epochs = list(rdm_epochs(epochs))
+        assert len(rdms_epochs) == 1
+        assert squareform(rdms_epochs[0]).shape == (4, 4)
 
     def test_nans(self):
         """Test inserting NaNs at dropped epochs."""
@@ -58,6 +66,7 @@ class TestSensorLevelRDMs:
     def test_rdm_temp(self):
         """Test making RDMs with a sliding temporal window."""
         epochs = load_epochs()
+        evokeds = load_evokeds()
 
         rdms = list(rdm_epochs(epochs, temporal_radius=0.1))  # 10 samples
         assert len(rdms) == len(epochs.times) - 2 * 10
@@ -123,5 +132,99 @@ class TestSensorLevelRDMs:
         cov = mne.compute_covariance(epochs)
         rdms_whitened = list(
             rdm_epochs(epochs, spatial_radius=0.1, temporal_radius=0.1, noise_cov=cov)
+        )
+        assert not np.allclose(rdms, rdms_whitened)
+
+
+class TestEvokedRDMs:
+    """Test making RDMs from sensor-level Evoked data."""
+
+    def test_rdm_single_searchlight_patch(self):
+        """Test making an RDM with a single searchlight patch."""
+        evokeds = load_evokeds()
+        rdms_evokeds = list(rdm_evokeds(evokeds))
+        assert len(rdms_evokeds) == 1
+        assert squareform(rdms_evokeds[0]).shape == (4, 4)
+
+        # Check equivalence of rdm_epochs and rdm_evokeds
+        evokeds_as_epochs = mne.EpochsArray(
+            np.array([e.data for e in evokeds]),
+            info=evokeds[0].info,
+            events=np.array([[1, 0, 1], [2, 0, 2], [3, 0, 3], [4, 0, 4]]),
+        )
+        rdms_evokeds_as_epochs = list(rdm_epochs(evokeds_as_epochs))
+        assert np.allclose(rdms_evokeds_as_epochs, rdms_evokeds)
+
+    def test_rdm_temp(self):
+        """Test making RDMs with a sliding temporal window."""
+        evokeds = load_evokeds()
+
+        rdms = list(rdm_evokeds(evokeds, temporal_radius=0.1))  # 10 samples
+        assert len(rdms) == len(evokeds[0].times) - 2 * 10
+        assert squareform(rdms[0]).shape == (4, 4)
+
+        # With noise normalization
+        epochs = load_epochs()
+        cov = mne.compute_covariance(epochs)
+        rdms_whitened = list(rdm_evokeds(evokeds, temporal_radius=0.1, noise_cov=cov))
+        assert not np.allclose(rdms, rdms_whitened)
+
+        # Restrict in time
+        rdms = list(rdm_evokeds(evokeds, temporal_radius=0.1, tmin=0, tmax=0.3))
+        assert len(rdms) == 30
+
+        # Out of bounds and wrong order of tmin/tmax
+        with pytest.raises(ValueError, match="`tmin=-5` is before the first sample"):
+            rdms = list(rdm_evokeds(evokeds, temporal_radius=0.1, tmin=-5))
+        with pytest.raises(ValueError, match="`tmax=5` is after the last sample"):
+            rdms = list(rdm_evokeds(evokeds, temporal_radius=0.1, tmax=5))
+        with pytest.raises(ValueError, match="`tmax=0.1` is smaller than `tmin=0.2`"):
+            rdms = list(rdm_evokeds(evokeds, temporal_radius=0.1, tmax=0.1, tmin=0.2))
+
+    def test_rdm_spatial(self):
+        """Test making RDMs with a searchlight across sensors."""
+        evokeds = load_evokeds()
+        rdms = list(rdm_evokeds(evokeds, spatial_radius=0.1))  # 10 cm
+        assert len(rdms) == evokeds[0].info["nchan"] - len(evokeds[0].info["bads"])
+        assert squareform(rdms[0]).shape == (4, 4)
+
+        # With noise normalization
+        epochs = load_epochs()
+        cov = mne.compute_covariance(epochs)
+        rdms_whitened = list(rdm_evokeds(evokeds, spatial_radius=0.1, noise_cov=cov))
+        assert not np.allclose(rdms, rdms_whitened)
+
+        # Restrict channels
+        rdms = list(
+            rdm_evokeds(evokeds, spatial_radius=0.1, picks=["EEG 020", "EEG 051"])
+        )
+        assert len(rdms) == 2
+
+        # Pick non-existing channels
+        with pytest.raises(ValueError, match=r"\['foo'\] could not be picked"):
+            rdms = list(
+                rdm_evokeds(evokeds, spatial_radius=0.1, picks=["EEG 020", "foo"])
+            )
+
+        # Pick duplicate channels
+        with pytest.raises(ValueError, match="`picks` are not unique"):
+            rdms = list(
+                rdm_evokeds(evokeds, spatial_radius=0.1, picks=["EEG 020", "EEG 020"])
+            )
+
+    def test_rdm_spatio_temporal(self):
+        """Test making RDMs with a searchlight across both sensors and time."""
+        evokeds = load_evokeds()
+        rdms = list(rdm_evokeds(evokeds, spatial_radius=0.1, temporal_radius=0.1))
+        assert len(rdms) == (
+            evokeds[0].info["nchan"] - len(evokeds[0].info["bads"])
+        ) * (len(evokeds[0].times) - 2 * 10)
+        assert squareform(rdms[0]).shape == (4, 4)
+
+        # With noise normalization
+        epochs = load_epochs()
+        cov = mne.compute_covariance(epochs)
+        rdms_whitened = list(
+            rdm_evokeds(evokeds, spatial_radius=0.1, temporal_radius=0.1, noise_cov=cov)
         )
         assert not np.allclose(rdms, rdms_whitened)
