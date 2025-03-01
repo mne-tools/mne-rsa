@@ -139,7 +139,7 @@ def rsa_evokeds(
     compute_rdm
 
     """
-    one_model = isinstance(rdm_model, list)
+    one_model = type(rdm_model) is np.ndarray
     if one_model:
         rdm_model = [rdm_model]
 
@@ -236,9 +236,14 @@ def rsa_evokeds(
     tmin = _construct_tmin(evokeds[0].times, samples_from, samples_to, temporal_radius)
 
     if one_model:
-        return mne.EvokedArray(
-            np.atleast_2d(data), info, tmin, comment="RSA", nave=len(evokeds)
-        )
+        if data.ndim == 0:
+            data = np.atleast_2d(data)
+        elif data.ndim == 1:
+            if spatial_radius is not None:
+                data = data[:, np.newaxis]
+            else:
+                data = data[np.newaxis, :]
+        return mne.EvokedArray(data, info, tmin, comment="RSA", nave=len(evokeds))
     else:
         return [
             mne.EvokedArray(
@@ -410,6 +415,8 @@ def rsa_epochs(
         raise ValueError("`picks` are not unique. Please remove duplicates.")
     samples_from, samples_to = _tmin_tmax_to_indices(epochs.times, tmin, tmax)
 
+    X = epochs.get_data(copy=False)
+
     # Normalize with the noise cov
     if noise_cov is not None:
         if spatial_radius is not None:
@@ -420,8 +427,9 @@ def rsa_epochs(
             noise_cov = noise_cov.as_diag()
         else:
             logger.info("    Using covariance matrix to whiten the data.")
-        W, _ = compute_whitener(noise_cov, epochs.info, picks=picks)
-        epochs._data[:, picks] = (W @ epochs._data[:, picks].T).T
+        W, _ = compute_whitener(noise_cov, epochs.info)
+        X = X.copy()
+        X[:, picks] = W @ np.tensordot(W, X[:, picks], axes=(1, 1)).transpose(1, 0, 2)
 
     if spatial_radius is not None:
         logger.info(f"    Spatial radius: {spatial_radius} meters")
@@ -438,7 +446,6 @@ def rsa_epochs(
         logger.info(f"    Time interval: {tmin}-{tmax} seconds")
 
     # Perform the RSA
-    X = epochs.get_data(copy=False)
     patches = searchlight(
         X.shape,
         dist=dist,
@@ -471,9 +478,14 @@ def rsa_epochs(
     tmin = _construct_tmin(epochs.times, samples_from, samples_to, temporal_radius)
 
     if one_model:
-        return mne.EvokedArray(
-            np.atleast_2d(data), info, tmin, comment="RSA", nave=len(np.unique(y))
-        )
+        if data.ndim == 0:
+            data = np.atleast_2d(data)
+        elif data.ndim == 1:
+            if spatial_radius is not None:
+                data = data[:, np.newaxis]
+            else:
+                data = data[np.newaxis, :]
+        return mne.EvokedArray(data, info, tmin, comment="RSA", nave=len(np.unique(y)))
     else:
         return [
             mne.EvokedArray(
@@ -733,6 +745,7 @@ def rdm_epochs(
         else:
             logger.info("    Using covariance matrix to whiten the data.")
         W, _ = compute_whitener(noise_cov, epochs.info)
+        X = X.copy()
         X[:, picks] = W @ np.tensordot(W, X[:, picks], axes=(1, 1)).transpose(1, 0, 2)
 
     if spatial_radius is not None:
