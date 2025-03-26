@@ -108,7 +108,7 @@ class TestEpochRDMs:
         assert len(rdms) == 2
 
         # Pick non-existing channels
-        with pytest.raises(ValueError, match=r"\['foo'\] could not be picked"):
+        with pytest.raises(ValueError, match="could not be picked"):
             next(rdm_epochs(epochs, spatial_radius=0.05, picks=["EEG 020", "foo"]))
 
         # Pick duplicate channels
@@ -197,7 +197,7 @@ class TestEvokedRDMs:
         assert len(rdms) == 2
 
         # Pick non-existing channels
-        with pytest.raises(ValueError, match=r"\['foo'\] could not be picked"):
+        with pytest.raises(ValueError, match="could not be picked"):
             rdms = list(
                 rdm_evokeds(evokeds, spatial_radius=0.05, picks=["EEG 020", "foo"])
             )
@@ -310,7 +310,7 @@ class TestEpochRSA:
         assert rsa_result.data.shape == (2, 1)
 
         # Pick non-existing channels
-        with pytest.raises(ValueError, match=r"\['foo'\] could not be picked"):
+        with pytest.raises(ValueError, match="could not be picked"):
             rsa_epochs(epochs, model_rdm, spatial_radius=0.05, picks=["EEG 020", "foo"])
 
         # Pick duplicate channels
@@ -430,7 +430,7 @@ class TestEvokedRSA:
         assert rsa_result.data.shape == (2, 1)
 
         # Pick non-existing channels
-        with pytest.raises(ValueError, match=r"\['foo'\] could not be picked"):
+        with pytest.raises(ValueError, match="could not be picked"):
             rsa_evokeds(
                 evokeds, model_rdm, spatial_radius=0.05, picks=["EEG 020", "foo"]
             )
