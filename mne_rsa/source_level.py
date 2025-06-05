@@ -15,16 +15,17 @@ Ossi Lehtonen <ossi.lehtonen@aalto.fi>
 
 from copy import deepcopy
 from warnings import warn
-import numpy as np
+
 import mne
+import nibabel as nib
+import numpy as np
 from mne.utils import logger, verbose
 from scipy.linalg import block_diag
-import nibabel as nib
 
 from .rdm import _n_items_from_rdm, rdm_array
 from .rsa import rsa_array
 from .searchlight import searchlight
-from .sensor_level import _tmin_tmax_to_indices, _construct_tmin
+from .sensor_level import _construct_tmin, _tmin_tmax_to_indices
 
 
 @verbose
@@ -291,7 +292,7 @@ def rdm_stcs(
     dist_metric="sqeuclidean",
     dist_params=dict(),
     y=None,
-    n_folds=None,
+    n_folds=1,
     sel_vertices=None,
     sel_vertices_by_index=None,
     tmin=None,
@@ -404,6 +405,8 @@ def rdm_stcs(
         sel_series = np.arange(len(stcs[0].data))
     else:
         sel_series = vertex_selection_to_indices(stcs[0].vertices, sel_vertices)
+    if len(sel_series) != len(set(sel_series)):
+        raise ValueError("selected vertices are not unique. Please remove duplicates.")
 
     X = np.array([stc.data for stc in stcs])
     patches = searchlight(
@@ -746,7 +749,7 @@ def rsa_nifti(
         not isinstance(image, tuple(nib.imageclasses.all_image_classes))
         or image.ndim != 4
     ):
-        raise ValueError("The image data must be 4-dimensional Nifti-like " "images")
+        raise ValueError("The image data must be 4-dimensional Nifti-like images")
 
     # Check for compatibility of the BOLD images and the model features
     for rdm in rdm_model:
@@ -924,7 +927,7 @@ def rdm_nifti(
         not isinstance(image, tuple(nib.imageclasses.all_image_classes))
         or image.ndim != 4
     ):
-        raise ValueError("The image data must be 4-dimensional Nifti-like " "images")
+        raise ValueError("The image data must be 4-dimensional Nifti-like images")
 
     # Get data as (n_items x n_voxels)
     X = image.get_fdata().reshape(-1, image.shape[3]).T
@@ -1051,7 +1054,11 @@ def _get_distance_matrix(src, dist_lim, n_jobs=1):
         if "dist" not in hemi or hemi["dist"] is None:
             needs_distance_computation = True
         else:
-            if hemi["dist_limit"] != np.inf and hemi["dist_limit"][0] < dist_lim:
+            if (
+                hemi["dist_limit"] != np.inf
+                and hemi["dist_limit"] >= 0
+                and hemi["dist_limit"][0] < dist_lim
+            ):
                 warn(
                     f"Source space has pre-computed distances, but all "
                     f"distances are smaller than the searchlight radius "
