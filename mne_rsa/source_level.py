@@ -849,7 +849,7 @@ def rsa_nifti(
 @verbose
 def rdm_nifti(
     image,
-    spatial_radius=0.01,
+    spatial_radius=None,
     dist_metric="correlation",
     dist_params=dict(),
     y=None,
@@ -873,7 +873,7 @@ def rdm_nifti(
     spatial_radius : float
         The spatial radius of the searchlight patch in meters. All source
         points within this radius will belong to the searchlight patch.
-        Defaults to 0.01.
+        Defaults to ``None`` which will use a single searchlight patch.
     dist_metric : str
         The metric to use to compute the RDM for the data. This can be
         any metric supported by the scipy.distance.pdist function. See also the
@@ -950,7 +950,7 @@ def rdm_nifti(
         result_mask &= brain_mask
         brain_mask = brain_mask.ravel()
         X = X[:, brain_mask]
-        voxel_loc = voxel_loc[brain_mask]
+        voxel_loc = voxel_loc[brain_mask, :]
     if roi_mask is not None:
         if roi_mask.ndim != 3 or roi_mask.shape != image.shape[:3]:
             raise ValueError(
@@ -969,7 +969,9 @@ def rdm_nifti(
     logger.info("Computing distances...")
     from sklearn.neighbors import NearestNeighbors
 
-    nn = NearestNeighbors(radius=spatial_radius, n_jobs=n_jobs).fit(voxel_loc)
+    nn = NearestNeighbors(
+        radius=1e6 if spatial_radius is None else spatial_radius, n_jobs=n_jobs
+    ).fit(voxel_loc)
     dist = nn.radius_neighbors_graph(mode="distance")
 
     # Compute RDMs

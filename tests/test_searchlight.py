@@ -205,6 +205,14 @@ class TestSearchLight:
         assert_equal(next(s), (slice(None),))
 
         # Test using subsets of series and samples
+        s = searchlight((10, 3), sel_series=[1, 2])
+        assert len(s) == 1
+        assert_equal(next(s), (slice(None), [1, 2]))
+
+        s = searchlight((10, 3), samples_from=1, samples_to=2)
+        assert len(s) == 1
+        assert_equal(next(s), (slice(None), slice(1, 2, None)))
+
         s = searchlight((10, 3, 4), sel_series=[1, 2], samples_from=2, samples_to=4)
         assert len(s) == 1
         assert s.shape == tuple()
@@ -225,18 +233,18 @@ class TestSearchLight:
         # Spatial case
         with pytest.raises(ValueError, match="no spatial dimension"):
             searchlight((10,), dist=dist, spatial_radius=1)
+        with pytest.raises(ValueError, match="no spatial dimension"):
+            searchlight((10,), dist=dist, sel_series=[1])
         with pytest.raises(ValueError, match="no distance information"):
             searchlight((10, 5), spatial_radius=1)
-        with pytest.raises(ValueError, match="no spatial dimension"):
-            searchlight((10,), sel_series=[1, 2])
 
         # Temporal case
         with pytest.raises(ValueError, match="no temporal dimension"):
             searchlight((10,), dist=dist, temporal_radius=1)
         with pytest.raises(ValueError, match="no temporal dimension"):
-            searchlight((10,), dist=dist, samples_from=1, samples_to=3)
+            searchlight((10,), dist=dist, samples_from=1)
         with pytest.raises(ValueError, match="no temporal dimension"):
-            searchlight((10,), dist=dist, samples_from=1, samples_to=3)
+            searchlight((10,), dist=dist, samples_to=1)
         with pytest.raises(ValueError, match=r"Temporal radius \(10\) too large"):
             searchlight((10, 5), temporal_radius=10)
         with pytest.raises(ValueError, match="`samples_from=10` is out of bounds"):

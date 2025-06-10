@@ -21,8 +21,10 @@ class searchlight:
         ``(n_items, n_series, n_samples)``
 
     2 dimensions
-        ``(n_items, n_series)`` when ``spatial_radius`` is not ``None``.
-        ``(n_items, n_samples)`` when ``temporal_radius`` is not ``None``.
+        ``(n_items, n_series)`` when ``spatial_radius`` or ``sel_series`` is set.
+
+        ``(n_items, n_samples)`` when ``temporal_radius`` or
+                ``samples_from``/``samples_to`` is set.
 
     1 dimension
         ``(n_items,)``
@@ -114,10 +116,12 @@ class searchlight:
         elif n_dims == 3:
             self.series_dim = 1
             self.samples_dim = 2
-        elif n_dims == 2 and spatial_radius is not None:
+        elif n_dims == 2 and (spatial_radius is not None or sel_series is not None):
             self.series_dim = 1
             self.samples_dim = None
-        elif n_dims == 2 and temporal_radius is not None:
+        elif n_dims == 2 and (
+            temporal_radius is not None or samples_from != 0 or samples_to != -1
+        ):
             self.series_dim = None
             self.samples_dim = 1
         else:

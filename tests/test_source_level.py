@@ -1,10 +1,13 @@
 """Unit tests for source-level analysis."""
 
+from copy import deepcopy
+
 import mne
+import nibabel as nib
 import numpy as np
 import pytest
 from mne.minimum_norm import apply_inverse_epochs, read_inverse_operator
-from mne_rsa import rdm_stcs, squareform
+from mne_rsa import rdm_nifti, rdm_stcs, squareform
 from numpy.testing import assert_equal
 
 
@@ -24,6 +27,17 @@ def make_stcs():
 
     # Also return the source space
     return stcs, inv["src"], epochs.events[:, 2]
+
+
+def make_nifty():
+    """Create a 4D nifty image containing 10x10x10 voxels with 4 instances."""
+    rng = np.random.RandomState(0)
+    data = rng.randn(10, 10, 10, 4)
+    affine = np.eye(4) * 5  # each voxel is 5 mm
+    affine[3, 3] = 1.0
+    mask = np.zeros_like(data[:, :, :, 0])  # create a mask as well
+    mask[2:4, 2:4, 2:4] = 1
+    return nib.Nifti1Image(data, affine), nib.Nifti2Image(mask, affine)
 
 
 class TestStcRDMs:
@@ -94,3 +108,33 @@ class TestStcRDMs:
         rdms = list(rdm_stcs(stcs, src, y=y, spatial_radius=0.05, temporal_radius=0.1))
         assert len(rdms) == len(stcs[0].data) * (len(stcs[0].times) - 2 * 10)
         assert squareform(rdms[0]).shape == (4, 4)
+
+
+class TestNiftyRDMs:
+    """Test making RDMs from fMRI data."""
+
+    def test_rdm_single_searchlight_patch(self):
+        """Test making an RDM with a single searchlight patch."""
+        bold, mask = make_nifty()
+        rdms = list(rdm_nifti(bold))
+        assert len(rdms) == 1
+        assert squareform(rdms[0]).shape == (4, 4)
+
+        bold_nans = deepcopy(bold)
+        bold_nans.get_fdata()[~mask.get_fdata().astype("bool")] = np.nan
+
+        # An ROI mask limits the result to only the mask
+        rdms = list(rdm_nifti(bold_nans, roi_mask=mask))
+        assert len(rdms) == 1
+        assert squareform(rdms[0]).shape == (4, 4)
+        assert not np.any(np.isnan(rdms))
+
+        # A brain mask limits the input voxels to only the mask and is in the case of a
+        # single patch the same thing as specifying roi_mask
+        rdms = list(rdm_nifti(bold_nans, brain_mask=mask))
+        assert len(rdms) == 1
+        assert squareform(rdms[0]).shape == (4, 4)
+        assert not np.any(np.isnan(rdms))
+
+    # def test_rdm_spatial(self):
+    #     """Test making RDMs with a searchlight across voxels."""
