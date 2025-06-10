@@ -136,5 +136,24 @@ class TestNiftyRDMs:
         assert squareform(rdms[0]).shape == (4, 4)
         assert not np.any(np.isnan(rdms))
 
-    # def test_rdm_spatial(self):
-    #     """Test making RDMs with a searchlight across voxels."""
+    def test_rdm_spatial(self):
+        """Test making RDMs with a searchlight across voxels."""
+        bold, mask = make_nifty()
+        rdms = list(rdm_nifti(bold, spatial_radius=0.01))
+        assert len(rdms) == 10 * 10 * 10
+        assert squareform(rdms[0]).shape == (4, 4)
+
+        # Restrict voxels to a mask.
+        rdms = list(rdm_nifti(bold, spatial_radius=0.01, roi_mask=mask))
+        assert len(rdms) == 2 * 2 * 2
+        assert squareform(rdms[0]).shape == (4, 4)
+
+        rdms = list(rdm_nifti(bold, spatial_radius=0.01, brain_mask=mask))
+        assert len(rdms) == 2 * 2 * 2
+        assert squareform(rdms[0]).shape == (4, 4)
+
+        # Specify `y`
+        y = [1, 1, 2, 2]
+        rdms = list(rdm_nifti(bold, y=y, spatial_radius=0.01, brain_mask=mask))
+        assert len(rdms) == 2 * 2 * 2
+        assert squareform(rdms[0]).shape == (2, 2)
