@@ -23,7 +23,7 @@ classifiers = [
 	"Operating System :: Unix",
 	"Operating System :: MacOS",
 ]
-dependencies = ["mne"]
+dependencies = ["mne", "nibabel", "scikit-learn", "pyvista", "pyside6", "pyvistaqt"]
 dynamic = ["version"]
 
 [project.urls]
