@@ -22,6 +22,8 @@ jobs:
         python-version: 3.12
     - name: Install dependencies
       run: |
+        sudo apt-get update
+        sudo apt-get install -y libegl1 libgl1-mesa-glx xvfb
         python -m pip install --upgrade pip
         pip install ruff pytest tqdm pytest-cov
         pip install -r requirements.txt
@@ -32,4 +34,4 @@ jobs:
     - name: Test with pytest
       run: |
         pip install -e .
-        pytest --cov-report term-missing --cov mne_rsa
+        xvfb-run pytest --cov-report term-missing --cov mne_rsa
