@@ -1,5 +1,7 @@
 """Test visualization functions."""
 
+import os
+
 import matplotlib.pyplot as plt
 import mne
 import numpy as np
@@ -165,6 +167,9 @@ class TestPlotRDMsTopo:
         assert plt.gcf().axes[0].get_title() == "EEG 001"
 
 
+@pytest.mark.skipif(
+    os.getenv("GITHUB_ACTIONS") == "true", reason="Skip GL plotting on GitHub Actions"
+)
 def test_plot_roi_map():
     """Test plotting ROI values on a brain."""
     rois = mne.read_labels_from_annot(
