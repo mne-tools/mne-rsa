@@ -808,9 +808,3 @@ def _construct_tmin(times, samples_from, samples_to, temporal_radius):
         return times[(samples_from + samples_to) // 2]
     else:
         return times[max(temporal_radius, samples_from)]
-
-
-def _square_to_condensed(i, j, n):
-    if i < j:
-        i, j = j, i
-    return n * j - j * (j + 1) // 2 + i - 1 - j

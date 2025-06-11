@@ -32,7 +32,7 @@ from .sensor_level import _construct_tmin, _tmin_tmax_to_indices
 def rsa_stcs(
     stcs,
     rdm_model,
-    src,
+    src=None,
     spatial_radius=None,
     temporal_radius=None,
     stc_rdm_metric="correlation",
@@ -70,14 +70,15 @@ def rsa_stcs(
         against multiple models at the same time, supply a list of model RDMs.
 
         Use :func:`compute_rdm` to compute RDMs.
-    src : instance of mne.SourceSpaces
-        The source space used by the source estimates specified in the `stcs`
-        parameter.
+    src : instance of mne.SourceSpaces | None
+        The source space used by the source estimates specified in the ``stcs``
+        parameter. Only needed when ``spatial_radius`` is used to create spatial
+        searchlight patches. Defaults to None.
     spatial_radius : float | None
-        The spatial radius of the searchlight patch in meters. All source
-        points within this radius will belong to the searchlight patch. Set to
-        None to only perform the searchlight over time, flattening across
-        sensors. Defaults to None.
+        The spatial radius of the searchlight patch in meters. All source points within
+        this radius will belong to the searchlight patch. When this is set, ``src`` also
+        must be set to the correct source space. Set to None to only perform the
+        searchlight over time, flattening across sensors. Defaults to None.
     temporal_radius : float | None
         The temporal radius of the searchlight patch in seconds. Set to None to
         only perform the searchlight over sensors, flattening across time.
@@ -184,8 +185,15 @@ def rsa_stcs(
                 % (n_items, len(np.unique(y)))
             )
 
-    src = _check_stcs_compatibility(stcs, src)
+    _check_stcs_compatibility(stcs)
     if spatial_radius is not None:
+        if src is None:
+            raise ValueError(
+                "When using `spatial_radius` to construct spatial searchlight patches, "
+                "you also need to set `src` to the corresponding source space to "
+                "allow distance calcultations."
+            )
+        src = _check_src_compatibility(src, stcs[0])
         dist = _get_distance_matrix(src, dist_lim=spatial_radius, n_jobs=n_jobs)
     else:
         dist = None
@@ -249,7 +257,7 @@ def rsa_stcs(
     if spatial_radius is not None:
         vertices = vertex_indices_to_numbers(stcs[0].vertices, sel_series)
     else:
-        if src.kind == "volume":
+        if isinstance(stcs[0], mne.VolSourceEstimate):
             vertices = [np.array([1])]
         else:
             vertices = [np.array([1]), np.array([])]
@@ -258,7 +266,7 @@ def rsa_stcs(
     tstep = stcs[0].tstep
 
     if one_model:
-        if src.kind == "volume":
+        if isinstance(stcs[0], mne.VolSourceEstimate):
             return mne.VolSourceEstimate(
                 data, vertices, tmin, tstep, subject=stcs[0].subject
             )
@@ -267,7 +275,7 @@ def rsa_stcs(
                 data, vertices, tmin, tstep, subject=stcs[0].subject
             )
     else:
-        if src.kind == "volume":
+        if isinstance(stcs[0], mne.VolSourceEstimate):
             return [
                 mne.VolSourceEstimate(
                     data[..., i], vertices, tmin, tstep, subject=stcs[0].subject
@@ -286,7 +294,7 @@ def rsa_stcs(
 @verbose
 def rdm_stcs(
     stcs,
-    src,
+    src=None,
     spatial_radius=None,
     temporal_radius=None,
     dist_metric="sqeuclidean",
@@ -314,14 +322,15 @@ def rdm_stcs(
     ----------
     stcs : list of mne.SourceEstimate | list of mne.VolSourceEstimate
         For each item, a source estimate for the brain activity.
-    src : instance of mne.SourceSpaces
-        The source space used by the source estimates specified in the `stcs`
-        parameter.
+    src : instance of mne.SourceSpaces | None
+        The source space used by the source estimates specified in the ``stcs``
+        parameter. Only needed when ``spatial_radius`` is used to create spatial
+        searchlight patches. Defaults to None.
     spatial_radius : float | None
-        The spatial radius of the searchlight patch in meters. All source
-        points within this radius will belong to the searchlight patch. Set to
-        None to only perform the searchlight over time, flattening across
-        sensors. Defaults to None.
+        The spatial radius of the searchlight patch in meters. All source points within
+        this radius will belong to the searchlight patch. When this is set, ``src`` also
+        must be set to the correct source space. Set to None to only perform the
+        searchlight over time, flattening across sensors. Defaults to None.
     temporal_radius : float | None
         The temporal radius of the searchlight patch in seconds. Set to None to
         only perform the searchlight over sensors, flattening across time.
@@ -384,8 +393,15 @@ def rdm_stcs(
         A RDM for each searchlight patch.
 
     """
-    src = _check_stcs_compatibility(stcs, src)
+    _check_stcs_compatibility(stcs)
     if spatial_radius is not None:
+        if src is None:
+            raise ValueError(
+                "When using `spatial_radius` to construct spatial searchlight patches, "
+                "you also need to set `src` to the corresponding source space to "
+                "allow distance calcultations."
+            )
+        src = _check_src_compatibility(src, stcs[0])
         dist = _get_distance_matrix(src, dist_lim=spatial_radius, n_jobs=n_jobs)
     else:
         dist = None
@@ -993,32 +1009,30 @@ def rdm_nifti(
     )
 
 
-def _check_stcs_compatibility(stcs, src):
-    """Check for compatibility of the source estimates and source space."""
-    if src.kind == "volume" and not isinstance(stcs[0], mne.VolSourceEstimate):
+def _check_stcs_compatibility(stcs):
+    """Check for compatibility of the source estimates."""
+    for stc in stcs:
+        for vert1, vert2 in zip(stc.vertices, stcs[0].vertices):
+            if np.any(vert1 != vert2):
+                raise ValueError("Not all source estimates have the same vertices.")
+    for stc in stcs:
+        if np.any(stc.times != stcs[0].times):
+            raise ValueError("Not all source estimates have the same time points.")
+
+def _check_src_compatibility(src, stc):
+    """Check for compatibility of the source space with the given source estimate."""
+    if src.kind == "volume" and not isinstance(stc, mne.VolSourceEstimate):
         raise ValueError(
             "Volume source estimates provided, but not a volume source space "
             f"(src.kind={src.kind})."
         )
     if src.kind == "volume":
-        if np.any(stcs[0].vertices != src[0]["vertno"]):
-            src = _restrict_src_to_vertices(src, stcs[0].vertices)
-        for stc in stcs:
-            if np.any(stc.vertices != src[0]["vertno"]):
-                raise ValueError("Not all source estimates have the same vertices.")
+        if np.any(stc.vertices != src[0]["vertno"]):
+            src = _restrict_src_to_vertices(src, stc.vertices)
     else:
-        for src_hemi, stc_hemi_vertno in zip(src, stcs[0].vertices):
+        for src_hemi, stc_hemi_vertno in zip(src, stc.vertices):
             if np.any(stc_hemi_vertno != src_hemi["vertno"]):
-                src = _restrict_src_to_vertices(src, stcs[0].vertices)
-        for stc in stcs:
-            for src_hemi, stc_hemi_vertno in zip(src, stcs[0].vertices):
-                if np.any(stc_hemi_vertno != src_hemi["vertno"]):
-                    raise ValueError("Not all source estimates have the same vertices.")
-
-    times = stcs[0].times
-    for stc in stcs:
-        if np.any(stc.times != times):
-            raise ValueError("Not all source estimates have the same time points.")
+                src = _restrict_src_to_vertices(src, stc.vertices)
     return src
 
 

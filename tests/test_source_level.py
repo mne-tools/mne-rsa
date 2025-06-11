@@ -7,7 +7,7 @@ import nibabel as nib
 import numpy as np
 import pytest
 from mne.minimum_norm import apply_inverse_epochs, read_inverse_operator
-from mne_rsa import rdm_nifti, rdm_stcs, squareform
+from mne_rsa import rdm_nifti, rdm_stcs, squareform, rsa_stcs
 from numpy.testing import assert_equal
 
 
@@ -45,35 +45,35 @@ class TestStcRDMs:
 
     def test_rdm_single_searchlight_patch(self):
         """Test making an RDM with a single searchlight patch."""
-        stcs, src, y = make_stcs()
-        rdms = list(rdm_stcs(stcs, src, y=y))
+        stcs, _, y = make_stcs()
+        rdms = list(rdm_stcs(stcs, y=y))
         assert len(rdms) == 1
         assert squareform(rdms[0]).shape == (4, 4)
 
     def test_rdm_temporal(self):
         """Test making RDMs with a sliding temporal window."""
-        stcs, src, y = make_stcs()
+        stcs, _, y = make_stcs()
 
-        rdms = list(rdm_stcs(stcs, src, y=y, temporal_radius=0.1))  # 10 samples
+        rdms = list(rdm_stcs(stcs, y=y, temporal_radius=0.1))  # 10 samples
         assert len(rdms) == len(stcs[0].times) - 2 * 10
         assert squareform(rdms[0]).shape == (4, 4)
 
         # Restrict in time
-        rdms = list(rdm_stcs(stcs, src, y=y, temporal_radius=0.1, tmin=0, tmax=0.3))
+        rdms = list(rdm_stcs(stcs, y=y, temporal_radius=0.1, tmin=0, tmax=0.3))
         assert len(rdms) == 30
 
         # Out of bounds and wrong order of tmin/tmax
         with pytest.raises(ValueError, match="`tmin=-5` is before the first sample"):
-            next(rdm_stcs(stcs, src, y=y, temporal_radius=0.1, tmin=-5))
+            next(rdm_stcs(stcs, y=y, temporal_radius=0.1, tmin=-5))
         with pytest.raises(ValueError, match="`tmax=5` is after the last sample"):
-            next(rdm_stcs(stcs, src, y=y, temporal_radius=0.1, tmax=5))
+            next(rdm_stcs(stcs, y=y, temporal_radius=0.1, tmax=5))
         with pytest.raises(ValueError, match="`tmax=0.1` is smaller than `tmin=0.2`"):
-            next(rdm_stcs(stcs, src, y=y, temporal_radius=0.1, tmax=0.1, tmin=0.2))
+            next(rdm_stcs(stcs, y=y, temporal_radius=0.1, tmax=0.1, tmin=0.2))
 
     def test_rdm_spatial(self):
         """Test making RDMs with a searchlight across sensors."""
         stcs, src, y = make_stcs()
-        rdms = list(rdm_stcs(stcs, src, y=y, spatial_radius=0.05))  # 5 cm
+        rdms = list(rdm_stcs(stcs, src=src, y=y, spatial_radius=0.05))  # 5 cm
         assert len(rdms) == len(stcs[0].data)
         assert squareform(rdms[0]).shape == (4, 4)
 
@@ -81,12 +81,20 @@ class TestStcRDMs:
         label = mne.read_labels_from_annot(
             "sample", subjects_dir=mne.datasets.sample.data_path() / "subjects"
         )[0]
-        rdms = list(rdm_stcs(stcs, src, y=y, spatial_radius=0.05, sel_vertices=label))
+        rdms = list(
+            rdm_stcs(stcs, src=src, y=y, spatial_radius=0.05, sel_vertices=label)
+        )
         assert len(rdms) == len(stcs[0].in_label(label).vertices[0])
 
         # Restrict vertices to 2 selected indices.
         rdms = list(
-            rdm_stcs(stcs, src, y=y, spatial_radius=0.05, sel_vertices_by_index=[0, 1])
+            rdm_stcs(
+                stcs,
+                src=src,
+                y=y,
+                spatial_radius=0.05,
+                sel_vertices_by_index=[0, 1]
+            )
         )
         assert len(rdms) == 2
 
@@ -105,7 +113,9 @@ class TestStcRDMs:
     def test_rdm_spatio_temporal(self):
         """Test making RDMs with a searchlight across both sensors and time."""
         stcs, src, y = make_stcs()
-        rdms = list(rdm_stcs(stcs, src, y=y, spatial_radius=0.05, temporal_radius=0.1))
+        rdms = list(
+            rdm_stcs(stcs, src=src, y=y, spatial_radius=0.05, temporal_radius=0.1)
+        )
         assert len(rdms) == len(stcs[0].data) * (len(stcs[0].times) - 2 * 10)
         assert squareform(rdms[0]).shape == (4, 4)
 
@@ -157,3 +167,13 @@ class TestNiftyRDMs:
         rdms = list(rdm_nifti(bold, spatial_radius=0.01, brain_mask=mask))
         assert len(rdms) == 2 * 2 * 2
         assert squareform(rdms[0]).shape == (4, 4)
+
+class TestStcRSA:
+    """Test performing RSA on source estimates."""
+
+    def test_rsa_single_searchlight_patch(self):
+        """Test performing RSA with a single searchlight patch."""
+        stcs, _, y = make_stcs()
+        model_rdm = np.array([0.5, 1, 1, 1, 1, 0.5])
+        rsa_result = rsa_stcs(stcs, model_rdm, y=y)
+        assert rsa_result.data.shape == (1, 1)
