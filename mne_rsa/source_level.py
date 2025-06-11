@@ -15,23 +15,24 @@ Ossi Lehtonen <ossi.lehtonen@aalto.fi>
 
 from copy import deepcopy
 from warnings import warn
-import numpy as np
+
 import mne
+import nibabel as nib
+import numpy as np
 from mne.utils import logger, verbose
 from scipy.linalg import block_diag
-import nibabel as nib
 
 from .rdm import _n_items_from_rdm, rdm_array
 from .rsa import rsa_array
 from .searchlight import searchlight
-from .sensor_level import _tmin_tmax_to_indices, _construct_tmin
+from .sensor_level import _construct_tmin, _tmin_tmax_to_indices
 
 
 @verbose
 def rsa_stcs(
     stcs,
     rdm_model,
-    src,
+    src=None,
     spatial_radius=None,
     temporal_radius=None,
     stc_rdm_metric="correlation",
@@ -69,14 +70,15 @@ def rsa_stcs(
         against multiple models at the same time, supply a list of model RDMs.
 
         Use :func:`compute_rdm` to compute RDMs.
-    src : instance of mne.SourceSpaces
-        The source space used by the source estimates specified in the `stcs`
-        parameter.
+    src : instance of mne.SourceSpaces | None
+        The source space used by the source estimates specified in the ``stcs``
+        parameter. Only needed when ``spatial_radius`` is used to create spatial
+        searchlight patches. Defaults to None.
     spatial_radius : float | None
-        The spatial radius of the searchlight patch in meters. All source
-        points within this radius will belong to the searchlight patch. Set to
-        None to only perform the searchlight over time, flattening across
-        sensors. Defaults to None.
+        The spatial radius of the searchlight patch in meters. All source points within
+        this radius will belong to the searchlight patch. When this is set, ``src`` also
+        must be set to the correct source space. Set to None to only perform the
+        searchlight over time, flattening across sensors. Defaults to None.
     temporal_radius : float | None
         The temporal radius of the searchlight patch in seconds. Set to None to
         only perform the searchlight over sensors, flattening across time.
@@ -150,12 +152,12 @@ def rsa_stcs(
 
     Returns
     -------
-    stc : SourceEstimate | VolSourceEstimate | list of SourceEstimate | list of VolSourceEstimate
+    stc : SourceEstimate | VolSourceEstimate | list of SourceEstimate | list of VolSourceEstimate | float | ndarray
         The correlation values for each searchlight patch. When spatial_radius
-        is set to None, there will only be one vertex. When temporal_radius is
-        set to None, there will only be one time point. When multiple models
-        have been supplied, a list will be returned containing the RSA results
-        for each model.
+        None, there will only be one time point. When both spatial_radius and
+        temporal_radius are set to None, the result will be a single number (not packed
+        in an SourceEstimate object). When multiple models have been supplied, an array
+        will be returned containing the RSA results for each model.
 
     See Also
     --------
@@ -183,8 +185,15 @@ def rsa_stcs(
                 % (n_items, len(np.unique(y)))
             )
 
-    src = _check_stcs_compatibility(stcs, src)
+    _check_stcs_compatibility(stcs)
     if spatial_radius is not None:
+        if src is None:
+            raise ValueError(
+                "When using `spatial_radius` to construct spatial searchlight patches, "
+                "you also need to set `src` to the corresponding source space to "
+                "allow distance calcultations."
+            )
+        src = _check_src_compatibility(src, stcs[0])
         dist = _get_distance_matrix(src, dist_lim=spatial_radius, n_jobs=n_jobs)
     else:
         dist = None
@@ -202,6 +211,8 @@ def rsa_stcs(
         sel_series = np.arange(len(stcs[0].data))
     else:
         sel_series = vertex_selection_to_indices(stcs[0].vertices, sel_vertices)
+    if len(sel_series) != len(set(sel_series)):
+        raise ValueError("Selected vertices are not unique. Please remove duplicates.")
 
     logger.info(
         f"Performing RSA between SourceEstimates and {len(rdm_model)} model RDM(s)"
@@ -244,20 +255,26 @@ def rsa_stcs(
         verbose=verbose,
     )
 
+    if spatial_radius is None and temporal_radius is None:
+        return data
+
     # Pack the result in a SourceEstimate object
     if spatial_radius is not None:
         vertices = vertex_indices_to_numbers(stcs[0].vertices, sel_series)
     else:
-        if src.kind == "volume":
+        if isinstance(stcs[0], mne.VolSourceEstimate):
             vertices = [np.array([1])]
         else:
             vertices = [np.array([1]), np.array([])]
-        data = data[np.newaxis, ...]
+        if one_model:
+            data = data[np.newaxis, ...]
+        else:
+            data = data[:, np.newaxis, ...]
     tmin = _construct_tmin(stcs[0].times, samples_from, samples_to, temporal_radius)
     tstep = stcs[0].tstep
 
     if one_model:
-        if src.kind == "volume":
+        if isinstance(stcs[0], mne.VolSourceEstimate):
             return mne.VolSourceEstimate(
                 data, vertices, tmin, tstep, subject=stcs[0].subject
             )
@@ -266,32 +283,32 @@ def rsa_stcs(
                 data, vertices, tmin, tstep, subject=stcs[0].subject
             )
     else:
-        if src.kind == "volume":
+        if isinstance(stcs[0], mne.VolSourceEstimate):
             return [
                 mne.VolSourceEstimate(
-                    data[..., i], vertices, tmin, tstep, subject=stcs[0].subject
+                    data[i], vertices, tmin, tstep, subject=stcs[0].subject
                 )
-                for i in range(data.shape[-1])
+                for i in range(data.shape[0])
             ]
         else:
             return [
                 mne.SourceEstimate(
-                    data[..., i], vertices, tmin, tstep, subject=stcs[0].subject
+                    data[i], vertices, tmin, tstep, subject=stcs[0].subject
                 )
-                for i in range(data.shape[-1])
+                for i in range(data.shape[0])
             ]
 
 
 @verbose
 def rdm_stcs(
     stcs,
-    src,
+    src=None,
     spatial_radius=None,
     temporal_radius=None,
     dist_metric="sqeuclidean",
     dist_params=dict(),
     y=None,
-    n_folds=None,
+    n_folds=1,
     sel_vertices=None,
     sel_vertices_by_index=None,
     tmin=None,
@@ -313,14 +330,15 @@ def rdm_stcs(
     ----------
     stcs : list of mne.SourceEstimate | list of mne.VolSourceEstimate
         For each item, a source estimate for the brain activity.
-    src : instance of mne.SourceSpaces
-        The source space used by the source estimates specified in the `stcs`
-        parameter.
+    src : instance of mne.SourceSpaces | None
+        The source space used by the source estimates specified in the ``stcs``
+        parameter. Only needed when ``spatial_radius`` is used to create spatial
+        searchlight patches. Defaults to None.
     spatial_radius : float | None
-        The spatial radius of the searchlight patch in meters. All source
-        points within this radius will belong to the searchlight patch. Set to
-        None to only perform the searchlight over time, flattening across
-        sensors. Defaults to None.
+        The spatial radius of the searchlight patch in meters. All source points within
+        this radius will belong to the searchlight patch. When this is set, ``src`` also
+        must be set to the correct source space. Set to None to only perform the
+        searchlight over time, flattening across sensors. Defaults to None.
     temporal_radius : float | None
         The temporal radius of the searchlight patch in seconds. Set to None to
         only perform the searchlight over sensors, flattening across time.
@@ -383,8 +401,15 @@ def rdm_stcs(
         A RDM for each searchlight patch.
 
     """
-    src = _check_stcs_compatibility(stcs, src)
+    _check_stcs_compatibility(stcs)
     if spatial_radius is not None:
+        if src is None:
+            raise ValueError(
+                "When using `spatial_radius` to construct spatial searchlight patches, "
+                "you also need to set `src` to the corresponding source space to "
+                "allow distance calcultations."
+            )
+        src = _check_src_compatibility(src, stcs[0])
         dist = _get_distance_matrix(src, dist_lim=spatial_radius, n_jobs=n_jobs)
     else:
         dist = None
@@ -404,6 +429,8 @@ def rdm_stcs(
         sel_series = np.arange(len(stcs[0].data))
     else:
         sel_series = vertex_selection_to_indices(stcs[0].vertices, sel_vertices)
+    if len(sel_series) != len(set(sel_series)):
+        raise ValueError("Selected vertices are not unique. Please remove duplicates.")
 
     X = np.array([stc.data for stc in stcs])
     patches = searchlight(
@@ -432,7 +459,7 @@ def rsa_stcs_rois(
     rdm_model,
     src,
     rois,
-    temporal_radius=0.1,
+    temporal_radius=None,
     stc_rdm_metric="correlation",
     stc_rdm_params=dict(),
     rsa_metric="spearman",
@@ -476,7 +503,7 @@ def rsa_stcs_rois(
     temporal_radius : float | None
         The temporal radius of the searchlight patch in seconds. Set to None to
         only perform the searchlight over sensors, flattening across time.
-        Defaults to 0.1.
+        Defaults to None.
     stc_rdm_metric : str
         The metric to use to compute the RDM for the source estimates. This can
         be any metric supported by the scipy.distance.pdist function. See also
@@ -548,7 +575,8 @@ def rsa_stcs_rois(
     See Also
     --------
     compute_rdm
-    """  # noqa E501
+
+    """
     # Check for compatibility of the source estimates and the model features
     one_model = type(rdm_model) is np.ndarray
     if one_model:
@@ -571,7 +599,8 @@ def rsa_stcs_rois(
                 % (n_items, len(np.unique(y)))
             )
 
-    src = _check_stcs_compatibility(stcs, src)
+    _check_stcs_compatibility(stcs)
+    src = _check_src_compatibility(src, stcs[0])
 
     if temporal_radius is not None:
         # Convert the temporal radius to samples
@@ -619,9 +648,9 @@ def rsa_stcs_rois(
     else:
         stc = [
             backfill_stc_from_rois(
-                data[..., i], rois, src, tmin=tmin, tstep=tstep, subject=subject
+                data[i], rois, src, tmin=tmin, tstep=tstep, subject=subject
             )
-            for i in range(data.shape[-1])
+            for i in range(data.shape[0])
         ]
 
     return data, stc
@@ -631,7 +660,7 @@ def rsa_stcs_rois(
 def rsa_nifti(
     image,
     rdm_model,
-    spatial_radius=0.01,
+    spatial_radius=None,
     image_rdm_metric="correlation",
     image_rdm_params=dict(),
     rsa_metric="spearman",
@@ -662,10 +691,10 @@ def rsa_nifti(
         against multiple models at the same time, supply a list of model RDMs.
 
         Use :func:`compute_rdm` to compute RDMs.
-    spatial_radius : float
+    spatial_radius : float | None
         The spatial radius of the searchlight patch in meters. All source
         points within this radius will belong to the searchlight patch.
-        Defaults to 0.01.
+        Defaults to ``None`` which will use a single searchlight patch.
     image_rdm_metric : str
         The metric to use to compute the RDM for the data. This can be
         any metric supported by the scipy.distance.pdist function. See also the
@@ -727,10 +756,11 @@ def rsa_nifti(
 
     Returns
     -------
-    rsa_results : 3D Nifti1Image | list of 3D Nifti1Image
-        The correlation values for each searchlight patch. When multiple models
-        have been supplied, a list will be returned containing the RSA results
-        for each model.
+    rsa_results : 3D Nifti1Image | list of 3D Nifti1Image | float | ndarray
+        The correlation values for each searchlight patch. When spatial_radius is set to
+        None, the result will be a single number (not packed in an SourceEstimate
+        object). When multiple models have been supplied, a list will be returned
+        containing the RSA results for each model.
 
     See Also
     --------
@@ -746,7 +776,7 @@ def rsa_nifti(
         not isinstance(image, tuple(nib.imageclasses.all_image_classes))
         or image.ndim != 4
     ):
-        raise ValueError("The image data must be 4-dimensional Nifti-like " "images")
+        raise ValueError("The image data must be 4-dimensional Nifti-like images")
 
     # Check for compatibility of the BOLD images and the model features
     for rdm in rdm_model:
@@ -768,13 +798,9 @@ def rsa_nifti(
     # Get data as (n_items x n_voxels)
     X = image.get_fdata().reshape(-1, image.shape[3]).T
 
-    # Find voxel positions
-    voxels = np.array(list(np.ndindex(image.shape[:-1])))
-    voxel_loc = voxels @ image.affine[:3, :3]
-    voxel_loc /= 1000  # convert position from mm to meters
-
     # Apply masks
-    result_mask = np.ones(image.shape[:3], dtype=bool)
+    if spatial_radius is not None:
+        result_mask = np.ones(image.shape[:3], dtype=bool)
     if brain_mask is not None:
         if brain_mask.ndim != 3 or brain_mask.shape != image.shape[:3]:
             raise ValueError(
@@ -783,10 +809,10 @@ def rsa_nifti(
                 "image"
             )
         brain_mask = brain_mask.get_fdata() != 0
-        result_mask &= brain_mask
+        if spatial_radius is not None:
+            result_mask &= brain_mask
         brain_mask = brain_mask.ravel()
         X = X[:, brain_mask]
-        voxel_loc = voxel_loc[brain_mask]
     if roi_mask is not None:
         if roi_mask.ndim != 3 or roi_mask.shape != image.shape[:3]:
             raise ValueError(
@@ -795,18 +821,29 @@ def rsa_nifti(
                 "image"
             )
         roi_mask = roi_mask.get_fdata() != 0
-        result_mask &= roi_mask
+        if spatial_radius is not None:
+            result_mask &= roi_mask
         roi_mask = roi_mask.ravel()
         if brain_mask is not None:
             roi_mask = roi_mask[brain_mask]
         roi_mask = np.flatnonzero(roi_mask)
 
     # Compute distances between voxels
-    logger.info("Computing distances...")
-    from sklearn.neighbors import NearestNeighbors
+    if spatial_radius is not None:
+        # Find voxel positions
+        voxels = np.array(list(np.ndindex(image.shape[:-1])))
+        voxel_loc = voxels @ image.affine[:3, :3]
+        voxel_loc /= 1000  # convert position from mm to meters
+        if brain_mask is not None:
+            voxel_loc = voxel_loc[brain_mask]
 
-    nn = NearestNeighbors(radius=spatial_radius, n_jobs=n_jobs).fit(voxel_loc)
-    dist = nn.radius_neighbors_graph(mode="distance")
+        logger.info("Computing distances...")
+        from sklearn.neighbors import NearestNeighbors
+
+        nn = NearestNeighbors(radius=spatial_radius, n_jobs=n_jobs).fit(voxel_loc)
+        dist = nn.radius_neighbors_graph(mode="distance")
+    else:
+        dist = None
 
     # Perform the RSA
     patches = searchlight(
@@ -830,15 +867,18 @@ def rsa_nifti(
         verbose=verbose,
     )
 
+    if spatial_radius is None:
+        return rsa_result
+
     if one_model:
         data = np.zeros(image.shape[:3])
         data[result_mask] = rsa_result
         return nib.Nifti1Image(data, image.affine, image.header)
     else:
         results = []
-        for i in range(rsa_result.shape[-1]):
+        for i in range(rsa_result.shape[0]):
             data = np.zeros(image.shape[:3])
-            data[result_mask] = rsa_result[:, i]
+            data[result_mask] = rsa_result[i]
             results.append(nib.Nifti1Image(data, image.affine, image.header))
         return results
 
@@ -846,7 +886,7 @@ def rsa_nifti(
 @verbose
 def rdm_nifti(
     image,
-    spatial_radius=0.01,
+    spatial_radius=None,
     dist_metric="correlation",
     dist_params=dict(),
     y=None,
@@ -867,10 +907,10 @@ def rdm_nifti(
     image : 4D Nifti-like image
         The Nitfi image data. The 4th dimension must contain the images
         for each item.
-    spatial_radius : float
+    spatial_radius : float | None
         The spatial radius of the searchlight patch in meters. All source
         points within this radius will belong to the searchlight patch.
-        Defaults to 0.01.
+        Defaults to ``None`` which will use a single searchlight patch.
     dist_metric : str
         The metric to use to compute the RDM for the data. This can be
         any metric supported by the scipy.distance.pdist function. See also the
@@ -924,7 +964,7 @@ def rdm_nifti(
         not isinstance(image, tuple(nib.imageclasses.all_image_classes))
         or image.ndim != 4
     ):
-        raise ValueError("The image data must be 4-dimensional Nifti-like " "images")
+        raise ValueError("The image data must be 4-dimensional Nifti-like images")
 
     # Get data as (n_items x n_voxels)
     X = image.get_fdata().reshape(-1, image.shape[3]).T
@@ -935,7 +975,6 @@ def rdm_nifti(
     voxel_loc /= 1000  # convert position from mm to meters
 
     # Apply masks
-    result_mask = np.ones(image.shape[:3], dtype=bool)
     if brain_mask is not None:
         if brain_mask.ndim != 3 or brain_mask.shape != image.shape[:3]:
             raise ValueError(
@@ -944,10 +983,9 @@ def rdm_nifti(
                 "image"
             )
         brain_mask = brain_mask.get_fdata() != 0
-        result_mask &= brain_mask
         brain_mask = brain_mask.ravel()
         X = X[:, brain_mask]
-        voxel_loc = voxel_loc[brain_mask]
+        voxel_loc = voxel_loc[brain_mask, :]
     if roi_mask is not None:
         if roi_mask.ndim != 3 or roi_mask.shape != image.shape[:3]:
             raise ValueError(
@@ -956,7 +994,6 @@ def rdm_nifti(
                 "image"
             )
         roi_mask = roi_mask.get_fdata() != 0
-        result_mask &= roi_mask
         roi_mask = roi_mask.ravel()
         if brain_mask is not None:
             roi_mask = roi_mask[brain_mask]
@@ -966,7 +1003,9 @@ def rdm_nifti(
     logger.info("Computing distances...")
     from sklearn.neighbors import NearestNeighbors
 
-    nn = NearestNeighbors(radius=spatial_radius, n_jobs=n_jobs).fit(voxel_loc)
+    nn = NearestNeighbors(
+        radius=1e6 if spatial_radius is None else spatial_radius, n_jobs=n_jobs
+    ).fit(voxel_loc)
     dist = nn.radius_neighbors_graph(mode="distance")
 
     # Compute RDMs
@@ -988,32 +1027,37 @@ def rdm_nifti(
     )
 
 
-def _check_stcs_compatibility(stcs, src):
-    """Check for compatibility of the source estimates and source space."""
-    if src.kind == "volume" and not isinstance(stcs[0], mne.VolSourceEstimate):
+def _check_stcs_compatibility(stcs):
+    """Check for compatibility of the source estimates."""
+    for stc in stcs:
+        for vert1, vert2 in zip(stc.vertices, stcs[0].vertices):
+            if len(vert1) != len(vert2) or np.any(vert1 != vert2):
+                raise ValueError("Not all source estimates have the same vertices.")
+    for stc in stcs:
+        if len(stc.times) != len(stcs[0].times) or np.any(stc.times != stcs[0].times):
+            raise ValueError("Not all source estimates have the same time points.")
+
+
+def _check_src_compatibility(src, stc):
+    """Check for compatibility of the source space with the given source estimate."""
+    if isinstance(stc, mne.VolSourceEstimate) and src.kind != "volume":
         raise ValueError(
             "Volume source estimates provided, but not a volume source space "
             f"(src.kind={src.kind})."
         )
-    if src.kind == "volume":
-        if np.any(stcs[0].vertices != src[0]["vertno"]):
-            src = _restrict_src_to_vertices(src, stcs[0].vertices)
-        for stc in stcs:
-            if np.any(stc.vertices != src[0]["vertno"]):
-                raise ValueError("Not all source estimates have the same vertices.")
-    else:
-        for src_hemi, stc_hemi_vertno in zip(src, stcs[0].vertices):
-            if np.any(stc_hemi_vertno != src_hemi["vertno"]):
-                src = _restrict_src_to_vertices(src, stcs[0].vertices)
-        for stc in stcs:
-            for src_hemi, stc_hemi_vertno in zip(src, stcs[0].vertices):
-                if np.any(stc_hemi_vertno != src_hemi["vertno"]):
-                    raise ValueError("Not all source estimates have the same vertices.")
+    if src.kind == "volume" and not isinstance(stc, mne.VolSourceEstimate):
+        raise ValueError(
+            "Volume source space provided, but not volume source estimates "
+            f"(src.kind={src.kind})."
+        )
 
-    times = stcs[0].times
-    for stc in stcs:
-        if np.any(stc.times != times):
-            raise ValueError("Not all source estimates have the same time points.")
+    if src.kind == "volume":
+        if len(np.setdiff1d(src[0]["vertno"], stc.vertices[0])) > 0:
+            src = _restrict_src_to_vertices(src, stc.vertices)
+    else:
+        for src_hemi, stc_hemi_vertno in zip(src, stc.vertices):
+            if len(np.setdiff1d(src_hemi["vertno"], stc_hemi_vertno)) > 0:
+                src = _restrict_src_to_vertices(src, stc.vertices)
     return src
 
 
@@ -1051,7 +1095,11 @@ def _get_distance_matrix(src, dist_lim, n_jobs=1):
         if "dist" not in hemi or hemi["dist"] is None:
             needs_distance_computation = True
         else:
-            if hemi["dist_limit"] != np.inf and hemi["dist_limit"][0] < dist_lim:
+            if (
+                hemi["dist_limit"] != np.inf
+                and hemi["dist_limit"] >= 0
+                and hemi["dist_limit"][0] < dist_lim
+            ):
                 warn(
                     f"Source space has pre-computed distances, but all "
                     f"distances are smaller than the searchlight radius "
@@ -1231,6 +1279,7 @@ def vertex_selection_to_indices(vertno, sel_vertices):
 
 def vertex_indices_to_numbers(vertno, vert_ind):
     """Convert vertex indices to vertex numbers."""
+    vert_ind = np.asarray(vert_ind)
     min_vert_ind = 0
     sel_vert_no = [[] for _ in vertno]
     for hemi, hemi_vertno in enumerate(vertno):
@@ -1263,22 +1312,22 @@ def _restrict_src_to_vertices(src, vertno, verbose=None):
         The restricted source space.
 
     """
+    assert isinstance(vertno, list) and (len(vertno) == 1 or len(vertno) == 2)
     src_out = deepcopy(src)
 
-    vert_no_lh, vert_no_rh = vertno
-    if not (
-        np.all(np.in1d(vert_no_lh, src[0]["vertno"]))
-        and np.all(np.in1d(vert_no_rh, src[1]["vertno"]))
-    ):
-        raise ValueError("One or more vertices were not present in the source space.")
+    for src_hemi, vertno_hemi in zip(src, vertno):
+        if not (np.all(np.isin(vertno_hemi, src_hemi["vertno"]))):
+            raise ValueError(
+                "One or more vertices were not present in the source space."
+            )
     logger.info(
         "Restricting source space to {n_keep} out of {n_total} vertices.".format(
-            n_keep=len(vert_no_lh) + len(vert_no_rh),
-            n_total=src[0]["nuse"] + src[1]["nuse"],
+            n_keep=sum(len(vertno_hemi) for vertno_hemi in vertno),
+            n_total=np.hstack([src_hemi["nuse"] for src_hemi in src]),
         )
     )
 
-    for hemi, verts in zip(src_out, (vert_no_lh, vert_no_rh)):
+    for hemi, verts in zip(src_out, vertno):
         # Ensure vertices are in sequential order
         verts = np.sort(verts)
 

@@ -17,6 +17,10 @@ searchlight will have a spatial radius of 1 cm.
 The dataset will be the Haxby et al. 2001 dataset: a collection of 1452 scans during
 which the participant was presented with a stimulus image belonging to any of 8
 different classes: scissors, face, cat, shoe, house, scrambledpix, bottle, chair.
+
+Authors
+-------
+Marijn van Vliet <marijn.vanvliet@aalto.fi>
 """
 # sphinx_gallery_thumbnail_number=2
 

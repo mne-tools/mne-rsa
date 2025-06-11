@@ -1,4 +1,10 @@
-"""Functions concerning the creation of cross-validation folds."""
+"""Functions concerning the creation of cross-validation folds.
+
+Authors
+-------
+Marijn van Vliet <marijn.vanvliet@aalto.fi>
+Yuan-Fang Zhao <distancejay@gmail.com>
+"""
 
 import numpy as np
 from mne.utils import logger
@@ -42,8 +48,7 @@ def create_folds(X, y=None, n_folds=None):
     y = np.asarray(y)
     if len(y) != len(X):
         raise ValueError(
-            f"The length of y ({len(y)}) does not match the "
-            f"number of items ({len(X)})."
+            f"The length of y ({len(y)}) does not match the number of items ({len(X)})."
         )
 
     y_one_hot = _convert_to_one_hot(y)

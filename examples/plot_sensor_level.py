@@ -29,6 +29,10 @@ to 75 participants in a go/no-go lexical decision task while event-related poten
 .. [1] Dufau, S., Grainger, J., Midgley, KJ., Holcomb, PJ (2015). A thousand words are
        worth a picture: Snapshots of printed-word processing in an event-related
        potential megastudy. Psychological science.
+
+Authors
+-------
+Marijn van Vliet <marijn.vanvliet@aalto.fi>
 """
 # sphinx_gallery_thumbnail_number=2
 

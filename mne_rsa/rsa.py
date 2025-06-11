@@ -1,5 +1,11 @@
 # encoding: utf-8
-"""Methods to compute representational similarity analysis (RSA)."""
+"""Methods to compute representational similarity analysis (RSA).
+
+Authors
+-------
+Marijn van Vliet <marijn.vanvliet@aalto.fi>
+Egor Eremin <egor.eremin@aalto.fi>
+"""
 
 import numpy as np
 from joblib import Parallel, delayed
@@ -90,10 +96,10 @@ def _partial_correlation(rdm_data, rdm_model, masks=None, type="pearson"):
     """Compute partial Pearson/Spearman correlation."""
     if len(rdm_model) == 1:
         raise ValueError(
-            "Need more than one model RDM to use partial " "correlation as metric."
+            "Need more than one model RDM to use partial correlation as metric."
         )
     if type not in ["pearson", "spearman"]:
-        raise ValueError("Correlation type must be either 'pearson' or " "'spearman'")
+        raise ValueError("Correlation type must be either 'pearson' or 'spearman'")
 
     if masks is not None:
         mask = _consolidate_masks(masks)
@@ -406,11 +412,11 @@ def rsa_array(
 
     Returns
     -------
-    rsa_vals : ndarray, shape ([n_series,] [n_times,] [n_model_rdms])
+    rsa_vals : ndarray, shape ([n_model_rdms,] [n_series,] [n_times,])
         The RSA value for each searchlight patch. When ``spatial_radius`` is set to
         ``None``, there will only be no ``n_series`` dimension. When ``temporal_radius``
         is set to ``None``, there will be no time dimension. When multiple models have
-        been supplied, the last dimension will contain RSA results for each model.
+        been supplied, the first dimension will contain RSA results for each model.
 
     See Also
     --------
@@ -473,7 +479,9 @@ def rsa_array(
 
     # Figure out the desired dimensions of the resulting array
     dims = getattr(patches, "shape", (-1,))
-    if len(rdm_model) > 1:
+    if len(rdm_model) == 1:
+        return np.array(data).reshape(dims)
+    else:
         dims = dims + (len(rdm_model),)
-
-    return np.array(data).reshape(dims)
+        data = np.array(data).reshape(dims)
+        return np.rollaxis(data, axis=-1)  # put n_models dim first

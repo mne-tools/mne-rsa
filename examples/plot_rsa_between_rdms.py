@@ -7,6 +7,10 @@ Compute RSA between RDMs
 
 This example showcases the most basic version of RSA: computing the similarity between
 two RDMs. Then we continue with computing RSA between many RDMs efficiently.
+
+Authors
+-------
+Marijn van Vliet <marijn.vanvliet@aalto.fi>
 """
 # sphinx_gallery_thumbnail_number=2
 

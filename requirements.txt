@@ -1,5 +1,6 @@
-numpy
-scipy
-scikit-learn
 mne
 nibabel
+pyside6
+pyvista
+pyvistaqt
+scikit-learn

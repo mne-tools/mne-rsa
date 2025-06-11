@@ -25,6 +25,12 @@ systems neuroscience. Frontiers in Systems Neuroscience, 2(4).
 https://doi.org/10.3389/neuro.06.004.2008
 
 .. image:: https://raw.githubusercontent.com/wmvanvliet/mne-rsa/main/doc/rsa.png
+   :width: 600
+   :class: only-light
+
+.. image:: https://raw.githubusercontent.com/wmvanvliet/mne-rsa/main/doc/rsa_dark.png
+   :width: 600
+   :class: only-dark
 
 
 Installation
