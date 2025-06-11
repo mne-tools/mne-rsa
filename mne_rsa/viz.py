@@ -1,4 +1,10 @@
-"""Functions related to visualization of RDMs."""
+"""Functions related to visualization of RDMs.
+
+Authors
+-------
+Marijn van Vliet <marijn.vanvliet@aalto.fi>
+Takao Shimizu <tshimizu.midd@gmail.com>
+"""
 
 import types
 from functools import partial

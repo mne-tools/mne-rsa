@@ -7,7 +7,7 @@ sphinx_gallery
 sphinx_bootstrap_theme
 numpydoc
 matplotlib
-pyqt6
+pyside6
 tqdm
 nilearn
 pillow

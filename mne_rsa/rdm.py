@@ -1,5 +1,10 @@
 # encoding: utf-8
-"""Methods to compute dissimilarity matrices (RDMs)."""
+"""Methods to compute representational dissimilarity matrices (RDMs).
+
+Authors
+-------
+Marijn van Vliet <marijn.vanvliet@aalto.fi>
+"""
 
 import numpy as np
 from joblib import Parallel, delayed

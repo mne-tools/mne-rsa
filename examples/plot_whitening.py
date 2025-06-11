@@ -21,6 +21,9 @@ The dataset will be the MNE-sample dataset: a collection of 288 epochs in which 
 participant was presented with an auditory beep or visual stimulus to either the left or
 right ear or visual field.
 
+Authors
+-------
+Marijn van Vliet <marijn.vanvliet@aalto.fi>
 """
 # sphinx_gallery_thumbnail_number=2
 

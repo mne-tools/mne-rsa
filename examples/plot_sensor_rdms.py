@@ -9,6 +9,9 @@ This example demonstrates how to visualize representational dissimilarity matric
 (RDMs) computed from EEG data. We will compute them using a spatial searchlight and plot
 the RDM computed for each searchlight-patch.
 
+Authors
+-------
+Marijn van Vliet <marijn.vanvliet@aalto.fi>
 """
 
 # Import required packages

@@ -6,7 +6,7 @@ Neuroscience, 2(November), 4. https://doi.org/10.3389/neuro.06.004.2008
 
 Authors
 -------
-Marijn van Vliet <w.m.vanvliet@gmail.com>
+Marijn van Vliet <marijn.vanvliet@aalto.fi>
 """
 
 import mne

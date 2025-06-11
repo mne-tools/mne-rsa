@@ -1,4 +1,9 @@
-"""Classes and functions having to do with creating searchlights."""
+"""Classes and functions having to do with creating searchlights.
+
+Authors
+-------
+Marijn van Vliet <marijn.vanvliet@aalto.fi>
+"""
 
 import numpy as np
 from mne.utils import logger

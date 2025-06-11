@@ -1,5 +1,11 @@
 # encoding: utf-8
-"""Methods to compute representational similarity analysis (RSA)."""
+"""Methods to compute representational similarity analysis (RSA).
+
+Authors
+-------
+Marijn van Vliet <marijn.vanvliet@aalto.fi>
+Egor Eremin <egor.eremin@aalto.fi>
+"""
 
 import numpy as np
 from joblib import Parallel, delayed
