@@ -133,7 +133,7 @@ def rsa_evokeds(
         None, there will only be one virtual sensor. When temporal_radius is set to
         None, there will only be one time point. When both spatial_radius and
         temporal_radius are set to None, the result will be a single number (not packed
-        in an Evoked object). When multiple models have been supplied, an array will be
+        in an Evoked object). When multiple models have been supplied, a list will be
         returned containing the RSA results for each model.
 
     See Also
@@ -251,13 +251,13 @@ def rsa_evokeds(
     else:
         return [
             mne.EvokedArray(
-                np.atleast_2d(data[..., i]),
+                np.atleast_2d(data[i]),
                 info,
                 tmin,
                 comment="RSA",
                 nave=len(evokeds),
             )
-            for i in range(data.shape[-1])
+            for i in range(data.shape[0])
         ]
 
 
@@ -382,7 +382,7 @@ def rsa_epochs(
         None, there will only be one virtual sensor. When temporal_radius is set to
         None, there will only be one time point. When both spatial_radius and
         temporal_radius are set to None, the result will be a single number (not packed
-        in an Evoked object). When multiple models have been supplied, an array will be
+        in an Evoked object). When multiple models have been supplied, a list will be
         returned containing the RSA results for each model.
 
     See Also
@@ -497,13 +497,13 @@ def rsa_epochs(
     else:
         return [
             mne.EvokedArray(
-                np.atleast_2d(data[..., i]),
+                np.atleast_2d(data[i]),
                 info,
                 tmin,
                 comment="RSA",
                 nave=len(np.unique(y)),
             )
-            for i in range(data.shape[-1])
+            for i in range(data.shape[0])
         ]
 
 

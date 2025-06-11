@@ -241,7 +241,7 @@ class TestRSASearchlight:
         rsa_result = rsa_array(
             data, [model_rdm, model_rdm], patches, data_rdm_metric="euclidean"
         )
-        assert rsa_result.shape == (3, 2)
+        assert rsa_result.shape == (2, 3)
         assert_equal(rsa_result, 1)
 
         # One model RDM, paralellization across 2 CPUs
@@ -257,7 +257,7 @@ class TestRSASearchlight:
         rsa_result = rsa_array(
             data, [model_rdm, model_rdm], patches, data_rdm_metric="euclidean", n_jobs=2
         )
-        assert rsa_result.shape == (3, 2)
+        assert rsa_result.shape == (2, 3)
         assert_equal(rsa_result, 1)
 
     def test_rsa_spat_temp(self):
@@ -279,7 +279,7 @@ class TestRSASearchlight:
         rsa_result = rsa_array(
             data, [model_rdm, model_rdm], patches, data_rdm_metric="euclidean"
         )
-        assert rsa_result.shape == (2, 1, 2)
+        assert rsa_result.shape == (2, 2, 1)
         assert_equal(rsa_result, 1)
 
         # One model RDM, paralellization across 2 CPUs
@@ -300,7 +300,7 @@ class TestRSASearchlight:
             n_jobs=2,
             verbose=True,
         )
-        assert rsa_result.shape == (2, 1, 2)
+        assert rsa_result.shape == (2, 2, 1)
         assert_equal(rsa_result, 1)
 
     def test_nan(self):

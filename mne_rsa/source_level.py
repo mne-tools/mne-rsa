@@ -266,7 +266,10 @@ def rsa_stcs(
             vertices = [np.array([1])]
         else:
             vertices = [np.array([1]), np.array([])]
-        data = data[np.newaxis, ...]
+        if one_model:
+            data = data[np.newaxis, ...]
+        else:
+            data = data[:, np.newaxis, ...]
     tmin = _construct_tmin(stcs[0].times, samples_from, samples_to, temporal_radius)
     tstep = stcs[0].tstep
 
@@ -283,16 +286,16 @@ def rsa_stcs(
         if isinstance(stcs[0], mne.VolSourceEstimate):
             return [
                 mne.VolSourceEstimate(
-                    data[..., i], vertices, tmin, tstep, subject=stcs[0].subject
+                    data[i], vertices, tmin, tstep, subject=stcs[0].subject
                 )
-                for i in range(data.shape[-1])
+                for i in range(data.shape[0])
             ]
         else:
             return [
                 mne.SourceEstimate(
-                    data[..., i], vertices, tmin, tstep, subject=stcs[0].subject
+                    data[i], vertices, tmin, tstep, subject=stcs[0].subject
                 )
-                for i in range(data.shape[-1])
+                for i in range(data.shape[0])
             ]
 
 
@@ -456,7 +459,7 @@ def rsa_stcs_rois(
     rdm_model,
     src,
     rois,
-    temporal_radius=0.1,
+    temporal_radius=None,
     stc_rdm_metric="correlation",
     stc_rdm_params=dict(),
     rsa_metric="spearman",
@@ -500,7 +503,7 @@ def rsa_stcs_rois(
     temporal_radius : float | None
         The temporal radius of the searchlight patch in seconds. Set to None to
         only perform the searchlight over sensors, flattening across time.
-        Defaults to 0.1.
+        Defaults to None.
     stc_rdm_metric : str
         The metric to use to compute the RDM for the source estimates. This can
         be any metric supported by the scipy.distance.pdist function. See also
@@ -595,7 +598,8 @@ def rsa_stcs_rois(
                 % (n_items, len(np.unique(y)))
             )
 
-    src = _check_stcs_compatibility(stcs, src)
+    _check_stcs_compatibility(stcs)
+    src = _check_src_compatibility(src, stcs[0])
 
     if temporal_radius is not None:
         # Convert the temporal radius to samples
@@ -643,9 +647,9 @@ def rsa_stcs_rois(
     else:
         stc = [
             backfill_stc_from_rois(
-                data[..., i], rois, src, tmin=tmin, tstep=tstep, subject=subject
+                data[i], rois, src, tmin=tmin, tstep=tstep, subject=subject
             )
-            for i in range(data.shape[-1])
+            for i in range(data.shape[0])
         ]
 
     return data, stc
@@ -754,7 +758,7 @@ def rsa_nifti(
     rsa_results : 3D Nifti1Image | list of 3D Nifti1Image | float | ndarray
         The correlation values for each searchlight patch. When spatial_radius is set to
         None, the result will be a single number (not packed in an SourceEstimate
-        object). When multiple models have been supplied, an array will be returned
+        object). When multiple models have been supplied, a list will be returned
         containing the RSA results for each model.
 
     See Also
@@ -871,9 +875,9 @@ def rsa_nifti(
         return nib.Nifti1Image(data, image.affine, image.header)
     else:
         results = []
-        for i in range(rsa_result.shape[-1]):
+        for i in range(rsa_result.shape[0]):
             data = np.zeros(image.shape[:3])
-            data[result_mask] = rsa_result[:, i]
+            data[result_mask] = rsa_result[i]
             results.append(nib.Nifti1Image(data, image.affine, image.header))
         return results
 
@@ -1041,11 +1045,11 @@ def _check_src_compatibility(src, stc):
             f"(src.kind={src.kind})."
         )
     if src.kind == "volume":
-        if np.any(stc.vertices != src[0]["vertno"]):
+        if len(np.setdiff1d(src[0]["vertno"], stc.vertices[0])) > 0:
             src = _restrict_src_to_vertices(src, stc.vertices)
     else:
         for src_hemi, stc_hemi_vertno in zip(src, stc.vertices):
-            if np.any(stc_hemi_vertno != src_hemi["vertno"]):
+            if len(np.setdiff1d(src_hemi["vertno"], stc_hemi_vertno)) > 0:
                 src = _restrict_src_to_vertices(src, stc.vertices)
     return src
 

@@ -7,7 +7,7 @@ import nibabel as nib
 import numpy as np
 import pytest
 from mne.minimum_norm import apply_inverse_epochs, read_inverse_operator
-from mne_rsa import rdm_nifti, rdm_stcs, rsa_nifti, rsa_stcs, squareform
+from mne_rsa import rdm_nifti, rdm_stcs, rsa_nifti, rsa_stcs, rsa_stcs_rois, squareform
 from numpy.testing import assert_equal
 
 
@@ -308,6 +308,19 @@ class TestStcRSA:
         assert_equal(rsa_result.vertices[0], stcs[0].vertices[0][:2])
         assert_equal(rsa_result.vertices[1], [])
 
+        # Restrict vertices by restricting the source estimates themselves.
+        stcs_restricted = [stc.in_label(label) for stc in stcs]
+        rsa_result = rsa_stcs(
+            stcs_restricted,
+            model_rdm,
+            src=src,
+            y=y,
+            spatial_radius=0.05,
+            sel_vertices_by_index=[0, 1],
+        )
+        assert_equal(rsa_result.vertices[0], stcs_restricted[0].vertices[0][:2])
+        assert_equal(rsa_result.vertices[1], [])
+
         # Pick non-existing vertices
         with pytest.raises(ValueError, match="not present in the data"):
             rsa_stcs(
@@ -393,6 +406,52 @@ class TestStcRSA:
         )
 
 
+class TestRoiRSA:
+    """Test performing RSA on ROIs."""
+
+    def test_rsa_rois(self):
+        """Test performing RSA with a searchlight across ROIs."""
+        stcs, src, y = make_stcs()
+        model_rdm = np.array([0.5, 1, 1, 1, 1, 0.5])
+        rois = mne.read_labels_from_annot(
+            "sample", subjects_dir=mne.datasets.sample.data_path() / "subjects"
+        )
+
+        rsa_result, rsa_stc = rsa_stcs_rois(stcs, model_rdm, src, rois, y=y)
+        assert rsa_result.shape == (len(rois),)
+        assert rsa_stc.data.shape == (stcs[0].shape[0], 1)
+        assert len(rsa_stc.times) == 1
+        assert_equal(rsa_stc.times, stcs[0].times[len(stcs[0].times) // 2])
+
+        # Two model RDMs
+        model_rdm2 = np.array([0.2, 0.5, 1, 1, 0.5, 0.2])
+        rsa_result, rsa_stc = rsa_stcs_rois(
+            stcs, [model_rdm, model_rdm2], src, rois, y=y
+        )
+        assert rsa_result.shape == (2, len(rois))
+        assert not np.array_equal(rsa_result[0], rsa_result[1])
+        assert len(rsa_stc) == 2
+        assert rsa_stc[0].data.shape == (stcs[0].shape[0], 1)
+        assert len(rsa_stc[0].times) == 1
+        assert_equal(rsa_stc[0].times, stcs[0].times[len(stcs[0].times) // 2])
+
+    def test_rsa_rois_temporal(self):
+        """Test performing temporal RSA with a searchlight across ROIs."""
+        stcs, src, y = make_stcs()
+        model_rdm = np.array([0.5, 1, 1, 1, 1, 0.5])
+        rois = mne.read_labels_from_annot(
+            "sample", subjects_dir=mne.datasets.sample.data_path() / "subjects"
+        )
+
+        rsa_result, rsa_stc = rsa_stcs_rois(
+            stcs, model_rdm, src, rois, y=y, temporal_radius=0.02
+        )
+        assert rsa_result.shape == (len(rois), len(stcs[0].times) - 2 * 2)
+        assert rsa_stc.data.shape == (stcs[0].shape[0], len(stcs[0].times) - 2 * 2)
+        assert rsa_stc.times[0].round(2) == 0.12
+        assert rsa_stc.times[-1].round(2) == 0.18
+
+
 class TestNiftiRSA:
     """Test performing RSA on fMRI data."""
 
@@ -403,6 +462,12 @@ class TestNiftiRSA:
         rsa_result = rsa_nifti(bold, model_rdm)
         assert isinstance(rsa_result, np.ndarray)
         assert rsa_result.shape == tuple()
+
+        # Two model RDMs
+        model_rdm2 = np.array([0.2, 0.5, 1, 1, 0.5, 0.2])
+        rsa_result = rsa_nifti(bold, [model_rdm, model_rdm2])
+        assert isinstance(rsa_result, np.ndarray)
+        assert rsa_result.shape == (2,)
 
     def test_rsa_spatial(self):
         """Test performing RSA with a searchlight across vertices."""
@@ -422,3 +487,9 @@ class TestNiftiRSA:
         assert rsa_result.shape == (10, 10, 10)
         assert np.all(apply_mask(rsa_result, mask) != 0)
         assert_equal(apply_mask(rsa_result, mask, invert=True), 0)
+
+        # Two model RDMs
+        model_rdm2 = np.array([0.2, 0.5, 1, 1, 0.5, 0.2])
+        rsa_result = rsa_nifti(bold, [model_rdm, model_rdm2], spatial_radius=0.01)
+        assert len(rsa_result) == 2
+        assert rsa_result[0].shape == (10, 10, 10)
