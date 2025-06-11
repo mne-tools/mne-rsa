@@ -1030,20 +1030,26 @@ def _check_stcs_compatibility(stcs):
     """Check for compatibility of the source estimates."""
     for stc in stcs:
         for vert1, vert2 in zip(stc.vertices, stcs[0].vertices):
-            if np.any(vert1 != vert2):
+            if len(vert1) != len(vert2) or np.any(vert1 != vert2):
                 raise ValueError("Not all source estimates have the same vertices.")
     for stc in stcs:
-        if np.any(stc.times != stcs[0].times):
+        if len(stc.times) != len(stcs[0].times) or np.any(stc.times != stcs[0].times):
             raise ValueError("Not all source estimates have the same time points.")
 
 
 def _check_src_compatibility(src, stc):
     """Check for compatibility of the source space with the given source estimate."""
-    if src.kind == "volume" and not isinstance(stc, mne.VolSourceEstimate):
+    if isinstance(stc, mne.VolSourceEstimate) and src.kind != "volume":
         raise ValueError(
             "Volume source estimates provided, but not a volume source space "
             f"(src.kind={src.kind})."
         )
+    if src.kind == "volume" and not isinstance(stc, mne.VolSourceEstimate):
+        raise ValueError(
+            "Volume source space provided, but not volume source estimates "
+            f"(src.kind={src.kind})."
+        )
+
     if src.kind == "volume":
         if len(np.setdiff1d(src[0]["vertno"], stc.vertices[0])) > 0:
             src = _restrict_src_to_vertices(src, stc.vertices)
@@ -1305,22 +1311,22 @@ def _restrict_src_to_vertices(src, vertno, verbose=None):
         The restricted source space.
 
     """
+    assert isinstance(vertno, list) and (len(vertno) == 1 or len(vertno) == 2)
     src_out = deepcopy(src)
 
-    vert_no_lh, vert_no_rh = vertno
-    if not (
-        np.all(np.in1d(vert_no_lh, src[0]["vertno"]))
-        and np.all(np.in1d(vert_no_rh, src[1]["vertno"]))
-    ):
-        raise ValueError("One or more vertices were not present in the source space.")
+    for src_hemi, vertno_hemi in zip(src, vertno):
+        if not (np.all(np.isin(vertno_hemi, src_hemi["vertno"]))):
+            raise ValueError(
+                "One or more vertices were not present in the source space."
+            )
     logger.info(
         "Restricting source space to {n_keep} out of {n_total} vertices.".format(
-            n_keep=len(vert_no_lh) + len(vert_no_rh),
-            n_total=src[0]["nuse"] + src[1]["nuse"],
+            n_keep=sum(len(vertno_hemi) for vertno_hemi in vertno),
+            n_total=np.hstack([src_hemi["nuse"] for src_hemi in src]),
         )
     )
 
-    for hemi, verts in zip(src_out, (vert_no_lh, vert_no_rh)):
+    for hemi, verts in zip(src_out, vertno):
         # Ensure vertices are in sequential order
         verts = np.sort(verts)
 

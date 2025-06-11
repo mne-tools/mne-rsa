@@ -165,19 +165,16 @@ class TestPlotRDMsTopo:
         assert plt.gcf().axes[0].get_title() == "EEG 001"
 
 
-class TestPlotROIMap:
+def test_plot_roi_map():
     """Test plotting ROI values on a brain."""
-
-    def test_plot_roi_map(self):
-        """Test plotting ROI values on a brain."""
-        rois = mne.read_labels_from_annot(
-            "sample", subjects_dir=mne.datasets.sample.data_path() / "subjects"
-        )
-        values = np.arange(len(rois))
-        brain = plot_roi_map(
-            values,
-            rois,
-            subject="sample",
-            subjects_dir=mne.datasets.sample.data_path() / "subjects",
-        )
-        assert brain._annots == {"lh": ["annotation"], "rh": ["annotation"]}
+    rois = mne.read_labels_from_annot(
+        "sample", subjects_dir=mne.datasets.sample.data_path() / "subjects"
+    )
+    values = np.arange(len(rois))
+    brain = plot_roi_map(
+        values,
+        rois,
+        subject="sample",
+        subjects_dir=mne.datasets.sample.data_path() / "subjects",
+    )
+    assert brain._annots == {"lh": ["annotation"], "rh": ["annotation"]}

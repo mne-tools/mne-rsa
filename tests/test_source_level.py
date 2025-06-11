@@ -8,6 +8,7 @@ import numpy as np
 import pytest
 from mne.minimum_norm import apply_inverse_epochs, read_inverse_operator
 from mne_rsa import rdm_nifti, rdm_stcs, rsa_nifti, rsa_stcs, rsa_stcs_rois, squareform
+from mne_rsa.source_level import (_restrict_src_to_vertices, _check_stcs_compatibility, _check_src_compatibility)
 from numpy.testing import assert_equal
 
 
@@ -198,6 +199,12 @@ class TestNiftiRDMs:
         assert len(rdms) == 1
         assert squareform(rdms[0]).shape == (2, 2)
 
+        # Invalid data.
+        with pytest.raises(ValueError, match="data must be 4-dimensional Nifti-like"):
+            next(rdm_nifti(bold.get_fdata()))
+        with pytest.raises(ValueError, match=r"The length of y \(3\) does not match"):
+            next(rdm_nifti(bold, y=[1, 2, 3]))
+
     def test_rdm_spatial(self):
         """Test making RDMs with a searchlight across voxels."""
         bold, mask = make_nifti()
@@ -213,6 +220,18 @@ class TestNiftiRDMs:
         rdms = list(rdm_nifti(bold, spatial_radius=0.01, brain_mask=mask))
         assert len(rdms) == 2 * 2 * 2
         assert squareform(rdms[0]).shape == (4, 4)
+
+        rdms = list(
+            rdm_nifti(bold, spatial_radius=0.01, roi_mask=mask, brain_mask=mask)
+        )
+        assert len(rdms) == 2 * 2 * 2
+        assert squareform(rdms[0]).shape == (4, 4)
+
+        # Invalid data.
+        with pytest.raises(ValueError, match="ROI mask"):
+            next(rdm_nifti(bold, roi_mask=mask.slicer[:5, :5, :5]))
+        with pytest.raises(ValueError, match="Brain mask"):
+            next(rdm_nifti(bold, brain_mask=mask.slicer[:5, :5, :5]))
 
 
 class TestStcRSA:
@@ -563,3 +582,77 @@ class TestNiftiRSA:
             rsa_result = rsa_nifti(bold, model_rdm, roi_mask=mask.slicer[:5, :5, :5])
         with pytest.raises(ValueError, match="Brain mask"):
             rsa_result = rsa_nifti(bold, model_rdm, brain_mask=mask.slicer[:5, :5, :5])
+
+
+def test_restrict_src_to_vertices():
+    """Test restricting a source space."""
+    stcs, src, _ = make_stcs()
+    vertices = [stcs[0].vertices[0][:5], stcs[0].vertices[1][:5]]
+    src_restricted = _restrict_src_to_vertices(src, vertices)
+    assert_equal(src_restricted[0]["vertno"], vertices[0])
+    assert_equal(src_restricted[1]["vertno"], vertices[1])
+    assert src_restricted[0]["nuse"] == len(vertices[0])
+    assert src_restricted[1]["nuse"] == len(vertices[1])
+    assert src_restricted[0]["inuse"].sum() == len(vertices[0])
+    assert src_restricted[1]["inuse"].sum() == len(vertices[1])
+    assert src_restricted[0]["nuse_tri"] == 0
+    assert src_restricted[1]["nuse_tri"] == 0
+
+    with pytest.raises(ValueError, match="One or more vertices were not present"):
+        vertices = [[50923892], []]
+        _restrict_src_to_vertices(src, vertices)
+
+    stcs_vol, src_vol, _ = make_vol_stcs()
+    vertices = [stcs_vol[0].vertices[0][:5],]
+    src_vol_restricted = _restrict_src_to_vertices(src_vol, vertices)
+    assert_equal(src_vol_restricted[0]["vertno"], vertices[0])
+    assert src_vol_restricted[0]["nuse"] == len(vertices[0])
+    assert src_vol_restricted[0]["inuse"].sum() == len(vertices[0])
+    assert src_vol_restricted[0]["nuse_tri"] == 0
+
+    with pytest.raises(ValueError, match="One or more vertices were not present"):
+        vertices = [[50923892], []]
+        _restrict_src_to_vertices(src_vol, vertices)
+
+def test_check_stcs_compatibility():
+    """Test checking SourceEstimate objects for compatibility."""
+    stcs, _, _ = make_stcs()
+    _check_stcs_compatibility(stcs)
+
+    # Inconsistent number of vertices.
+    stcs_bad = [stc.copy() for stc in stcs]
+    stcs_bad[0].vertices[0] = stcs_bad[0].vertices[0][:3]
+    with pytest.raises(ValueError, match="same vertices"):
+        _check_stcs_compatibility(stcs_bad)
+
+    # Inconsistent vertex numbers
+    stcs_bad = [stc.copy() for stc in stcs]
+    stcs_bad[0].vertices[0][0] += 1
+    with pytest.raises(ValueError, match="same vertices"):
+        _check_stcs_compatibility(stcs_bad)
+
+    # Inconsistent number of time samples.
+    stcs_bad = [stc.copy() for stc in stcs]
+    stcs_bad[0].crop(0.1, 0.15)
+    with pytest.raises(ValueError, match="same time points"):
+        _check_stcs_compatibility(stcs_bad)
+
+    # Inconsistent time samples.
+    stcs_bad = [stc.copy() for stc in stcs]
+    stcs_bad[0].tmin += 1
+    with pytest.raises(ValueError, match="same time points"):
+        _check_stcs_compatibility(stcs_bad)
+
+def test_check_src_compatibility():
+    """Test checking compatibility between a source space and a source estimtate."""
+    stcs, src, _ = make_stcs()
+    _check_src_compatibility(src, stcs[0])
+
+    stcs_vol, src_vol, _ = make_vol_stcs()
+    _check_src_compatibility(src_vol, stcs_vol[0])
+
+    with pytest.raises(ValueError, match="Volume source space"):
+        _check_src_compatibility(src_vol, stcs[0])
+    with pytest.raises(ValueError, match="Volume source estimate"):
+        _check_src_compatibility(src, stcs_vol[0])
+
