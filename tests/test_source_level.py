@@ -78,6 +78,10 @@ class TestStcRDMs:
         assert len(rdms) == 1
         assert squareform(rdms[0]).shape == (4, 4)
 
+        # Invalid inputs.
+        with pytest.raises(ValueError, match="the number of items"):
+            next(rdm_stcs(stcs, y=[1, 2, 3]))
+
     def test_rdm_temporal(self):
         """Test making RDMs with a sliding temporal window."""
         stcs, _, y = make_stcs()
@@ -147,6 +151,10 @@ class TestStcRDMs:
                     stcs, src, y=y, spatial_radius=0.05, sel_vertices_by_index=[1, 1]
                 )
             )
+
+        # Invalid inputs.
+        with pytest.raises(ValueError, match="you also need to set `src`"):
+            next(rdm_stcs(stcs, y=y, spatial_radius=0.05))
 
     def test_rdm_spatio_temporal(self):
         """Test making RDMs with a searchlight across both sensors and time."""
@@ -228,6 +236,12 @@ class TestStcRSA:
         model_rdm2 = np.array([0.2, 0.5, 1, 1, 0.5, 0.2])
         rsa_result = rsa_stcs(stcs, [model_rdm, model_rdm2], y=y)
         assert rsa_result.shape == (2,)
+
+        # Invalid inputs.
+        with pytest.raises(ValueError, match="The number of source estimates"):
+            rsa_stcs(stcs, model_rdm)
+        with pytest.raises(ValueError, match="the number of items encoded in the `y`"):
+            rsa_stcs(stcs, model_rdm, y=[1, 2, 3])
 
     def test_rsa_temporal(self):
         """Test performing RSA with a sliding temporal window."""
@@ -343,6 +357,10 @@ class TestStcRSA:
                 sel_vertices_by_index=[1, 1],
             )
 
+        # Invalid inputs.
+        with pytest.raises(ValueError, match="you also need to set `src`"):
+            rsa_stcs(stcs, model_rdm, y=y, spatial_radius=0.05)
+
     def test_rsa_spatio_temporal(self):
         """Test performing RSA with a searchlight across both vertices and time."""
         stcs, src, y = make_stcs()
@@ -435,6 +453,12 @@ class TestRoiRSA:
         assert len(rsa_stc[0].times) == 1
         assert_equal(rsa_stc[0].times, stcs[0].times[len(stcs[0].times) // 2])
 
+        # Invalid inputs.
+        with pytest.raises(ValueError, match="The number of source estimates"):
+            rsa_stcs_rois(stcs, model_rdm, src, rois)
+        with pytest.raises(ValueError, match="the number of items encoded in the `y`"):
+            rsa_stcs_rois(stcs, model_rdm, src, rois, y=[1, 2, 3])
+
     def test_rsa_rois_temporal(self):
         """Test performing temporal RSA with a searchlight across ROIs."""
         stcs, src, y = make_stcs()
@@ -450,6 +474,31 @@ class TestRoiRSA:
         assert rsa_stc.data.shape == (stcs[0].shape[0], len(stcs[0].times) - 2 * 2)
         assert rsa_stc.times[0].round(2) == 0.12
         assert rsa_stc.times[-1].round(2) == 0.18
+
+        # Out of bounds and wrong order of tmin/tmax
+        with pytest.raises(ValueError, match="`tmin=-5` is before the first sample"):
+            rsa_stcs_rois(
+                stcs, model_rdm, src, rois, y=y, temporal_radius=0.02, tmin=-5
+            )
+        with pytest.raises(ValueError, match="`tmax=5` is after the last sample"):
+            rsa_stcs_rois(stcs, model_rdm, src, rois, y=y, temporal_radius=0.02, tmax=5)
+        with pytest.raises(ValueError, match="`tmax=0.1` is smaller than `tmin=0.2`"):
+            rsa_stcs_rois(
+                stcs,
+                model_rdm,
+                src,
+                rois,
+                y=y,
+                temporal_radius=0.02,
+                tmax=0.1,
+                tmin=0.2,
+            )
+
+        # Too small to or large temporal radius
+        with pytest.raises(ValueError, match="less than one sample"):
+            next(rsa_stcs_rois(stcs, model_rdm, src, rois, y=y, temporal_radius=0))
+        with pytest.raises(ValueError, match="too large"):
+            next(rsa_stcs_rois(stcs, model_rdm, src, rois, y=y, temporal_radius=100))
 
 
 class TestNiftiRSA:
@@ -468,6 +517,14 @@ class TestNiftiRSA:
         rsa_result = rsa_nifti(bold, [model_rdm, model_rdm2])
         assert isinstance(rsa_result, np.ndarray)
         assert rsa_result.shape == (2,)
+
+        # Invalid data.
+        with pytest.raises(ValueError, match="data must be 4-dimensional Nifti-like"):
+            rsa_result = rsa_nifti(bold.get_fdata(), model_rdm)
+        with pytest.raises(ValueError, match="The number of images"):
+            rsa_result = rsa_nifti(bold.slicer[:, :, :, :3], model_rdm)
+        with pytest.raises(ValueError, match="The number of items"):
+            rsa_result = rsa_nifti(bold, model_rdm, y=[1, 2, 3])
 
     def test_rsa_spatial(self):
         """Test performing RSA with a searchlight across vertices."""
@@ -493,3 +550,7 @@ class TestNiftiRSA:
         rsa_result = rsa_nifti(bold, [model_rdm, model_rdm2], spatial_radius=0.01)
         assert len(rsa_result) == 2
         assert rsa_result[0].shape == (10, 10, 10)
+
+        # Invalid data.
+        with pytest.raises(ValueError, match="Brain mask"):
+            rsa_result = rsa_nifti(bold, model_rdm)
