@@ -48,8 +48,7 @@ def create_folds(X, y=None, n_folds=None):
     y = np.asarray(y)
     if len(y) != len(X):
         raise ValueError(
-            f"The length of y ({len(y)}) does not match the "
-            f"number of items ({len(X)})."
+            f"The length of y ({len(y)}) does not match the number of items ({len(X)})."
         )
 
     y_one_hot = _convert_to_one_hot(y)

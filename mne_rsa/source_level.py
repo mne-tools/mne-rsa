@@ -575,6 +575,7 @@ def rsa_stcs_rois(
     See Also
     --------
     compute_rdm
+
     """
     # Check for compatibility of the source estimates and the model features
     one_model = type(rdm_model) is np.ndarray

@@ -8,7 +8,11 @@ import numpy as np
 import pytest
 from mne.minimum_norm import apply_inverse_epochs, read_inverse_operator
 from mne_rsa import rdm_nifti, rdm_stcs, rsa_nifti, rsa_stcs, rsa_stcs_rois, squareform
-from mne_rsa.source_level import (_restrict_src_to_vertices, _check_stcs_compatibility, _check_src_compatibility)
+from mne_rsa.source_level import (
+    _restrict_src_to_vertices,
+    _check_stcs_compatibility,
+    _check_src_compatibility,
+)
 from numpy.testing import assert_equal
 
 
@@ -603,7 +607,9 @@ def test_restrict_src_to_vertices():
         _restrict_src_to_vertices(src, vertices)
 
     stcs_vol, src_vol, _ = make_vol_stcs()
-    vertices = [stcs_vol[0].vertices[0][:5],]
+    vertices = [
+        stcs_vol[0].vertices[0][:5],
+    ]
     src_vol_restricted = _restrict_src_to_vertices(src_vol, vertices)
     assert_equal(src_vol_restricted[0]["vertno"], vertices[0])
     assert src_vol_restricted[0]["nuse"] == len(vertices[0])
@@ -613,6 +619,7 @@ def test_restrict_src_to_vertices():
     with pytest.raises(ValueError, match="One or more vertices were not present"):
         vertices = [[50923892], []]
         _restrict_src_to_vertices(src_vol, vertices)
+
 
 def test_check_stcs_compatibility():
     """Test checking SourceEstimate objects for compatibility."""
@@ -643,6 +650,7 @@ def test_check_stcs_compatibility():
     with pytest.raises(ValueError, match="same time points"):
         _check_stcs_compatibility(stcs_bad)
 
+
 def test_check_src_compatibility():
     """Test checking compatibility between a source space and a source estimtate."""
     stcs, src, _ = make_stcs()
@@ -668,4 +676,3 @@ def test_check_src_compatibility():
     stc.data = stc.data[1:]
     src_vol2 = _check_src_compatibility(src_vol, stc)
     assert src_vol2[0]["nuse"] == src_vol[0]["nuse"] - 1
-
