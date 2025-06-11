@@ -545,6 +545,13 @@ class TestNiftiRSA:
         assert np.all(apply_mask(rsa_result, mask) != 0)
         assert_equal(apply_mask(rsa_result, mask, invert=True), 0)
 
+        rsa_result = rsa_nifti(
+            bold, model_rdm, spatial_radius=0.01, brain_mask=mask, roi_mask=mask
+        )
+        assert rsa_result.shape == (10, 10, 10)
+        assert np.all(apply_mask(rsa_result, mask) != 0)
+        assert_equal(apply_mask(rsa_result, mask, invert=True), 0)
+
         # Two model RDMs
         model_rdm2 = np.array([0.2, 0.5, 1, 1, 0.5, 0.2])
         rsa_result = rsa_nifti(bold, [model_rdm, model_rdm2], spatial_radius=0.01)
@@ -552,5 +559,7 @@ class TestNiftiRSA:
         assert rsa_result[0].shape == (10, 10, 10)
 
         # Invalid data.
+        with pytest.raises(ValueError, match="ROI mask"):
+            rsa_result = rsa_nifti(bold, model_rdm, roi_mask=mask.slicer[:5, :5, :5])
         with pytest.raises(ValueError, match="Brain mask"):
-            rsa_result = rsa_nifti(bold, model_rdm)
+            rsa_result = rsa_nifti(bold, model_rdm, brain_mask=mask.slicer[:5, :5, :5])
