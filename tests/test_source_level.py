@@ -656,3 +656,16 @@ def test_check_src_compatibility():
     with pytest.raises(ValueError, match="Volume source estimate"):
         _check_src_compatibility(src, stcs_vol[0])
 
+    # Remove a vertex and check that the source space is updated accordingly.
+    stc = stcs[0].copy()
+    stc.vertices[0] = stc.vertices[0][1:]
+    stc.data = stc.data[1:]
+    src2 = _check_src_compatibility(src, stc)
+    assert src2[0]["nuse"] == src[0]["nuse"] - 1
+
+    stc = stcs_vol[0].copy()
+    stc.vertices[0] = stc.vertices[0][1:]
+    stc.data = stc.data[1:]
+    src_vol2 = _check_src_compatibility(src_vol, stc)
+    assert src_vol2[0]["nuse"] == src_vol[0]["nuse"] - 1
+
