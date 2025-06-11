@@ -128,11 +128,13 @@ def rsa_evokeds(
 
     Returns
     -------
-    rsa : Evoked | list of Evoked
+    rsa : Evoked | list of Evoked | float | ndarray
         The correlation values for each searchlight patch. When spatial_radius is set to
         None, there will only be one virtual sensor. When temporal_radius is set to
-        None, there will only be one time point. When multiple models have been
-        supplied, a list will be returned containing the RSA results for each model.
+        None, there will only be one time point. When both spatial_radius and
+        temporal_radius are set to None, the result will be a single number (not packed
+        in an Evoked object). When multiple models have been supplied, an array will be
+        returned containing the RSA results for each model.
 
     See Also
     --------
@@ -175,8 +177,7 @@ def rsa_evokeds(
     if noise_cov is not None:
         if spatial_radius is not None:
             logger.info(
-                "    Using diagonal values of the covariance matrix to whiten "
-                "the data."
+                "    Using diagonal values of the covariance matrix to whiten the data."
             )
             diag = True
         else:
@@ -227,6 +228,9 @@ def rsa_evokeds(
         n_jobs=n_jobs,
         verbose=verbose,
     )
+
+    if spatial_radius is None and temporal_radius is None:
+        return data
 
     # Pack the result in an Evoked object
     if spatial_radius is not None:
@@ -373,11 +377,13 @@ def rsa_epochs(
 
     Returns
     -------
-    rsa : Evoked | list of Evoked
+    rsa : Evoked | list of Evoked | float | ndarray
         The correlation values for each searchlight patch. When spatial_radius is set to
         None, there will only be one virtual sensor. When temporal_radius is set to
-        None, there will only be one time point. When multiple models have been
-        supplied, a list will be returned containing the RSA results for each model.
+        None, there will only be one time point. When both spatial_radius and
+        temporal_radius are set to None, the result will be a single number (not packed
+        in an Evoked object). When multiple models have been supplied, an array will be
+        returned containing the RSA results for each model.
 
     See Also
     --------
@@ -421,8 +427,7 @@ def rsa_epochs(
     if noise_cov is not None:
         if spatial_radius is not None:
             logger.info(
-                "    Using diagonal values of the covariance matrix to whiten "
-                "the data."
+                "    Using diagonal values of the covariance matrix to whiten the data."
             )
             noise_cov = noise_cov.as_diag()
         else:
@@ -468,6 +473,9 @@ def rsa_epochs(
         n_jobs=n_jobs,
         verbose=verbose,
     )
+
+    if spatial_radius is None and temporal_radius is None:
+        return data
 
     # Pack the result in an Evoked object
     if spatial_radius is not None:
@@ -738,8 +746,7 @@ def rdm_epochs(
     if noise_cov is not None:
         if spatial_radius is not None:
             logger.info(
-                "    Using diagonal values of the covariance matrix to whiten "
-                "the data."
+                "    Using diagonal values of the covariance matrix to whiten the data."
             )
             noise_cov = noise_cov.as_diag()
         else:

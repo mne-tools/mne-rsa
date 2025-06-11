@@ -152,12 +152,12 @@ def rsa_stcs(
 
     Returns
     -------
-    stc : SourceEstimate | VolSourceEstimate | list of SourceEstimate | list of VolSourceEstimate
+    stc : SourceEstimate | VolSourceEstimate | list of SourceEstimate | list of VolSourceEstimate | float | ndarray
         The correlation values for each searchlight patch. When spatial_radius
-        is set to None, there will only be one vertex. When temporal_radius is
-        set to None, there will only be one time point. When multiple models
-        have been supplied, a list will be returned containing the RSA results
-        for each model.
+        None, there will only be one time point. When both spatial_radius and
+        temporal_radius are set to None, the result will be a single number (not packed
+        in an SourceEstimate object). When multiple models have been supplied, an array
+        will be returned containing the RSA results for each model.
 
     See Also
     --------
@@ -211,6 +211,8 @@ def rsa_stcs(
         sel_series = np.arange(len(stcs[0].data))
     else:
         sel_series = vertex_selection_to_indices(stcs[0].vertices, sel_vertices)
+    if len(sel_series) != len(set(sel_series)):
+        raise ValueError("Selected vertices are not unique. Please remove duplicates.")
 
     logger.info(
         f"Performing RSA between SourceEstimates and {len(rdm_model)} model RDM(s)"
@@ -252,6 +254,9 @@ def rsa_stcs(
         n_jobs=n_jobs,
         verbose=verbose,
     )
+
+    if spatial_radius is None and temporal_radius is None:
+        return data
 
     # Pack the result in a SourceEstimate object
     if spatial_radius is not None:
@@ -422,7 +427,7 @@ def rdm_stcs(
     else:
         sel_series = vertex_selection_to_indices(stcs[0].vertices, sel_vertices)
     if len(sel_series) != len(set(sel_series)):
-        raise ValueError("selected vertices are not unique. Please remove duplicates.")
+        raise ValueError("Selected vertices are not unique. Please remove duplicates.")
 
     X = np.array([stc.data for stc in stcs])
     patches = searchlight(
@@ -567,7 +572,7 @@ def rsa_stcs_rois(
     See Also
     --------
     compute_rdm
-    """  # noqa E501
+    """
     # Check for compatibility of the source estimates and the model features
     one_model = type(rdm_model) is np.ndarray
     if one_model:
@@ -650,7 +655,7 @@ def rsa_stcs_rois(
 def rsa_nifti(
     image,
     rdm_model,
-    spatial_radius=0.01,
+    spatial_radius=None,
     image_rdm_metric="correlation",
     image_rdm_params=dict(),
     rsa_metric="spearman",
@@ -681,10 +686,10 @@ def rsa_nifti(
         against multiple models at the same time, supply a list of model RDMs.
 
         Use :func:`compute_rdm` to compute RDMs.
-    spatial_radius : float
+    spatial_radius : float | None
         The spatial radius of the searchlight patch in meters. All source
         points within this radius will belong to the searchlight patch.
-        Defaults to 0.01.
+        Defaults to ``None`` which will use a single searchlight patch.
     image_rdm_metric : str
         The metric to use to compute the RDM for the data. This can be
         any metric supported by the scipy.distance.pdist function. See also the
@@ -746,10 +751,11 @@ def rsa_nifti(
 
     Returns
     -------
-    rsa_results : 3D Nifti1Image | list of 3D Nifti1Image
-        The correlation values for each searchlight patch. When multiple models
-        have been supplied, a list will be returned containing the RSA results
-        for each model.
+    rsa_results : 3D Nifti1Image | list of 3D Nifti1Image | float | ndarray
+        The correlation values for each searchlight patch. When spatial_radius is set to
+        None, the result will be a single number (not packed in an SourceEstimate
+        object). When multiple models have been supplied, an array will be returned
+        containing the RSA results for each model.
 
     See Also
     --------
@@ -787,13 +793,9 @@ def rsa_nifti(
     # Get data as (n_items x n_voxels)
     X = image.get_fdata().reshape(-1, image.shape[3]).T
 
-    # Find voxel positions
-    voxels = np.array(list(np.ndindex(image.shape[:-1])))
-    voxel_loc = voxels @ image.affine[:3, :3]
-    voxel_loc /= 1000  # convert position from mm to meters
-
     # Apply masks
-    result_mask = np.ones(image.shape[:3], dtype=bool)
+    if spatial_radius is not None:
+        result_mask = np.ones(image.shape[:3], dtype=bool)
     if brain_mask is not None:
         if brain_mask.ndim != 3 or brain_mask.shape != image.shape[:3]:
             raise ValueError(
@@ -802,10 +804,10 @@ def rsa_nifti(
                 "image"
             )
         brain_mask = brain_mask.get_fdata() != 0
-        result_mask &= brain_mask
+        if spatial_radius is not None:
+            result_mask &= brain_mask
         brain_mask = brain_mask.ravel()
         X = X[:, brain_mask]
-        voxel_loc = voxel_loc[brain_mask]
     if roi_mask is not None:
         if roi_mask.ndim != 3 or roi_mask.shape != image.shape[:3]:
             raise ValueError(
@@ -814,18 +816,29 @@ def rsa_nifti(
                 "image"
             )
         roi_mask = roi_mask.get_fdata() != 0
-        result_mask &= roi_mask
+        if spatial_radius is not None:
+            result_mask &= roi_mask
         roi_mask = roi_mask.ravel()
         if brain_mask is not None:
             roi_mask = roi_mask[brain_mask]
         roi_mask = np.flatnonzero(roi_mask)
 
     # Compute distances between voxels
-    logger.info("Computing distances...")
-    from sklearn.neighbors import NearestNeighbors
+    if spatial_radius is not None:
+        # Find voxel positions
+        voxels = np.array(list(np.ndindex(image.shape[:-1])))
+        voxel_loc = voxels @ image.affine[:3, :3]
+        voxel_loc /= 1000  # convert position from mm to meters
+        if brain_mask is not None:
+            voxel_loc = voxel_loc[brain_mask]
 
-    nn = NearestNeighbors(radius=spatial_radius, n_jobs=n_jobs).fit(voxel_loc)
-    dist = nn.radius_neighbors_graph(mode="distance")
+        logger.info("Computing distances...")
+        from sklearn.neighbors import NearestNeighbors
+
+        nn = NearestNeighbors(radius=spatial_radius, n_jobs=n_jobs).fit(voxel_loc)
+        dist = nn.radius_neighbors_graph(mode="distance")
+    else:
+        dist = None
 
     # Perform the RSA
     patches = searchlight(
@@ -848,6 +861,9 @@ def rsa_nifti(
         n_jobs=n_jobs,
         verbose=verbose,
     )
+
+    if spatial_radius is None:
+        return rsa_result
 
     if one_model:
         data = np.zeros(image.shape[:3])
@@ -886,7 +902,7 @@ def rdm_nifti(
     image : 4D Nifti-like image
         The Nitfi image data. The 4th dimension must contain the images
         for each item.
-    spatial_radius : float
+    spatial_radius : float | None
         The spatial radius of the searchlight patch in meters. All source
         points within this radius will belong to the searchlight patch.
         Defaults to ``None`` which will use a single searchlight patch.
@@ -954,7 +970,6 @@ def rdm_nifti(
     voxel_loc /= 1000  # convert position from mm to meters
 
     # Apply masks
-    result_mask = np.ones(image.shape[:3], dtype=bool)
     if brain_mask is not None:
         if brain_mask.ndim != 3 or brain_mask.shape != image.shape[:3]:
             raise ValueError(
@@ -963,7 +978,6 @@ def rdm_nifti(
                 "image"
             )
         brain_mask = brain_mask.get_fdata() != 0
-        result_mask &= brain_mask
         brain_mask = brain_mask.ravel()
         X = X[:, brain_mask]
         voxel_loc = voxel_loc[brain_mask, :]
@@ -975,7 +989,6 @@ def rdm_nifti(
                 "image"
             )
         roi_mask = roi_mask.get_fdata() != 0
-        result_mask &= roi_mask
         roi_mask = roi_mask.ravel()
         if brain_mask is not None:
             roi_mask = roi_mask[brain_mask]
@@ -1018,6 +1031,7 @@ def _check_stcs_compatibility(stcs):
     for stc in stcs:
         if np.any(stc.times != stcs[0].times):
             raise ValueError("Not all source estimates have the same time points.")
+
 
 def _check_src_compatibility(src, stc):
     """Check for compatibility of the source space with the given source estimate."""
@@ -1254,6 +1268,7 @@ def vertex_selection_to_indices(vertno, sel_vertices):
 
 def vertex_indices_to_numbers(vertno, vert_ind):
     """Convert vertex indices to vertex numbers."""
+    vert_ind = np.asarray(vert_ind)
     min_vert_ind = 0
     sel_vert_no = [[] for _ in vertno]
     for hemi, hemi_vertno in enumerate(vertno):
