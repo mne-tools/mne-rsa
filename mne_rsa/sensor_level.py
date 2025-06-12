@@ -157,7 +157,7 @@ def rsa_evokeds(
                 "the `y` parameter to assign evokeds to items."
                 % (len(evokeds), n_items)
             )
-        if y is not None and np.unique(y) != n_items:
+        if y is not None and len(np.unique(y)) != n_items:
             raise ValueError(
                 "The number of items in `rdm_model` (%d) does not match "
                 "the number of items encoded in the `y` matrix (%d)."
@@ -166,7 +166,7 @@ def rsa_evokeds(
 
     times = evokeds[0].times
     for evoked in evokeds:
-        if np.any(evoked.times != times):
+        if len(evoked.times) != len(times) or np.any(evoked.times != times):
             raise ValueError("Not all evokeds have the same time points.")
 
     # Convert the temporal radius to samples
@@ -249,14 +249,13 @@ def rsa_evokeds(
                 data = data[np.newaxis, :]
         return mne.EvokedArray(data, info, tmin, comment="RSA", nave=len(evokeds))
     else:
+        if data.ndim == 2:
+            if spatial_radius is not None:
+                data = data[:, :, np.newaxis]
+            else:
+                data = data[:, np.newaxis, :]
         return [
-            mne.EvokedArray(
-                np.atleast_2d(data[i]),
-                info,
-                tmin,
-                comment="RSA",
-                nave=len(evokeds),
-            )
+            mne.EvokedArray(data[i], info, tmin, comment="RSA", nave=len(evokeds))
             for i in range(data.shape[0])
         ]
 
@@ -495,14 +494,13 @@ def rsa_epochs(
                 data = data[np.newaxis, :]
         return mne.EvokedArray(data, info, tmin, comment="RSA", nave=len(np.unique(y)))
     else:
+        if data.ndim == 2:
+            if spatial_radius is not None:
+                data = data[:, :, np.newaxis]
+            else:
+                data = data[:, np.newaxis, :]
         return [
-            mne.EvokedArray(
-                np.atleast_2d(data[i]),
-                info,
-                tmin,
-                comment="RSA",
-                nave=len(np.unique(y)),
-            )
+            mne.EvokedArray(data, info, tmin, comment="RSA", nave=len(np.unique(y)))
             for i in range(data.shape[0])
         ]
 
