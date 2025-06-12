@@ -158,6 +158,12 @@ class TestEvokedRDMs:
         rdms_evokeds_as_epochs = list(rdm_epochs(evokeds_as_epochs))
         assert np.allclose(rdms_evokeds_as_epochs, rdms_evokeds)
 
+        # Invalid input.
+        with pytest.raises(ValueError, match="same time points"):
+            evokeds_bad = [e.copy() for e in evokeds]
+            evokeds_bad[0].crop(0.11, 0.15)  # one evoked is shorter than the others
+            next(rdm_evokeds(evokeds_bad))
+
     def test_rdm_temporal(self):
         """Test making RDMs with a sliding temporal window."""
         evokeds = load_evokeds()
@@ -258,6 +264,13 @@ class TestEpochRSA:
         rsa_whitened = rsa_epochs(epochs, model_rdm, noise_cov=cov)
         assert not np.allclose(rsa_result, rsa_whitened)
 
+        # Invalid input
+        with pytest.raises(ValueError, match="number of items in `rdm_model`"):
+            model_bad = np.array([0.5, 1, 0.5])
+            rsa_result = rsa_epochs(epochs, model_bad)
+        with pytest.raises(ValueError, match="number of items encoded in the `y`"):
+            rsa_result = rsa_epochs(epochs, model_rdm, y=[1, 2, 3])
+
     def test_rsa_temporal(self):
         """Test performing RSA with a sliding temporal window."""
         epochs = load_epochs()
@@ -284,6 +297,12 @@ class TestEpochRSA:
         assert rsa_result.data.shape == (1, 3)
         assert rsa_result.times[0] == 0.14
         assert rsa_result.times[-1] == 0.16
+
+        # Two model RDMs
+        model_rdm2 = np.array([0.2, 0.5, 1, 1, 0.5, 0.2])
+        rsa_result = rsa_epochs(epochs, [model_rdm, model_rdm2], temporal_radius=0.02)
+        assert len(rsa_result) == 2
+        assert rsa_result[0].data.shape == (1, len(epochs.times) - 2 * 2)
 
         # Out of bounds and wrong order of tmin/tmax
         with pytest.raises(ValueError, match="`tmin=-5` is before the first sample"):

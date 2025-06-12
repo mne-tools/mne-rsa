@@ -9,9 +9,11 @@ import pytest
 from mne.minimum_norm import apply_inverse_epochs, read_inverse_operator
 from mne_rsa import rdm_nifti, rdm_stcs, rsa_nifti, rsa_stcs, rsa_stcs_rois, squareform
 from mne_rsa.source_level import (
-    _restrict_src_to_vertices,
-    _check_stcs_compatibility,
     _check_src_compatibility,
+    _check_stcs_compatibility,
+    _get_distance_matrix,
+    _restrict_src_to_vertices,
+    vertex_selection_to_indices,
 )
 from numpy.testing import assert_equal
 
@@ -676,3 +678,79 @@ def test_check_src_compatibility():
     stc.data = stc.data[1:]
     src_vol2 = _check_src_compatibility(src_vol, stc)
     assert src_vol2[0]["nuse"] == src_vol[0]["nuse"] - 1
+
+
+def test_get_distance_matrix():
+    """Test computing distances in source space."""
+    _, src, _ = make_stcs()
+    _, src_vol, _ = make_vol_stcs()
+
+    # src already has distances computed
+    dist = _get_distance_matrix(src)
+    nuse = src[0]["nuse"] + src[1]["nuse"]
+    assert dist.shape == (nuse, nuse)
+
+    # Cross-hemisphere distances should be infinity.
+    assert np.all(dist[: src[0]["nuse"] :, src[0]["nuse"] :] == np.inf)
+    assert np.all(dist[src[0]["nuse"] :, : src[0]["nuse"]] == np.inf)
+
+    # Remove precomputed distances from src and re-compute them.
+    src[0]["dist"] = None
+    src[1]["dist"] = None
+    dist = _get_distance_matrix(src, dist_lim=0.01)
+    assert dist.shape == (nuse, nuse)
+    assert src[0]["dist_limit"][0] == 0.01
+    assert src[1]["dist_limit"][0] == 0.01
+
+    # If we want smaller distances, no need to re-compute.
+    dist = _get_distance_matrix(src, dist_lim=0.005)
+    assert dist.shape == (nuse, nuse)
+    assert src[0]["dist_limit"][0] == 0.01
+
+    # But if we want greater distances, we will need to re-compute.
+    with pytest.warns(UserWarning, match="distances are smaller than the searchlight"):
+        dist = _get_distance_matrix(src, dist_lim=0.02)
+        assert dist.shape == (nuse, nuse)
+        assert src[0]["dist_limit"][0] == 0.02
+
+    # src_vol does not have distances pre-computed
+    dist = _get_distance_matrix(src_vol, dist_lim=0.01)
+    nuse = src_vol[0]["nuse"]
+    assert dist.shape == (nuse, nuse)
+    assert src_vol[0]["dist_limit"][0] == 0.01
+
+
+def test_vertex_selection_to_indices():
+    """Test selecting vertices."""
+    stcs, src, _ = make_stcs()
+    stc = stcs[0]
+    n_vert_lh = len(stc.vertices[0])
+    n_vert_rh = len(stc.vertices[1])
+
+    assert_equal(
+        vertex_selection_to_indices(stc.vertices, [[841, 155323], [1492, 156838]]),
+        [0, n_vert_lh - 2, n_vert_lh + 0, n_vert_lh + n_vert_rh - 1],
+    )
+    assert_equal(vertex_selection_to_indices(stc.vertices, [[841, 841], []]), [0])
+
+    labels = mne.read_labels_from_annot(
+        "sample", subjects_dir=mne.datasets.sample.data_path() / "subjects"
+    )
+    assert_equal(
+        vertex_selection_to_indices(stc.vertices, labels[0]),
+        np.searchsorted(
+            stc.vertices[0], np.intersect1d(stc.vertices[0], labels[0].vertices)
+        ),
+    )
+
+    # Invalid input.
+    with pytest.raises(TypeError, match="Invalid type for sel_vertices"):
+        vertex_selection_to_indices(stc.vertices, "bla")
+    with pytest.raises(ValueError, match="Empty list"):
+        vertex_selection_to_indices(stc.vertices, [])
+    with pytest.raises(ValueError, match="one for each hemisphere"):
+        vertex_selection_to_indices(stc.vertices, [1, 2, 3])
+    with pytest.raises(ValueError, match="not present in the data"):
+        vertex_selection_to_indices(stc.vertices, [[900], []])
+    with pytest.raises(ValueError, match="right hemisphere"):
+        vertex_selection_to_indices([stc.vertices[0]], labels[-1])

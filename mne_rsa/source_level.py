@@ -1061,7 +1061,7 @@ def _check_src_compatibility(src, stc):
     return src
 
 
-def _get_distance_matrix(src, dist_lim, n_jobs=1):
+def _get_distance_matrix(src, dist_lim=None, n_jobs=1):
     """Get vertex-to-vertex distance matrix from source space.
 
     During inverse computation, the source space was downsampled (i.e. using
@@ -1072,9 +1072,9 @@ def _get_distance_matrix(src, dist_lim, n_jobs=1):
     ----------
     src : mne.SourceSpaces
         The source space to get the distance matrix for.
-    dist_lim : float
+    dist_lim : float | None
         Maximum distance required. We don't care about distances beyond this
-        maximum.
+        maximum. Defaults to None, which means an infinite distance limit.
     n_jobs : int
         Number of CPU cores to use if distance computation is necessary.
         Defaults to 1.
@@ -1086,6 +1086,8 @@ def _get_distance_matrix(src, dist_lim, n_jobs=1):
 
     """
     dist = []
+    if dist_lim is None:
+        dist_lim = np.inf
 
     # Check if distances have been pre-computed in the given source space. Give
     # a warning if the pre-computed distances may have had a too limited
@@ -1107,10 +1109,9 @@ def _get_distance_matrix(src, dist_lim, n_jobs=1):
                     f"the source space distances using the "
                     f"mne.add_source_space_distances function."
                 )
+                needs_distance_computation = True
 
     if needs_distance_computation:
-        if dist_lim is None:
-            dist_lim = np.inf
         if src.kind == "volume":
             src = _add_volume_source_space_distances(src, dist_lim)
         else:
@@ -1233,7 +1234,7 @@ def vertex_selection_to_indices(vertno, sel_vertices):
     if isinstance(sel_vertices, mne.Label):
         sel_vertices = [sel_vertices]
     if not isinstance(sel_vertices, list):
-        raise ValueError(
+        raise TypeError(
             "Invalid type for sel_vertices. It should be an mne.Label, a list of "
             f"mne.Label's or a list of numpy arrays, but {type(sel_vertices)} was "
             "provided."

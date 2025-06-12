@@ -500,7 +500,7 @@ def rsa_epochs(
             else:
                 data = data[:, np.newaxis, :]
         return [
-            mne.EvokedArray(data, info, tmin, comment="RSA", nave=len(np.unique(y)))
+            mne.EvokedArray(data[i], info, tmin, comment="RSA", nave=len(np.unique(y)))
             for i in range(data.shape[0])
         ]
 
@@ -583,7 +583,7 @@ def rdm_evokeds(
     """
     times = evokeds[0].times
     for evoked in evokeds:
-        if np.any(evoked.times != times):
+        if len(evoked.times) != len(times) or np.any(evoked.times != times):
             raise ValueError("Not all evokeds have the same time points.")
 
     # Convert the temporal radius to samples
