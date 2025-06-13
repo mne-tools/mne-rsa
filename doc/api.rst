@@ -1,13 +1,12 @@
 .. _api_documentation:
 
-=================
 API Documentation
-=================
+-----------------
 
 .. currentmodule:: mne_rsa
 
 Main MNE-RSA functions
-----------------------
+^^^^^^^^^^^^^^^^^^^^^^
 .. autosummary::
     :toctree: functions
     :template: function.rst
@@ -18,7 +17,7 @@ Main MNE-RSA functions
     rsa_nifti
 
 Constructing RDMs
------------------
+^^^^^^^^^^^^^^^^^
 .. autosummary::
     :toctree: functions
     :template: function.rst
@@ -36,7 +35,7 @@ Constructing RDMs
     rdm_array
 
 Performing RSA
---------------
+^^^^^^^^^^^^^^
 .. autosummary::
     :toctree: functions
     :template: function.rst
@@ -46,7 +45,7 @@ Performing RSA
     rsa_gen
 
 Making searchlight patches
---------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. autosummary::
     :toctree: functions
     :template: class.rst
@@ -54,18 +53,21 @@ Making searchlight patches
     searchlight
 
 Visualization
--------------
+^^^^^^^^^^^^^
 .. autosummary::
     :toctree: functions
     :template: function.rst
 
     plot_rdms
+    plot_rdms_topo
+    plot_roi_map
 
 
 Utility functions
------------------
+^^^^^^^^^^^^^^^^^
 .. autosummary::
     :toctree: functions
     :template: function.rst
 
     create_folds
+    squareform

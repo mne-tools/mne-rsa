@@ -57,7 +57,7 @@ jobs:
         - name: Install Python dependencies
           run: |
             python -m pip install --user --upgrade --progress-bar off pip wheel
-            python -m pip install --user --upgrade --progress-bar off -r doc/requirements.txt
+            python -m pip install --user --upgrade --progress-bar off -r requirements-dev.txt
             python -m pip install --user -e .
 
         # Look at what we have and fail early if there is some library conflict
