@@ -16,6 +16,7 @@ serve to show the default.
 import mne
 import mne_rsa
 from numpydoc import docscrape, numpydoc  # noqa
+from intersphinx_registry import get_intersphinx_mapping
 
 # -- General configuration ------------------------------------------------
 
@@ -30,7 +31,6 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx.ext.mathjax",
     "sphinx_gallery.gen_gallery",
-    "nbsphinx",
     "numpydoc",
 ]
 
@@ -42,9 +42,7 @@ autosummary_imported_members = True
 templates_path = ["_templates"]
 
 # The suffix(es) of source filenames.
-# You can specify multiple suffix as a list of string:
-# source_suffix = ['.rst', '.md']
-source_suffix = ".rst"
+source_suffix = {".rst": "restructuredtext"}
 
 # The encoding of source files.
 source_encoding = "utf-8-sig"
@@ -78,11 +76,6 @@ pygments_style = "sphinx"
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = False
-
-nbsphinx_execute = "never"
-
-
-# -- Options for HTML output ----------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
@@ -129,48 +122,13 @@ html_show_sourcelink = False
 # Output file base name for HTML help builder.
 htmlhelp_basename = "mnersadoc"
 
-# -- Options for LaTeX output ---------------------------------------------
-
-# Grouping the document tree into LaTeX files. List of tuples
-# (source start file, target name, title,
-#  author, documentclass [howto, manual, or own class]).
-latex_documents = [
-    (master_doc, "mne-rsa.tex", "MNE-RSA Documentation", "Marijn van Vliet", "manual"),
-]
-
-
-# -- Options for manual page output ---------------------------------------
-
-# One entry per manual page. List of tuples
-# (source start file, name, description, authors, manual section).
-man_pages = [(master_doc, "mne_rsa", "MNE-RSA Documentation", ["Marijn van Vliet"], 1)]
-
-
-# -- Options for Texinfo output -------------------------------------------
-
-# Grouping the document tree into Texinfo files. List of tuples
-# (source start file, target name, title, author,
-#  dir menu entry, description, category)
-texinfo_documents = [
-    (
-        master_doc,
-        "mne_rsa",
-        "MNE-RSA Documentation",
-        "Marijn van Vliet",
-        "mne_rsa",
-        "Representational Similarity Analysis",
-        "Miscellaneous",
-    ),
-]
-
-# Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
-    "python": ("https://docs.python.org/3/", None),
     "mne": ("https://mne.tools/stable/", None),
     "mne_rsa": ("https://users.aalto.fi/~vanvlm1/mne-rsa/", None),
-    "numpy": ("https://docs.scipy.org/doc/numpy/", None),
-    "scipy": ("https://scipy.github.io/devdocs", None),
 }
+intersphinx_mapping.update(
+    get_intersphinx_mapping(packages={"matplotlib", "numpy", "python", "scipy"})
+)
 
 sphinx_gallery_conf = {
     "examples_dirs": "../examples",

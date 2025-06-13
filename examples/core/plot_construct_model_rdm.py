@@ -3,16 +3,15 @@
 
 """
 Construct a model RDM
-=====================
+---------------------
 
 This example shows how to create RDMs from arbitrary data. A common use case for this is
 to construct a "model" RDM to RSA against the brain data. In this example, we will
 create a RDM based on the length of the words shown during an EEG experiment.
 
-Authors
--------
-Marijn van Vliet <marijn.vanvliet@aalto.fi>
-Stefan Appelhoff <stefan.appelhoff@mailbox.org>
+| Authors:
+| Marijn van Vliet <marijn.vanvliet@aalto.fi>
+| Stefan Appelhoff <stefan.appelhoff@mailbox.org>
 """
 
 # Import required packages

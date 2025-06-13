@@ -3,7 +3,7 @@
 
 """
 Sensor-level RSA using a searchlight
-====================================
+------------------------------------
 
 This example demonstrates how to perform representational similarity analysis (RSA) on
 EEG data, using a searchlight approach.
@@ -30,9 +30,8 @@ to 75 participants in a go/no-go lexical decision task while event-related poten
        worth a picture: Snapshots of printed-word processing in an event-related
        potential megastudy. Psychological science.
 
-Authors
--------
-Marijn van Vliet <marijn.vanvliet@aalto.fi>
+| Authors:
+| Marijn van Vliet <marijn.vanvliet@aalto.fi>
 """
 # sphinx_gallery_thumbnail_number=2
 

@@ -3,14 +3,13 @@
 
 """
 Compute RSA between RDMs
-========================
+------------------------
 
 This example showcases the most basic version of RSA: computing the similarity between
 two RDMs. Then we continue with computing RSA between many RDMs efficiently.
 
-Authors
--------
-Marijn van Vliet <marijn.vanvliet@aalto.fi>
+| Authors:
+| Marijn van Vliet <marijn.vanvliet@aalto.fi>
 """
 # sphinx_gallery_thumbnail_number=2
 
@@ -77,9 +76,9 @@ print(pd.DataFrame(rsa_results, index=columns[:2], columns=columns[2:]))
 # Let's create a generator that creates RDMs for each time-point in the EEG data and
 # compute the RSA between those RDMs and all the "model" RDMs we computed above. This is
 # a basic example of using a "searchlight" and in other examples, you can learn how to
-# use the :class:`searchlight` generator to build more advanced searchlights. However,
-# since this is such a simple case, it is educational to construct the generator
-# manually.
+# use the :class:`mne_rsa.searchlight` generator to build more advanced searchlights.
+# However, since this is such a simple case, it is educational to construct the
+# generator manually.
 #
 # The RSA computation will take some time. Therefore, we pass a few extra parameters to
 # :func:`mne_rsa.rsa` to enable some improvements. First, the ``verbose=True`` enables a
