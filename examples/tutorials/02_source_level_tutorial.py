@@ -91,14 +91,16 @@ elif (
     squareform(pixel_rdm)[:150, :150].mean() >= squareform(pixel_rdm)[150:, 150:].mean()
 ):
     print(
-        "The pixels RDM doesn't look quite right. Make sure the rows are in alphabetical filename order. 🤔"
+        "The pixels RDM doesn't look quite right. Make sure the rows are in "
+        "alphabetical filename order. 🤔"
     )
 elif (
     squareform(facenet_rdm)[:150, :150].mean()
     <= squareform(facenet_rdm)[150:, 150:].mean()
 ):
     print(
-        "The FaceNet RDM doesn't look quite right. Make sure the rows are in alphabetical filename order. 🤔"
+        "The FaceNet RDM doesn't look quite right. Make sure the rows are in "
+        "alphabetical filename order. 🤔"
     )
 else:
     print("The RDMs look just right! 😊")
