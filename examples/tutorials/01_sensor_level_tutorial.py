@@ -3,13 +3,14 @@
 
 Tutorial part 1: RSA on sensor-level MEG data
 ---------------------------------------------
+In this tutorial, we will perform sensor-level RSA analysis on MEG data.
 
-In this tutorial we will explore how representational similarity analysis (RSA) can be
-used to study the neural representational code within visual cortex. We will start with
-performing RSA on the sensor level data, followed by source level and finally we will
-perform group level statistical analysis. Along the way, we will encounter many of the
-functions and classes offered by MNE-RSA, which will always be presented in the form of
-links to the :ref:`api_documentation` which you are encouraged to explore.
+We will explore how representational similarity analysis (RSA) can be used to study the
+neural representational code within visual cortex. We will start with performing RSA on
+the sensor level data, followed by source level and finally we will perform group level
+statistical analysis. Along the way, we will encounter many of the functions and classes
+offered by MNE-RSA, which will always be presented in the form of links to the
+:ref:`api_documentation` which you are encouraged to explore.
 
 The dataset we will be working with today is the MEG data of the `Wakeman & Nelson
 (2015) “faces” dataset <https://www.nature.com/articles/sdata20151>`__. During this
@@ -26,6 +27,7 @@ case, make sure that the ``data_path`` variable points to where you have extract
 file to.
 """
 # ruff: noqa: E402
+# sphinx_gallery_thumbnail_number=8
 
 import os
 
@@ -293,7 +295,7 @@ print("RSA score between neural RDM and FaceNet RDM:", rsa_facenet)
 # the visual cortex at an early time point, and that the FaceNET RDM might
 # be more similar to a neural RDM that we computed at a later time point.
 #
-# For the remainder of this notebook, we’ll restrict the ``epochs`` to
+# For the remainder of this tutorial, we’ll restrict the ``epochs`` to
 # only contain the sensors over the left occipital cortex.
 #
 # .. warning::
@@ -364,5 +366,5 @@ mne.viz.plot_compare_evokeds(
 # found at around 250 ms.
 #
 # If you’ve made it this far, you have successfully completed your first sensor-level
-# RSA! 🎉 This is the end of this notebook. I invite you to join me in the next
+# RSA! 🎉 This is the end of this tutorial. I invite you to join me in the next
 # tutorial where we will do source level RSA: :ref:`tut-source-level`

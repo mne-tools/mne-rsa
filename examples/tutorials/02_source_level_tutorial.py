@@ -4,6 +4,8 @@
 Tutorial part 2: RSA on sourse-level MEG data
 ---------------------------------------------
 
+In this tutorial, we will perform source-level RSA analysis on MEG data.
+
 If you haven't done so, I recommend first completing :ref:`tut-sensor-level`.
 
 While sensor-level RSA is useful to get a first impression of how neural representations
@@ -17,9 +19,11 @@ take a lot of time. Hence, we will also learn about the API regarding restrictin
 analysis to parts of the data in several ways.
 
 In the cell below, update the ``data_path`` variable to point to where you have
-extracted the ```rsa-data.zip`` <https://github.com/wmvanvliet/neuroscience_tutorials/releases/download/2/rsa-data.zip>`__ file to.
+extracted the `rsa-data.zip <https://github.com/wmvanvliet/neuroscience_tutorials/releases/download/2/rsa-data.zip>`__
+file to.
 """
 # ruff: noqa: E402
+# sphinx_gallery_thumbnail_number=3
 
 # Set this to where you've extracted `data.zip` to
 data_path = "data"
@@ -239,5 +243,5 @@ brain_facenet = stc_rsa[1].plot(
 
 ########################################################################################
 # If you’ve made it this far, you have successfully completed your first sensor-level
-# RSA! 🎉 This is the end of this notebook. In the next notebook, we will discuss
-# group-level analysis and statistics.
+# RSA! 🎉 This is the end of this tutorial. In the next tutorial, we will discuss
+# group-level analysis and statistics: :ref:`tut-statistics`.

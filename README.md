@@ -5,7 +5,8 @@
 [![doi](https://zenodo.org/badge/194268560.svg)](https://zenodo.org/doi/10.5281/zenodo.11242874)
 
 This is a Python package for performing representational similarity analysis (RSA) using [MNE-Python](https://martinos.org/mne/stable/index.html>) data structures.
-The RSA is computed using a “searchlight” approach, showing where and when the representation in the brain matches a reference representation.
+The main use-case is to perform RSA using a “searchlight” approach through time and/or a
+volumetric or surface source space.
 
 Read more on RSA in the paper that introduced the technique:
 
@@ -15,9 +16,9 @@ Frontiers in Systems Neuroscience, 2(4).
 [https://doi.org/10.3389/neuro.06.004.2008](https://doi.org/10.3389/neuro.06.004.2008)
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/wmvanvliet/mne-rsa/main/doc/rsa_dark.png">
-  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/wmvanvliet/mne-rsa/main/doc/rsa.png">
-  <img src="https://raw.githubusercontent.com/wmvanvliet/mne-rsa/main/doc/rsa.png" width="600">
+  <source media="(prefers-color-scheme: dark)" srcset="doc/rsa_dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="doc/rsa.png">
+  <img src="doc/rsa.png" width="600">
 </picture>
 
 
@@ -57,15 +58,23 @@ Basic example on the EEG “kiloword” data:
 
 ```python
 import mne
-import rsa
+import mne_rsa
 data_path = mne.datasets.kiloword.data_path(verbose=True)
-epochs = mne.read_epochs(data_path + '/kword_metadata-epo.fif')
-# Compute the model RDM using all word properties
-rdm_model = rsa.compute_rdm(epochs.metadata.iloc[:, 1:].values)
-evoked_rsa = rsa.rsa_epochs(epochs, rdm_model,
-                            spatial_radius=0.04, temporal_radius=0.01,
-                            verbose=True)
+epochs = mne.read_epochs(data_path / "kword_metadata-epo.fif")
+# Create model RDMs based on each stimulus property
+columns = epochs.metadata.columns[1:]  # Skip the first column: WORD
+model_rdms = [mne_rsa.compute_rdm(epochs.metadata[col], metric="euclidean") for col in columns]
+# Perform RSA in a sliding window across time
+rsa_results = mne_rsa.rsa_epochs(epochs, model_rdms, temporal_radius=0.01)
+# Plot the result
+mne.viz.plot_compare_evokeds({column: result for column, result in zip(columns, rsa_results)},
+                            picks="rsa", legend="lower center", title="RSA result")
 ```
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="doc/rsa_result.png">
+  <source media="(prefers-color-scheme: light)" srcset="doc/rsa_result_dark.png">
+  <img src="rsa_result.png" width="600">
+</picture>
 
 ## Documentation
 For a detailed guide on RSA analyis from start to finish on an example dataset, see the [tutorial]().
@@ -110,4 +119,13 @@ pip install -e .
 ```
 
 To run the test suite, execute `pytest` in the main `mne-rsa` folder.  
-To build the documentation, execute `make html` in the `mne-rsa/doc` folder.
+To build the documentation, execute `make html` in the `mne-rsa/doc` folder (or on
+Windows: `sphinx-build . _build/html`).
+
+## Citation
+If you end up using this package for the data analysis that is part of a scientific
+article, please cite:
+
+Marijn van Vliet, Takao Shimizu, Stefan Appelhoff, Yuan-Fang Zhao, & Richard
+Höchenberger. (2024). wmvanvliet/mne-rsa: Version 0.9.1 (0.9.1). Zenodo.
+https://doi.org/10.5281/zenodo.11258133

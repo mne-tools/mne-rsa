@@ -17,7 +17,6 @@ import mne
 import mne_rsa
 from numpydoc import docscrape, numpydoc  # noqa
 from intersphinx_registry import get_intersphinx_mapping
-from sphinx_gallery.sorting import FileNameSortKey
 
 # -- General configuration ------------------------------------------------
 
@@ -138,5 +137,5 @@ sphinx_gallery_conf = {
     "image_scrapers": ["matplotlib", mne.viz._brain._BrainScraper()],
     "reference_url": dict(mne=None),
     'filename_pattern': r'.*\.py',
-    'within_subsection_order': FileNameSortKey,
+    'within_subsection_order': 'FileNameSortKey',
 }

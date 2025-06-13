@@ -1,12 +1,16 @@
 """
-Statistical analysis of group-level RSA results
-===============================================
+.. _tut-statistics:
 
-In this notebook, we’ll dive into cluster-based permutation testing, as described in
-`Maris & Oostenveld, 2007 <https://doi.org/10.1016/j.jneumeth.2007.03.024>`__. This
-functionality is not part of the MNE-RSA package, but rather MNE-Python, but it is a
-large part of a proper RSA analysis so I figures any decent RSA tutorial should cover
-this.
+Tutorial part 3: statistical analysis of group-level RSA results
+----------------------------------------------------------------
+
+In this tutorial, we'll dive into cluster-based permutation testing for group-level
+statistical analysis.
+
+The statistical test is described in `Maris & Oostenveld, 2007
+<https://doi.org/10.1016/j.jneumeth.2007.03.024>`__. This functionality is not part of
+the MNE-RSA package, but rather MNE-Python, but it is a large part of a proper RSA
+analysis so I figures any decent RSA tutorial should cover this.
 
 Cluster-based permutation testing is becoming the standard “go-to” method for testing
 for significant differences between experimental conditions in MEG and EEG studies.
@@ -43,6 +47,7 @@ extracted the
 file to.
 """
 # ruff: noqa: E402
+# sphinx_gallery_thumbnail_number=2
 
 import mne
 
@@ -63,10 +68,10 @@ data_path = "data"
 # whether the chosen channels and time region would replicate across
 # studies.
 #
-# Let’s do this for our sensor-level RSA result that we obtained in the
-# first notebook. I’ve ran the same analysis across multiple subjects and
-# placed it in the ``group_analysis`` subfolder of the data package you’ve
-# downloaded. Executing the call below will load them.
+# Let’s do this for our sensor-level RSA result that we obtained in
+# :ref:`tut-sensor-level`. I’ve ran the same analysis across multiple subjects and
+# placed it in the ``group_analysis`` subfolder of the data package you’ve downloaded.
+# Executing the call below will load them.
 
 import mne
 
@@ -364,10 +369,10 @@ print(f"Our manually computed cluster p-values are:\t{our_pvals}")
 # so that the vertices are aligned. This is common practice in MEG group analysis, so
 # I’m not going to cover that process in this tutorial.
 #
-# Instead, I have run the spatio-temporal RSA analysis that we did in the previous
-# notebook across multiple subjects and placed the results in the ``group_analysis``
-# folder of your data package. Let’s load them and see if we can run a spatio-temporal
-# cluster-based permutation test (quite a mouthful).
+# Instead, I have run the spatio-temporal RSA analysis that we did
+# :ref:`tut-source-level` across multiple subjects and placed the results in the
+# ``group_analysis`` folder of your data package. Let’s load them and see if we can run
+# a spatio-temporal cluster-based permutation test (quite a mouthful).
 
 from mne import read_source_estimate
 
