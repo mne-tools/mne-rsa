@@ -35,13 +35,13 @@ The key to this is the creation of a representational dissimilarity matrix (RDM)
 Once an RDM is obtained for the different representation schemes (typically you have one obtained through some model and one obtained from brain activity) they can be compared (again using correlation) to yield an RSA score.
 When one does this in a "searchlight" pattern across the brain, the result is a map of RSA scores indicating where and when in the brain the neural representation corresponds to the model.
 
-![Schematic overview of representational similarity analysis (RSA).\label{fig:rsa}](RSA.pdf)
+![Schematic overview of representational similarity analysis (RSA).\label{fig:rsa}](rsa.pdf)
 
 # Statement of need
 While the core computations behind RSA are simple, getting the details right is hard.
-Creating a "searchlight" patches across the cortex means using geodesic rather than Euclidean distance (\autoref{fig:geodesic}), combining MEG gradiometers and magnetometers requires signal whitening, creating proper evoked responses requires averaging across stimulus repetitions, and creating reliable brain RDMs requires cross-validated distance metrics [@Guggenmos2028].
+Creating a "searchlight" patches across the cortex means using geodesic rather than Euclidean distance (\autoref{fig:distances}), combining MEG gradiometers and magnetometers requires signal whitening, creating proper evoked responses requires averaging across stimulus repetitions, and creating reliable brain RDMs requires cross-validated distance metrics [@Guggenmos2028].
 
-![Depiction of geodesic versus Euclidean distance between points along the cortex.\label{fig:geodesic}](geodesic.pdf)
+![Depiction of geodesic versus Euclidean distance between points along the cortex.\label{fig:distances}](distances.pdf)
 
 At the time of writing, MNE-RSA has been used in five studies, two of which involve the author [@Hulten2021; @Xu2024; @Messi2025; @Ghazaryan2023; @Klimovich-Gray2021].
 
@@ -58,13 +58,6 @@ Hence its focus is mostly on MEG and EEG analysis, providing a streamlined user 
 
 ![Design of MNE-RSA.\label{fig:design}](design.pdf)
 and referenced from text using \autoref{fig:design}.
-
-# Citations
-
-For a quick reference, the following citation commands can be used:
-- `@author:2001`  ->  "Author et al. (2001)"
-- `[@author:2001]` -> "(Author et al., 2001)"
-- `[@author1:2001; @author2:2001]` -> "(Author1 et al., 2001; Author2 et al., 2002)"
 
 # Acknowledgements
 
