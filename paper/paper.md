@@ -38,8 +38,8 @@ When one does this in a "searchlight" pattern across the brain, the result is a 
 ![Schematic overview of representational similarity analysis (RSA).\label{fig:rsa}](rsa.pdf)
 
 # Statement of need
-While the core computations behind RSA are simple, getting the details right is hard.
-Creating a "searchlight" patches across the cortex means using geodesic rather than Euclidean distance (\autoref{fig:distances}), combining MEG gradiometers and magnetometers requires signal whitening, creating proper evoked responses requires averaging across stimulus repetitions, and creating reliable brain RDMs requires cross-validated distance metrics [@Guggenmos2028].
+While the core computations behind RSA ae simple, getting the details right is hard.
+Creating a "searchlight" patches across the cortex means using geodesic rather than Euclidean distance (\autoref{fig:distances}), combining MEG gradiometers and magnetometers requires signal whitening, creating proper evoked responses requires averaging across stimulus repetitions, and creating reliable brain RDMs requires cross-validated distance metrics [@Guggenmos2018].
 
 ![Depiction of geodesic versus Euclidean distance between points along the cortex.\label{fig:distances}](distances.pdf)
 
@@ -57,7 +57,6 @@ Hence its focus is mostly on MEG and EEG analysis, providing a streamlined user 
 # Design
 
 ![Design of MNE-RSA.\label{fig:design}](design.pdf)
-and referenced from text using \autoref{fig:design}.
 
 # Acknowledgements
 
