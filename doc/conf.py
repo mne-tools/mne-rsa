@@ -30,6 +30,7 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx.ext.mathjax",
     "sphinx_gallery.gen_gallery",
+    "nbsphinx",
     "numpydoc",
 ]
 
@@ -77,6 +78,8 @@ pygments_style = "sphinx"
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = False
+
+nbsphinx_execute = "never"
 
 
 # -- Options for HTML output ----------------------------------------------

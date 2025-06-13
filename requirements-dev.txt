@@ -16,3 +16,6 @@ pydata_sphinx_theme
 pyvista
 pyvistaqt
 pooch
+pytest
+pytest-cov
+pytest-xdist
