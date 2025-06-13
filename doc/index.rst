@@ -115,13 +115,13 @@ Basic example on the EEG “kiloword” data:
 
 Documentation
 -------------
+For a detailed guide on how RSA is performed using MNE-RSA, see the `Tutorials
+<auto_examples/tutorials/index>`_.
 
-For quick guides on how to do specific things, see the
-`examples <https://users.aalto.fi/~vanvlm1/mne-rsa/auto_examples/index.html>`__.
+For quick guides on how to do specific things, see the `Examples
+<auto_examples/index>`_.
 
-Finally, there is the
-`API reference <https://users.aalto.fi/~vanvlm1/mne-rsa/api.html>`__
-documentation.
+Finally, there is the `API reference documentation <api>`_.
 
 Integration with other packages
 -------------------------------
