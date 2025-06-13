@@ -4,22 +4,21 @@
 [![docs](https://github.com/wmvanvliet/mne-rsa/workflows/build-docs/badge.svg)](https://github.com/wmvanvliet/mne-rsa/actions?query=workflow%3Abuild-docs)
 [![doi](https://zenodo.org/badge/194268560.svg)](https://zenodo.org/doi/10.5281/zenodo.11242874)
 
-This is a Python package for performing representational similarity
-analysis (RSA) using
-[MNE-Python](https://martinos.org/mne/stable/index.html>) data
-structures. The RSA is computed using a “searchlight” approach, showing where and when the representation in the brain matches a reference representation.
+This is a Python package for performing representational similarity analysis (RSA) using [MNE-Python](https://martinos.org/mne/stable/index.html>) data structures.
+The main use-case is to perform RSA using a “searchlight” approach through time and/or a
+volumetric or surface source space.
 
 Read more on RSA in the paper that introduced the technique:
 
 Nikolaus Kriegeskorte, Marieke Mur and Peter Bandettini (2008).
-Representational similarity analysis - connecting the branches of
-systems neuroscience. Frontiers in Systems Neuroscience, 2(4).
-https://doi.org/10.3389/neuro.06.004.2008
+Representational similarity analysis - connecting the branches of systems neuroscience.
+Frontiers in Systems Neuroscience, 2(4).
+[https://doi.org/10.3389/neuro.06.004.2008](https://doi.org/10.3389/neuro.06.004.2008)
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/wmvanvliet/mne-rsa/main/doc/rsa_dark.png">
-  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/wmvanvliet/mne-rsa/main/doc/rsa.png">
-  <img src="https://raw.githubusercontent.com/wmvanvliet/mne-rsa/main/doc/rsa.png" width="600">
+  <source media="(prefers-color-scheme: dark)" srcset="doc/rsa_dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="doc/rsa.png">
+  <img src="doc/rsa.png" width="600">
 </picture>
 
 
@@ -49,10 +48,8 @@ Supported metrics for comparing RDMs:
 
 ## Installation
 
-The package can be installed either through PIP:  
-``pip install mne-rsa``  
-or through conda using the conda-forge channel:  
-``conda install -c conda-forge mne-rsa``
+The package can be installed either through PIP: `pip install mne-rsa`  
+or through conda using the conda-forge channel: `conda install -c conda-forge mne-rsa`
 
 
 ## Example usage
@@ -61,46 +58,74 @@ Basic example on the EEG “kiloword” data:
 
 ```python
 import mne
-import rsa
+import mne_rsa
 data_path = mne.datasets.kiloword.data_path(verbose=True)
-epochs = mne.read_epochs(data_path + '/kword_metadata-epo.fif')
-# Compute the model RDM using all word properties
-rdm_model = rsa.compute_rdm(epochs.metadata.iloc[:, 1:].values)
-evoked_rsa = rsa.rsa_epochs(epochs, rdm_model,
-                            spatial_radius=0.04, temporal_radius=0.01,
-                            verbose=True)
+epochs = mne.read_epochs(data_path / "kword_metadata-epo.fif")
+# Create model RDMs based on each stimulus property
+columns = epochs.metadata.columns[1:]  # Skip the first column: WORD
+model_rdms = [mne_rsa.compute_rdm(epochs.metadata[col], metric="euclidean") for col in columns]
+# Perform RSA in a sliding window across time
+rsa_results = mne_rsa.rsa_epochs(epochs, model_rdms, temporal_radius=0.01)
+# Plot the result
+mne.viz.plot_compare_evokeds({column: result for column, result in zip(columns, rsa_results)},
+                            picks="rsa", legend="lower center", title="RSA result")
 ```
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="doc/rsa_result.png">
+  <source media="(prefers-color-scheme: light)" srcset="doc/rsa_result_dark.png">
+  <img src="rsa_result.png" width="600">
+</picture>
 
 ## Documentation
+For a detailed guide on RSA analyis from start to finish on an example dataset, see the [tutorial]().
 
-For quick guides on how to do specific things, see the
-[examples](<https://users.aalto.fi/~vanvlm1/mne-rsa/auto_examples/index.html>).
+For quick guides on how to do specific things, see the [examples](https://users.aalto.fi/~vanvlm1/mne-rsa/auto_examples/index.html).
 
-Finally, there is the
-[API reference](<https://users.aalto.fi/~vanvlm1/mne-rsa/api.html>)
-documentation.
+Finally, there is the [API reference](https://users.aalto.fi/~vanvlm1/mne-rsa/api.html) documentation.
 
 ## Integration with other packages
 
-The main purpose of this package is to perform RSA analysis on MEG data. Hence,
-integration functions with [MNE-Python](https://mne.tools) are
-provided. However, there is also some integration with [nipy](https://nipy.org) for
-fMRI that should well in a [nilearn](https://nilearn.github.io) setup.
+The main purpose of this package is to perform RSA analysis on MEG data.
+Hence, integration functions with [MNE-Python](https://mne.tools) are provided.
+However, there is also some integration with [nipy](https://nipy.org) for fMRI that should well in a [nilearn](https://nilearn.github.io) setup.
 
 ## Performance
 
-This package aims to be fast and memory efficient. An important design
-feature is that under the hood, everything operates on generators. The
-searchlight routines produce a generator of RDMs which are consumed by a
-generator of RSA values. Parallel processing is also supported, so you
-can use all of your CPU cores.
+This package aims to be fast and memory efficient.
+An important design feature is that under the hood, everything operates on generators.
+The searchlight routines produce a generator of RDMs which are consumed by a generator of RSA values.
+Parallel processing is also supported, so you can use all of your CPU cores.
 
-## Development
 
-Here is how to set up the package as a developer:
+## Support
+
+This free software comes without any form of official support.
+However, if you think you have encountered a bug or have a particularly great idea for improvements, please open an [issue on Github](https://github.com/wmvanvliet/mne-rsa/issues).
+For questions and help with your analysis, you are welcome to post on the [MNE forum](https://mne.discourse.group/).
+
+
+## Contributing
+
+Development of the package happens on [Github](https://github.com/wmvanvliet/mne-rsa).
+Everyone is welcome to raise [issues](https://github.com/wmvanvliet/mne-rsa/issues) or contribute [pull requests](https://github.com/wmvanvliet/mne-rsa/pulls).
+
+Here is how to install the additional required packages for developing MNE-RSA and set up the package in development mode:
 
 ```bash
 git clone git@github.com:wmvanvliet/mne-rsa.git
 cd mne-rsa
-python setup.py develop --user
+pip install -r requirements-dev.txt
+pip install -e .
 ```
+
+To run the test suite, execute `pytest` in the main `mne-rsa` folder.  
+To build the documentation, execute `make html` in the `mne-rsa/doc` folder (or on
+Windows: `sphinx-build . _build/html`).
+
+## Citation
+If you end up using this package for the data analysis that is part of a scientific
+article, please cite:
+
+Marijn van Vliet, Takao Shimizu, Stefan Appelhoff, Yuan-Fang Zhao, & Richard
+Höchenberger. (2024). wmvanvliet/mne-rsa: Version 0.9.1 (0.9.1). Zenodo.
+https://doi.org/10.5281/zenodo.11258133
