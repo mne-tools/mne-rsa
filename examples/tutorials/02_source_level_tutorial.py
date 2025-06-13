@@ -4,7 +4,7 @@
 Tutorial part 2: RSA on sourse-level MEG data
 ---------------------------------------------
 
-If you haven't done so, I recommend first completing :ref:`tut-sensor_level`.
+If you haven't done so, I recommend first completing :ref:`tut-sensor-level`.
 
 While sensor-level RSA is useful to get a first impression of how neural representations
 unfold over time, it is not really suited to study differences between brain regions.

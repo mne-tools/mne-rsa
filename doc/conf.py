@@ -136,4 +136,5 @@ sphinx_gallery_conf = {
     "backreferences_dir": "generated",
     "image_scrapers": ["matplotlib", mne.viz._brain._BrainScraper()],
     "reference_url": dict(mne=None),
+    'filename_pattern': r'.*\.py',
 }
