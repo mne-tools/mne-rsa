@@ -154,6 +154,6 @@ Here is how to set up the package as a developer:
 .. toctree::
    :hidden:
 
-   Tutorial <tutorial/index>
+   Tutorial <auto_examples/tutorial>
    Examples <auto_examples/index>
    API Reference <api>
