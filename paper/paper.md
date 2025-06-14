@@ -40,8 +40,10 @@ When one does this in a "searchlight" pattern across the brain, the result is a 
 # Statement of need
 While the core computations behind RSA ae simple, getting the details right is hard.
 Creating a "searchlight" patches across the cortex means using geodesic rather than Euclidean distance (\autoref{fig:distances}), combining MEG gradiometers and magnetometers requires signal whitening, creating proper evoked responses requires averaging across stimulus repetitions, and creating reliable brain RDMs requires cross-validated distance metrics [@Guggenmos2018].
+MNE-RSA provides turn-key solutions for all of these details.
 
 ![Depiction of geodesic versus Euclidean distance between points along the cortex.\label{fig:distances}](distances.pdf)
+
 
 At the time of writing, MNE-RSA has been used in five studies, two of which involve the author [@Hulten2021; @Xu2024; @Messi2025; @Ghazaryan2023; @Klimovich-Gray2021].
 
@@ -56,7 +58,22 @@ Hence its focus is mostly on MEG and EEG analysis, providing a streamlined user 
 
 # Design
 
+The design of MNE-RSA is depicted in \autoref{fig:design}.
+At it's core, the main loop consists of three python generators:
+the searchlight generator (`mne_rsa.searchlight`) takes distances between data points (e.g. locations on the cortex, voxels, or timestamps) and produces a stream of searchlight patches.
+The RDM generator (`mne_rsa.rdm_gen`) consumes these patches, applies them to a data array, and generates a stream of RDMs.
+The RSA generator (`mne_rsa.rda_gen`) consumes the stream of RDMs and compares them to a list of model RDMs to produce a stream of RSA values.
+Then there is a function that will set up the three generators for generic data arrays (`mne_rsa.rsa_array`).
+The rest of the package is all about providing different functions (e.g. `mne_rsa.rsa_stcs`) that take the relevant information out of the high-level objects provided by MNE-Python (and nibabel for fMRI), use `mne_rsa.rsa_array` to do the heavy lifting, and then package the result back in a high-level object.
+
 ![Design of MNE-RSA.\label{fig:design}](design.pdf)
+
+## Performance
+
+Performing RSA in a searchlight pattern will produce tens of thousands of RDMs that can take up multiple gigabytes of space.
+For memory efficiency, RDMs are never kept in memory longer than they need to be, hence the useage of python generators.
+It is almost always easier to re-compute RDMs than it is to write them to disk and later read them back in.
+The computation of RDMs is also straightforward to parallelize across multiple CPU cores.
 
 # Acknowledgements
 
