@@ -8,14 +8,15 @@ tags:
   - MEG
   - fMRI
 authors:
-  - name: Marijn van Vliet
+  - given name: Marijn
     dropping-particle: van
+    surname: Vliet
     orcid: 0000-0002-6537-6899
     affiliation: "1"
 affiliations:
  - name: Department of Neuroscience and Biomedical Engineering, Aalto University, Finland
    index: 1
-date: 13 June 2025
+date: 14 June 2025
 bibliography: paper.bib
 
 ---
@@ -35,14 +36,14 @@ The key to this is the creation of a representational dissimilarity matrix (RDM)
 Once an RDM is obtained for the different representation schemes (typically you have one obtained through some model and one obtained from brain activity) they can be compared (again using correlation) to yield an RSA score.
 When one does this in a "searchlight" pattern across the brain, the result is a map of RSA scores indicating where and when in the brain the neural representation corresponds to the model.
 
-![Schematic overview of representational similarity analysis (RSA).\label{fig:rsa}](rsa.pdf)
+![Schematic overview of representational similarity analysis (RSA).\label{fig:rsa}](rsa.pdf){width="8cm"}
 
 # Statement of need
 While the core computations behind RSA ae simple, getting the details right is hard.
 Creating a "searchlight" patches across the cortex means using geodesic rather than Euclidean distance (\autoref{fig:distances}), combining MEG gradiometers and magnetometers requires signal whitening, creating proper evoked responses requires averaging across stimulus repetitions, and creating reliable brain RDMs requires cross-validated distance metrics [@Guggenmos2018].
 MNE-RSA provides turn-key solutions for all of these details.
 
-![Depiction of geodesic versus Euclidean distance between points along the cortex.\label{fig:distances}](distances.pdf)
+![Depiction of geodesic versus Euclidean distance between points along the cortex.\label{fig:distances}](distances.pdf){width="4cm"}
 
 
 At the time of writing, MNE-RSA has been used in five studies, two of which involve the author [@Hulten2021; @Xu2024; @Messi2025; @Ghazaryan2023; @Klimovich-Gray2021].
@@ -66,7 +67,7 @@ The RSA generator (`mne_rsa.rda_gen`) consumes the stream of RDMs and compares t
 Then there is a function that will set up the three generators for generic data arrays (`mne_rsa.rsa_array`).
 The rest of the package is all about providing different functions (e.g. `mne_rsa.rsa_stcs`) that take the relevant information out of the high-level objects provided by MNE-Python (and nibabel for fMRI), use `mne_rsa.rsa_array` to do the heavy lifting, and then package the result back in a high-level object.
 
-![Design of MNE-RSA.\label{fig:design}](design.pdf)
+![Design of MNE-RSA.\label{fig:design}](design.pdf){width="8cm"}
 
 ## Performance
 
