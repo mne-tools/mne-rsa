@@ -7,6 +7,7 @@ numpy
 numpydoc
 pillow
 pooch
+pre-commit
 pydata_sphinx_theme
 pyside6
 pytest
