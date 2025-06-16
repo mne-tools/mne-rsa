@@ -130,7 +130,7 @@ def plot_rdms_topo(
         Info object that contains meta data of MEG/EEG recordings.
     time: int | [int, int] | None
         A time point (int) or time window ([int, int]) for which RDMs are plotted. When
-        a time window is given, averge RDMs for the window are plotted. The default
+        a time window is given, average RDMs for the window are plotted. The default
         (``None``) plots the average RDMs of all the time points. Start of the time
         window is inclusive, while the end is exclusive.
     layout: mne.channels.layout.Layout, optional
