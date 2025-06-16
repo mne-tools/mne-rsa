@@ -1,0 +1,12 @@
+﻿mne_rsa.plot_roi_map
+====================
+
+.. currentmodule:: mne_rsa
+
+.. autofunction:: plot_roi_map
+
+.. include:: mne_rsa.plot_roi_map.examples
+
+.. raw:: html
+
+    <div style='clear:both'></div>
