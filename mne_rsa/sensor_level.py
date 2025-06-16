@@ -15,7 +15,6 @@ from mne.cov import compute_whitener
 from mne.utils import logger
 from scipy.spatial import distance
 
-from .folds import _match_order
 from .rdm import _n_items_from_rdm, rdm_array
 from .rsa import rsa_array
 from .searchlight import searchlight

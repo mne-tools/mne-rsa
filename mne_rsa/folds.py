@@ -6,8 +6,6 @@ Marijn van Vliet <marijn.vanvliet@aalto.fi>
 Yuan-Fang Zhao <distancejay@gmail.com>
 """
 
-import re
-
 import numpy as np
 from mne.utils import logger
 from sklearn.model_selection import StratifiedKFold
