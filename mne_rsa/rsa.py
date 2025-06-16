@@ -375,18 +375,9 @@ def rsa_array(
 
         .. versionadded:: 0.8
     y : ndarray of int, shape (n_items,) | None
-        (Deprecated) For each item, a number indicating the class to which the item
-        belongs.  When ``None``, each item is assumed to belong to a different class.
-        Defaults to ``None``.
-    labels_rdm_model: list | None
-        For each row in ``rdm_model``, a label that identifies the item to which it
-        corresponds. This is used in combination with ``labels_X`` to align the data and
-        model RDMs before comparing them. Each row should have a unique label. Labels
-        may be of any python type that can be compared with ``==`` (int, float, string,
-        tuple, etc). By default (``None``), the integers ``0:n_rows`` are used as
-        labels.
-
-        .. versionadded:: 0.10
+        Deprecated, use ``labels_X`` and ``labels_rdm_model`` instead.
+        For each item, a number indicating the class to which the item belongs.
+        Defaults to ``None``, in which case ``labels_X`` is used.
     labels_X : list | None
         For each element in ``X`` (=the first dimension), a label that identifies the
         item to which it corresponds. This is used in combination with
@@ -396,6 +387,15 @@ def rsa_array(
         RDM (``n_folds=1``) or used for cross-validation (``n_folds>1``). Labels may be
         of any python type that can be compared with ``==`` (int, float, string, tuple,
         etc). By default (``None``), the integers ``0:len(X)`` are used as labels.
+
+        .. versionadded:: 0.10
+    labels_rdm_model: list | None
+        For each row in ``rdm_model``, a label that identifies the item to which it
+        corresponds. This is used in combination with ``labels_X`` to align the data and
+        model RDMs before comparing them. Each row should have a unique label. Labels
+        may be of any python type that can be compared with ``==`` (int, float, string,
+        tuple, etc). By default (``None``), the integers ``0:n_rows`` are used as
+        labels.
 
         .. versionadded:: 0.10
     n_folds : int | sklearn.model_selection.BaseCrollValidator | None
