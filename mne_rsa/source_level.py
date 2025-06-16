@@ -40,6 +40,8 @@ def rsa_stcs(
     rsa_metric="spearman",
     ignore_nan=False,
     y=None,
+    labels_stcs=None,
+    labels_rdm_model=None,
     n_folds=1,
     sel_vertices=None,
     sel_vertices_by_index=None,
@@ -109,9 +111,29 @@ def rsa_stcs(
 
         .. versionadded:: 0.8
     y : ndarray of int, shape (n_items,) | None
+        Deprecated, use ``labels_stcs`` and ``labels_rdm_model`` instead.
         For each source estimate, a number indicating the item to which it
-        belongs. When ``None``, each source estimate is assumed to belong to a
-        different item. Defaults to ``None``.
+        belongs. Defaults to ``None``, in which case ``labels_stcs`` is used.
+    labels_stcs : list | None
+        For each source estimate, a label that identifies the item to which it
+        corresponds. This is used in combination with ``labels_rdm_model`` to align the
+        data and model RDMs before comparing them. Multiple source estimates may
+        correspond to the same item, in which case they should have the same label and
+        will either be averaged when computing the data RDM (``n_folds=1``) or used for
+        cross-validation (``n_folds>1``). Labels may be of any python type that can be
+        compared with ``==`` (int, float, string, tuple, etc). By default (``None``),
+        the integers ``0:len(evokeds)`` are used as labels.
+
+        .. versionadded:: 0.10
+    labels_rdm_model: list | None
+        For each row in ``rdm_model``, a label that identifies the item to which it
+        corresponds. This is used in combination with ``labels_stcs`` to align the
+        data and model RDMs before comparing them. Each row should have a unique label.
+        Labels may be of any python type that can be compared with ``==`` (int, float,
+        string, tuple, etc). By default (``None``), the integers ``0:n_rows`` are used
+        as labels.
+
+        .. versionadded:: 0.10
     n_folds : int | sklearn.model_selection.BaseCrollValidator | None
         Number of cross-validation folds to use when computing the distance
         metric. Folds are created based on the ``y`` parameter. Specify
@@ -168,21 +190,24 @@ def rsa_stcs(
     if one_model:
         rdm_model = [rdm_model]
 
+    if labels_stcs is None and y is not None:
+        labels_stcs = y
+
     # Check for compatibility of the stcs and the model features
     for rdm in rdm_model:
         n_items = _n_items_from_rdm(rdm)
-        if len(stcs) != n_items and y is None:
+        if len(stcs) != n_items and labels_stcs is None:
             raise ValueError(
                 "The number of source estimates (%d) should be equal to the "
                 "number of items in `rdm_model` (%d). Alternatively, use "
                 "the `y` parameter to assign source estimates to items."
                 % (len(stcs), n_items)
             )
-        if y is not None and len(np.unique(y)) != n_items:
+        if labels_stcs is not None and len(set(labels_stcs)) != n_items:
             raise ValueError(
                 "The number of items in `rdm_model` (%d) does not match "
-                "the number of items encoded in the `y` matrix (%d)."
-                % (n_items, len(np.unique(y)))
+                "the number of items encoded in the `labels_stcs` list (%d)."
+                % (n_items, len(set(labels_stcs)))
             )
 
     _check_stcs_compatibility(stcs)
@@ -249,7 +274,8 @@ def rsa_stcs(
         data_rdm_params=stc_rdm_params,
         rsa_metric=rsa_metric,
         ignore_nan=ignore_nan,
-        y=y,
+        labels_X=labels_stcs,
+        labels_rdm_model=labels_rdm_model,
         n_folds=n_folds,
         n_jobs=n_jobs,
         verbose=verbose,
@@ -308,6 +334,7 @@ def rdm_stcs(
     dist_metric="sqeuclidean",
     dist_params=dict(),
     y=None,
+    labels=None,
     n_folds=1,
     sel_vertices=None,
     sel_vertices_by_index=None,
@@ -353,9 +380,19 @@ def rdm_stcs(
         Refer to :mod:`scipy.spatial.distance` for a list of all other metrics
         and their arguments. Defaults to an empty dictionary.
     y : ndarray of int, shape (n_items,) | None
+        Deprecated, use ``labels`` instead.
         For each source estimate, a number indicating the item to which it
-        belongs. When ``None``, each source estimate is assumed to belong to a
-        different item. Defaults to ``None``.
+        belongs. Defaults to ``None``, in which case ``labels`` is used.
+    labels : list | None
+        For each source estimate, a label that identifies the item to which it
+        corresponds. Multiple source estimates may correspond to the same item, in which
+        case they should have the same label and will either be averaged when computing
+        the data RDM (``n_folds=1``) or used for cross-validation (``n_folds>1``).
+        Labels may be of any python type that can be compared with ``==`` (int, float,
+        string, tuple, etc). By default (``None``), the integers ``0:len(evokeds)`` are
+        used as labels.
+
+        .. versionadded:: 0.10
     n_folds : int | sklearn.model_selection.BaseCrollValidator | None
         Number of cross-validation folds to use when computing the distance
         metric. Folds are created based on the ``y`` parameter. Specify
@@ -432,6 +469,9 @@ def rdm_stcs(
     if len(sel_series) != len(set(sel_series)):
         raise ValueError("Selected vertices are not unique. Please remove duplicates.")
 
+    if labels is None and y is not None:
+        labels = y
+
     X = np.array([stc.data for stc in stcs])
     patches = searchlight(
         X.shape,
@@ -447,7 +487,7 @@ def rdm_stcs(
         patches,
         dist_metric=dist_metric,
         dist_params=dist_params,
-        y=y,
+        labels=labels,
         n_folds=n_folds,
         n_jobs=n_jobs,
     )
@@ -465,6 +505,8 @@ def rsa_stcs_rois(
     rsa_metric="spearman",
     ignore_nan=False,
     y=None,
+    labels_stcs=None,
+    labels_rdm_model=None,
     n_folds=1,
     tmin=None,
     tmax=None,
@@ -530,9 +572,29 @@ def rsa_stcs_rois(
 
         .. versionadded:: 0.8
     y : ndarray of int, shape (n_items,) | None
+        Deprecated, use ``labels_stcs`` and ``labels_rdm_model`` instead.
         For each source estimate, a number indicating the item to which it
-        belongs. When ``None``, each source estimate is assumed to belong to a
-        different item. Defaults to ``None``.
+        belongs. Defaults to ``None``, in which case ``labels_stcs`` is used.
+    labels_stcs : list | None
+        For each source estimate, a label that identifies the item to which it
+        corresponds. This is used in combination with ``labels_rdm_model`` to align the
+        data and model RDMs before comparing them. Multiple source estimates may
+        correspond to the same item, in which case they should have the same label and
+        will either be averaged when computing the data RDM (``n_folds=1``) or used for
+        cross-validation (``n_folds>1``). Labels may be of any python type that can be
+        compared with ``==`` (int, float, string, tuple, etc). By default (``None``),
+        the integers ``0:len(evokeds)`` are used as labels.
+
+        .. versionadded:: 0.10
+    labels_rdm_model: list | None
+        For each row in ``rdm_model``, a label that identifies the item to which it
+        corresponds. This is used in combination with ``labels_stcs`` to align the
+        data and model RDMs before comparing them. Each row should have a unique label.
+        Labels may be of any python type that can be compared with ``==`` (int, float,
+        string, tuple, etc). By default (``None``), the integers ``0:n_rows`` are used
+        as labels.
+
+        .. versionadded:: 0.10
     n_folds : int | sklearn.model_selection.BaseCrollValidator | None
         Number of cross-validation folds to use when computing the distance
         metric. Folds are created based on the ``y`` parameter. Specify
@@ -582,21 +644,24 @@ def rsa_stcs_rois(
     if one_model:
         rdm_model = [rdm_model]
 
+    if labels_stcs is None and y is not None:
+        labels_stcs = y
+
     # Check for compatibility of the stcs and the model features
     for rdm in rdm_model:
         n_items = _n_items_from_rdm(rdm)
-        if len(stcs) != n_items and y is None:
+        if len(stcs) != n_items and labels_stcs is None:
             raise ValueError(
                 "The number of source estimates (%d) should be equal to the "
                 "number of items in `rdm_model` (%d). Alternatively, use "
-                "the `y` parameter to assign source estimates to items."
+                "the `labels_stcs` parameter to assign source estimates to items."
                 % (len(stcs), n_items)
             )
-        if y is not None and len(np.unique(y)) != n_items:
+        if labels_stcs is not None and len(set(labels_stcs)) != n_items:
             raise ValueError(
                 "The number of items in `rdm_model` (%d) does not match "
-                "the number of items encoded in the `y` matrix (%d)."
-                % (n_items, len(np.unique(y)))
+                "the number of items encoded in the `labels_stcs` matrix (%d)."
+                % (n_items, len(set(labels_stcs)))
             )
 
     _check_stcs_compatibility(stcs)
@@ -631,7 +696,8 @@ def rsa_stcs_rois(
         data_rdm_params=stc_rdm_params,
         rsa_metric=rsa_metric,
         ignore_nan=ignore_nan,
-        y=y,
+        labels_X=labels_stcs,
+        labels_rdm_model=labels_rdm_model,
         n_folds=n_folds,
         n_jobs=n_jobs,
         verbose=verbose,
@@ -666,6 +732,8 @@ def rsa_nifti(
     rsa_metric="spearman",
     ignore_nan=False,
     y=None,
+    labels_image=None,
+    labels_rdm_model=None,
     n_folds=1,
     roi_mask=None,
     brain_mask=None,
@@ -721,9 +789,29 @@ def rsa_nifti(
 
         .. versionadded:: 0.8
     y : ndarray of int, shape (n_items,) | None
-        For each source estimate, a number indicating the item to which it
-        belongs. When ``None``, each source estimate is assumed to belong to a
-        different item. Defaults to ``None``.
+        Deprecated, use ``labels_image`` and ``labels_rdm_model`` instead.
+        For each image in the Nifti image object, a number indicating the item to which
+        it belongs. Defaults to ``None``, in which case ``labels_image`` is used.
+    labels_image : list | None
+        For each image in the Nifti image object, a label that identifies the item to
+        which it corresponds. This is used in combination with ``labels_rdm_model`` to
+        align the data and model RDMs before comparing them. Multiple images objects may
+        correspond to the same item, in which case they should have the same label and
+        will either be averaged when computing the data RDM (``n_folds=1``) or used for
+        cross-validation (``n_folds>1``). Labels may be of any python type that can be
+        compared with ``==`` (int, float, string, tuple, etc). By default (``None``),
+        the integers ``0:image.shape[3]`` are used as labels.
+
+        .. versionadded:: 0.10
+    labels_rdm_model: list | None
+        For each row in ``rdm_model``, a label that identifies the item to which it
+        corresponds. This is used in combination with ``labels_image`` to align the data
+        and model RDMs before comparing them. Each row should have a unique label.
+        Labels may be of any python type that can be compared with ``==`` (int, float,
+        string, tuple, etc). By default (``None``), the integers ``0:n_rows`` are used
+        as labels.
+
+        .. versionadded:: 0.10
     n_folds : int | sklearn.model_selection.BaseCrollValidator | None
         Number of cross-validation folds to use when computing the distance
         metric. Folds are created based on the ``y`` parameter. Specify
@@ -778,21 +866,24 @@ def rsa_nifti(
     ):
         raise ValueError("The image data must be 4-dimensional Nifti-like images")
 
+    if labels_image is None and y is not None:
+        labels_image = y
+
     # Check for compatibility of the BOLD images and the model features
     for rdm in rdm_model:
         n_items = _n_items_from_rdm(rdm)
-        if image.shape[3] != n_items and y is None:
+        if image.shape[3] != n_items and labels_image is None:
             raise ValueError(
                 "The number of images (%d) should be equal to the "
                 "number of items in `rdm_model` (%d). Alternatively, use "
                 "the `y` parameter to assign evokeds to items."
                 % (image.shape[3], n_items)
             )
-        if y is not None and len(np.unique(y)) != n_items:
+        if labels_image is not None and len(set(labels_image)) != n_items:
             raise ValueError(
                 "The number of items in `rdm_model` (%d) does not match "
-                "the number of items encoded in the `y` matrix (%d)."
-                % (n_items, len(np.unique(y)))
+                "the number of items encoded in the `labels_image` list (%d)."
+                % (n_items, len(set(labels_image)))
             )
 
     # Get data as (n_items x n_voxels)
@@ -861,7 +952,8 @@ def rsa_nifti(
         data_rdm_params=image_rdm_params,
         rsa_metric=rsa_metric,
         ignore_nan=ignore_nan,
-        y=y,
+        labels_X=labels_image,
+        labels_rdm_model=labels_rdm_model,
         n_folds=n_folds,
         n_jobs=n_jobs,
         verbose=verbose,
@@ -890,6 +982,7 @@ def rdm_nifti(
     dist_metric="correlation",
     dist_params=dict(),
     y=None,
+    labels=None,
     n_folds=1,
     roi_mask=None,
     brain_mask=None,
@@ -921,9 +1014,19 @@ def rdm_nifti(
         Refer to :mod:`scipy.spatial.distance` for a list of all other metrics
         and their arguments. Defaults to an empty dictionary.
     y : ndarray of int, shape (n_items,) | None
-        For each source estimate, a number indicating the item to which it
-        belongs. When ``None``, each source estimate is assumed to belong to a
-        different item. Defaults to ``None``.
+        Deprecated, use ``labels`` instead.
+        For each image in the Nifti image object, a number indicating the item to which
+        it belongs. Defaults to ``None``, in which case ``labels`` is used.
+    labels : list | None
+        For each image in the Nifti image object, a label that identifies the item to
+        which it corresponds. Multiple images objects may correspond to the same item,
+        in which case they should have the same label and will either be averaged when
+        computing the data RDM (``n_folds=1``) or used for cross-validation
+        (``n_folds>1``). Labels may be of any python type that can be compared with
+        ``==`` (int, float, string, tuple, etc). By default (``None``), the integers
+        ``0:image.shape[3]`` are used as labels.
+
+        .. versionadded:: 0.10
     n_folds : int | sklearn.model_selection.BaseCrollValidator | None
         Number of cross-validation folds to use when computing the distance
         metric. Folds are created based on the ``y`` parameter. Specify
@@ -968,6 +1071,9 @@ def rdm_nifti(
 
     # Get data as (n_items x n_voxels)
     X = image.get_fdata().reshape(-1, image.shape[3]).T
+
+    if labels is None and y is not None:
+        labels = y
 
     # Find voxel positions
     voxels = np.array(list(np.ndindex(image.shape[:-1])))
@@ -1021,7 +1127,7 @@ def rdm_nifti(
         patches,
         dist_metric=dist_metric,
         dist_params=dist_params,
-        y=y,
+        labels=labels,
         n_folds=n_folds,
         n_jobs=n_jobs,
     )

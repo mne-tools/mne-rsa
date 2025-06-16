@@ -107,14 +107,6 @@ else:
     plot_rdms([pixel_rdm, facenet_rdm], names=["pixels", "facenet"])
 
 ########################################################################################
-# As was the case with the sensor-level RSA, we also need the ``y`` array that assigns a
-# number to each epoch indicating which one of the 297 images was shown, taking care to
-# assign numbers that respect the order in which the images appear in ``pixel_dsm`` and
-# ``facenet_dsm``.
-
-y = np.searchsorted(filenames, epochs.metadata.file)
-
-########################################################################################
 # To source space!
 # ----------------
 #
@@ -192,7 +184,12 @@ rois = [r for r in rois if r.name in roi_sel]
 # used before.
 #
 # We will perform RSA on the source estimates, using the pixel and FaceNet RDMs as model
-# RDMs. Searchlight patches swill have a spatial radius of 2cm (=0.02 meters) and a
+# RDMs. As was the case with the sensor-level RSA, we will need specify labels to
+# indicate which image was shown during which epoch and which image corresponds to each
+# row/column of the ``pixel_rdm`` and ``facenet_rdm``. We will use the filenames for
+# this.
+#
+# Searchlight patches swill have a spatial radius of 2cm (=0.02 meters) and a
 # temporal radius of 50 ms (=0.05 seconds). We will restrict the analysis to 0.0 to 0.5
 # seconds after stimulus onset and to the cortical regions (``rois``) we’ve selected
 # above. We can optionally set ``n_jobs=-1`` to use all CPU cores and ``verbose=True``
@@ -207,7 +204,8 @@ stc_rsa = rsa_stcs(
     stcs,
     [pixel_rdm, facenet_rdm],
     src=src,
-    y=y,
+    labels_stcs=epochs.metadata.file,
+    labels_rdm_model=filenames,
     tmin=0,
     tmax=0.5,
     sel_vertices=rois,

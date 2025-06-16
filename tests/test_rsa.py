@@ -324,6 +324,47 @@ class TestRSASearchlight:
         assert rsa_result.shape == (3,)
         assert_equal(rsa_result, 1)
 
+    def test_rsa_match_order(self):
+        """Test order matching of rsa_array."""
+        data = np.array([[1], [2], [3], [4]])
+        model_rdm = np.array([1, 2, 3, 1, 2, 1])
+
+        rsa_result = rsa_array(
+            data,
+            model_rdm,
+            data_rdm_metric="euclidean",
+            labels_X=["a", "b", "c", "d"],
+            labels_rdm_model=["a", "b", "c", "d"],
+        )
+        assert rsa_result == 1
+
+        rsa_result = rsa_array(
+            X=np.array([[4], [2], [3], [1]]),
+            rdm_model=np.array([1, 2, 3, 1, 2, 1]),
+            data_rdm_metric="euclidean",
+            labels_X=["d", "b", "c", "a"],
+            labels_rdm_model=["a", "b", "c", "d"],
+        )
+        assert rsa_result == 1
+
+        rsa_result = rsa_array(
+            X=np.array([[4], [2], [3], [1]]),
+            rdm_model=np.array([1, 2, 3, 1, 2, 1]),
+            data_rdm_metric="euclidean",
+            labels_X=["a", "b", "c", "d"],
+            labels_rdm_model=["d", "b", "c", "a"],
+        )
+        assert rsa_result == 1
+
+        rsa_result = rsa_array(
+            X=np.array([[1], [3], [2], [4], [3], [5], [4], [6]]),
+            rdm_model=np.array([1, 2, 3, 1, 2, 1]),
+            data_rdm_metric="euclidean",
+            labels_X=["a", "a", "b", "b", "c", "c", "d", "d"],
+            labels_rdm_model=["a", "b", "c", "d"],
+        )
+        assert rsa_result == 1
+
 
 class TestKendallTau:
     """Test computing Kendall's Tau Alpha metric."""
