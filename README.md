@@ -1,7 +1,7 @@
 # MNE-RSA
 
-[![Unit tests](https://github.com/wmvanvliet/mne-rsa/workflows/unit%20tests/badge.svg)](https://github.com/wmvanvliet/mne-rsa/actions?query=workflow%3A%22unit+tests%22)
-[![docs](https://github.com/wmvanvliet/mne-rsa/workflows/build-docs/badge.svg)](https://github.com/wmvanvliet/mne-rsa/actions?query=workflow%3Abuild-docs)
+[![Unit tests](https://github.com/mne-tools/mne-rsa/workflows/unit%20tests/badge.svg)](https://github.com/mne-tools/mne-rsa/actions?query=workflow%3A%22unit+tests%22)
+[![docs](https://github.com/mne-tools/mne-rsa/workflows/build-docs/badge.svg)](https://github.com/mne-tools/mne-rsa/actions?query=workflow%3Abuild-docs)
 [![doi](https://zenodo.org/badge/194268560.svg)](https://zenodo.org/doi/10.5281/zenodo.11242874)
 
 This is a Python package for performing representational similarity analysis (RSA) using [MNE-Python](https://martinos.org/mne/stable/index.html>) data structures.
@@ -98,18 +98,18 @@ However, there is also some integration with [nipy](https://nipy.org) for fMRI t
 ## Support
 
 This free software comes without any form of official support.
-However, if you think you have encountered a bug or have a particularly great idea for improvements, please open an [issue on Github](https://github.com/wmvanvliet/mne-rsa/issues).
+However, if you think you have encountered a bug or have a particularly great idea for improvements, please open an [issue on Github](https://github.com/mne-tools/mne-rsa/issues).
 For questions and help with your analysis, you are welcome to post on the [MNE forum](https://mne.discourse.group/).
 
 ## Contributing
 
-Development of the package happens on [Github](https://github.com/wmvanvliet/mne-rsa).
-Everyone is welcome to raise [issues](https://github.com/wmvanvliet/mne-rsa/issues) or contribute [pull requests](https://github.com/wmvanvliet/mne-rsa/pulls).
+Development of the package happens on [Github](https://github.com/mne-tools/mne-rsa).
+Everyone is welcome to raise [issues](https://github.com/mne-tools/mne-rsa/issues) or contribute [pull requests](https://github.com/mne-tools/mne-rsa/pulls).
 
 Here is how to install the additional required packages for developing MNE-RSA and set up the package in development mode:
 
 ```bash
-git clone git@github.com:wmvanvliet/mne-rsa.git
+git clone git@github.com:mne-tools/mne-rsa.git
 cd mne-rsa
 pip install -r requirements-dev.txt
 pip install -e .
@@ -124,5 +124,5 @@ If you end up using this package for the data analysis that is part of a scienti
 article, please cite:
 
 Marijn van Vliet, Takao Shimizu, Stefan Appelhoff, Yuan-Fang Zhao, & Richard
-Höchenberger. (2024). wmvanvliet/mne-rsa: Version 0.9.1 (0.9.1). Zenodo.
+Höchenberger. (2024). mne-tools/mne-rsa: Version 0.9.1 (0.9.1). Zenodo.
 https://doi.org/10.5281/zenodo.11258133
