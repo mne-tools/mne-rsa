@@ -16,8 +16,13 @@ Frontiers in Systems Neuroscience, 2(4).
 [https://doi.org/10.3389/neuro.06.004.2008](https://doi.org/10.3389/neuro.06.004.2008)
 
 <picture>
+<<<<<<< HEAD
   <source media="(prefers-color-scheme: light)" srcset="doc/rsa.png">
   <source media="(prefers-color-scheme: dark)" srcset="doc/rsa_dark.png">
+=======
+  <source media="(prefers-color-scheme: dark)" srcset="doc/rsa_dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="doc/rsa.png">
+>>>>>>> main
   <img src="doc/rsa.png" width="600">
 </picture>
 
@@ -79,12 +84,7 @@ mne.viz.plot_compare_evokeds({column: result for column, result in zip(columns, 
 ## Documentation
 For a detailed guide on RSA analyis from start to finish on an example dataset, see the [tutorials](auto_examples/tutorials/index.html).
 
-<<<<<<< HEAD
-For quick guides on how to do specific things, see the
-[examples](auto_examples/index.html).
-=======
 For quick guides on how to do specific things, see the [examples](auto_examples/index.html).
->>>>>>> doc
 
 Finally, there is the [API reference](api.html) documentation.
 
@@ -100,7 +100,6 @@ However, there is also some integration with [nipy](https://nipy.org) for fMRI t
 This free software comes without any form of official support.
 However, if you think you have encountered a bug or have a particularly great idea for improvements, please open an [issue on Github](https://github.com/wmvanvliet/mne-rsa/issues).
 For questions and help with your analysis, you are welcome to post on the [MNE forum](https://mne.discourse.group/).
-
 
 ## Contributing
 

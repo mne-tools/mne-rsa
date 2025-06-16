@@ -158,26 +158,3 @@ jobs:
           git commit -m "update documentation for release ${{ github.event.release.tag_name }}"
           git push origin gh-pages
 
-  publish:
-    if: github.event_name == 'release'
-    needs: [unit-tests, doc-deploy-release]
-    name: publish to PyPI
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    permissions:
-      id-token: write
-      contents: write
-    environment:
-      name: pypi
-      url: https://pypi.org/p/mne-rsa
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          pattern: cibw-wheels-*
-          merge-multiple: true
-          path: dist
-      - uses: softprops/action-gh-release@v2
-        with:
-          files: dist/*
-          tag_name: ${{ github.event.release.tag_name }}
-      - uses: pypa/gh-action-pypi-publish@release/v1
