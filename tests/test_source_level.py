@@ -80,45 +80,53 @@ class TestStcRDMs:
 
     def test_rdm_single_searchlight_patch(self):
         """Test making an RDM with a single searchlight patch."""
-        stcs, _, y = make_stcs()
-        rdms = list(rdm_stcs(stcs, y=y))
+        stcs, _, labels = make_stcs()
+        rdms = list(rdm_stcs(stcs, labels=labels))
+        assert len(rdms) == 1
+        assert squareform(rdms[0]).shape == (4, 4)
+
+        rdms = list(rdm_stcs(stcs, y=labels))
         assert len(rdms) == 1
         assert squareform(rdms[0]).shape == (4, 4)
 
         # Invalid inputs.
         with pytest.raises(ValueError, match="the number of items"):
-            next(rdm_stcs(stcs, y=[1, 2, 3]))
+            next(rdm_stcs(stcs, labels=[1, 2, 3]))
 
     def test_rdm_temporal(self):
         """Test making RDMs with a sliding temporal window."""
-        stcs, _, y = make_stcs()
+        stcs, _, labels = make_stcs()
 
-        rdms = list(rdm_stcs(stcs, y=y, temporal_radius=0.02))  # 2 samples
+        rdms = list(rdm_stcs(stcs, labels=labels, temporal_radius=0.02))  # 2 samples
         assert len(rdms) == len(stcs[0].times) - 2 * 2
         assert squareform(rdms[0]).shape == (4, 4)
 
         # Restrict in time
-        rdms = list(rdm_stcs(stcs, y=y, temporal_radius=0.02, tmin=0.139, tmax=0.161))
+        rdms = list(
+            rdm_stcs(stcs, labels=labels, temporal_radius=0.02, tmin=0.139, tmax=0.161)
+        )
         assert len(rdms) == 3
 
         # Out of bounds and wrong order of tmin/tmax
         with pytest.raises(ValueError, match="`tmin=-5` is before the first sample"):
-            next(rdm_stcs(stcs, y=y, temporal_radius=0.02, tmin=-5))
+            next(rdm_stcs(stcs, labels=labels, temporal_radius=0.02, tmin=-5))
         with pytest.raises(ValueError, match="`tmax=5` is after the last sample"):
-            next(rdm_stcs(stcs, y=y, temporal_radius=0.02, tmax=5))
+            next(rdm_stcs(stcs, labels=labels, temporal_radius=0.02, tmax=5))
         with pytest.raises(ValueError, match="`tmax=0.1` is smaller than `tmin=0.2`"):
-            next(rdm_stcs(stcs, y=y, temporal_radius=0.02, tmax=0.1, tmin=0.2))
+            next(
+                rdm_stcs(stcs, labels=labels, temporal_radius=0.02, tmax=0.1, tmin=0.2)
+            )
 
         # Too small to or large temporal radius
         with pytest.raises(ValueError, match="less than one sample"):
-            next(rdm_stcs(stcs, y=y, temporal_radius=0))
+            next(rdm_stcs(stcs, labels=labels, temporal_radius=0))
         with pytest.raises(ValueError, match="too large"):
-            next(rdm_stcs(stcs, y=y, temporal_radius=100))
+            next(rdm_stcs(stcs, labels=labels, temporal_radius=100))
 
     def test_rdm_spatial(self):
         """Test making RDMs with a searchlight across sensors."""
-        stcs, src, y = make_stcs()
-        rdms = list(rdm_stcs(stcs, src=src, y=y, spatial_radius=0.05))  # 5 cm
+        stcs, src, labels = make_stcs()
+        rdms = list(rdm_stcs(stcs, src=src, labels=labels, spatial_radius=0.05))  # 5 cm
         assert len(rdms) == len(stcs[0].data)
         assert squareform(rdms[0]).shape == (4, 4)
 
@@ -127,14 +135,20 @@ class TestStcRDMs:
             "sample", subjects_dir=mne.datasets.sample.data_path() / "subjects"
         )[0]
         rdms = list(
-            rdm_stcs(stcs, src=src, y=y, spatial_radius=0.05, sel_vertices=label)
+            rdm_stcs(
+                stcs, src=src, labels=labels, spatial_radius=0.05, sel_vertices=label
+            )
         )
         assert len(rdms) == len(stcs[0].in_label(label).vertices[0])
 
         # Restrict vertices to 2 selected indices.
         rdms = list(
             rdm_stcs(
-                stcs, src=src, y=y, spatial_radius=0.05, sel_vertices_by_index=[0, 1]
+                stcs,
+                src=src,
+                labels=labels,
+                spatial_radius=0.05,
+                sel_vertices_by_index=[0, 1],
             )
         )
         assert len(rdms) == 2
@@ -145,7 +159,7 @@ class TestStcRDMs:
                 rdm_stcs(
                     stcs,
                     src,
-                    y=y,
+                    labels=labels,
                     spatial_radius=0.05,
                     sel_vertices=[[-1, 109209], [-304, 120930904]],
                 )
@@ -155,19 +169,25 @@ class TestStcRDMs:
         with pytest.raises(ValueError, match="vertices are not unique"):
             next(
                 rdm_stcs(
-                    stcs, src, y=y, spatial_radius=0.05, sel_vertices_by_index=[1, 1]
+                    stcs,
+                    src,
+                    labels=labels,
+                    spatial_radius=0.05,
+                    sel_vertices_by_index=[1, 1],
                 )
             )
 
         # Invalid inputs.
         with pytest.raises(ValueError, match="you also need to set `src`"):
-            next(rdm_stcs(stcs, y=y, spatial_radius=0.05))
+            next(rdm_stcs(stcs, labels=labels, spatial_radius=0.05))
 
     def test_rdm_spatio_temporal(self):
         """Test making RDMs with a searchlight across both sensors and time."""
-        stcs, src, y = make_stcs()
+        stcs, src, labels = make_stcs()
         rdms = list(
-            rdm_stcs(stcs, src=src, y=y, spatial_radius=0.05, temporal_radius=0.02)
+            rdm_stcs(
+                stcs, src=src, labels=labels, spatial_radius=0.05, temporal_radius=0.02
+            )
         )
         assert len(rdms) == len(stcs[0].data) * (len(stcs[0].times) - 2 * 2)
         assert squareform(rdms[0]).shape == (4, 4)
@@ -199,17 +219,21 @@ class TestNiftiRDMs:
         assert squareform(rdms[0]).shape == (4, 4)
         assert not np.any(np.isnan(rdms))
 
-        # Specify `y`
-        y = [1, 1, 2, 2]
-        rdms = list(rdm_nifti(bold, y=y))
+        # Specify `labels`
+        labels = [1, 1, 2, 2]
+        rdms = list(rdm_nifti(bold, labels=labels))
+        assert len(rdms) == 1
+        assert squareform(rdms[0]).shape == (2, 2)
+
+        rdms = list(rdm_nifti(bold, y=labels))
         assert len(rdms) == 1
         assert squareform(rdms[0]).shape == (2, 2)
 
         # Invalid data.
         with pytest.raises(ValueError, match="data must be 4-dimensional Nifti-like"):
             next(rdm_nifti(bold.get_fdata()))
-        with pytest.raises(ValueError, match=r"The length of y \(3\) does not match"):
-            next(rdm_nifti(bold, y=[1, 2, 3]))
+        with pytest.raises(ValueError, match="The number of labels in `labels`"):
+            next(rdm_nifti(bold, labels=[1, 2, 3]))
 
     def test_rdm_spatial(self):
         """Test making RDMs with a searchlight across voxels."""
@@ -245,34 +269,44 @@ class TestStcRSA:
 
     def test_rsa_single_searchlight_patch(self):
         """Test performing RSA with a single searchlight patch."""
-        stcs, _, y = make_stcs()
+        stcs, _, labels_stcs = make_stcs()
         model_rdm = np.array([0.5, 1, 1, 1, 1, 0.5])
-        rsa_result = rsa_stcs(stcs, model_rdm, y=y)
+        rsa_result = rsa_stcs(stcs, model_rdm, labels_stcs=labels_stcs)
+        assert isinstance(rsa_result, np.ndarray)
+        assert rsa_result.shape == tuple()
+
+        rsa_result = rsa_stcs(stcs, model_rdm, y=labels_stcs)
         assert isinstance(rsa_result, np.ndarray)
         assert rsa_result.shape == tuple()
 
         # Try using different metrics
-        rsa_euc = rsa_stcs(stcs, model_rdm, y=y, stc_rdm_metric="euclidean")
+        rsa_euc = rsa_stcs(
+            stcs, model_rdm, labels_stcs=labels_stcs, stc_rdm_metric="euclidean"
+        )
         assert not np.allclose(rsa_result, rsa_euc)
-        rsa_tau = rsa_stcs(stcs, model_rdm, y=y, rsa_metric="kendall-tau-a")
+        rsa_tau = rsa_stcs(
+            stcs, model_rdm, labels_stcs=labels_stcs, rsa_metric="kendall-tau-a"
+        )
         assert not np.allclose(rsa_result, rsa_tau)
 
         # Two model RDMs
         model_rdm2 = np.array([0.2, 0.5, 1, 1, 0.5, 0.2])
-        rsa_result = rsa_stcs(stcs, [model_rdm, model_rdm2], y=y)
+        rsa_result = rsa_stcs(stcs, [model_rdm, model_rdm2], labels_stcs=labels_stcs)
         assert rsa_result.shape == (2,)
 
         # Invalid inputs.
         with pytest.raises(ValueError, match="The number of source estimates"):
             rsa_stcs(stcs, model_rdm)
-        with pytest.raises(ValueError, match="the number of items encoded in the `y`"):
-            rsa_stcs(stcs, model_rdm, y=[1, 2, 3])
+        with pytest.raises(ValueError, match="items encoded in the `labels_stcs` list"):
+            rsa_stcs(stcs, model_rdm, labels_stcs=[1, 2, 3])
 
     def test_rsa_temporal(self):
         """Test performing RSA with a sliding temporal window."""
-        stcs, _, y = make_stcs()
+        stcs, _, labels_stcs = make_stcs()
         model_rdm = np.array([0.5, 1, 1, 1, 1, 0.5])
-        rsa_result = rsa_stcs(stcs, model_rdm, y=y, temporal_radius=0.02)  # 2 samples
+        rsa_result = rsa_stcs(
+            stcs, model_rdm, labels_stcs=labels_stcs, temporal_radius=0.02
+        )  # 2 samples
         assert rsa_result.data.shape == (1, len(stcs[0].times) - 2 * 2)
         assert rsa_result.data.max().round(2) == 0.62
         assert rsa_result.times[0].round(2) == 0.12
@@ -280,7 +314,12 @@ class TestStcRSA:
 
         # Restrict in time
         rsa_result = rsa_stcs(
-            stcs, model_rdm, y=y, temporal_radius=0.02, tmin=0.139, tmax=0.161
+            stcs,
+            model_rdm,
+            labels_stcs=labels_stcs,
+            temporal_radius=0.02,
+            tmin=0.139,
+            tmax=0.161,
         )
         print(stcs[0].times)
         print(rsa_result.times)
@@ -293,7 +332,7 @@ class TestStcRSA:
         rsa_result = rsa_stcs(
             stcs,
             [model_rdm, model_rdm2],
-            y=y,
+            labels_stcs=labels_stcs,
             temporal_radius=0.02,
         )
         assert len(rsa_result) == 2
@@ -304,23 +343,38 @@ class TestStcRSA:
 
         # Out of bounds and wrong order of tmin/tmax
         with pytest.raises(ValueError, match="`tmin=-5` is before the first sample"):
-            rsa_stcs(stcs, model_rdm, y=y, temporal_radius=0.02, tmin=-5)
+            rsa_stcs(
+                stcs, model_rdm, labels_stcs=labels_stcs, temporal_radius=0.02, tmin=-5
+            )
         with pytest.raises(ValueError, match="`tmax=5` is after the last sample"):
-            rsa_stcs(stcs, model_rdm, y=y, temporal_radius=0.02, tmax=5)
+            rsa_stcs(
+                stcs, model_rdm, labels_stcs=labels_stcs, temporal_radius=0.02, tmax=5
+            )
         with pytest.raises(ValueError, match="`tmax=0.1` is smaller than `tmin=0.2`"):
-            rsa_stcs(stcs, model_rdm, y=y, temporal_radius=0.02, tmax=0.1, tmin=0.2)
+            rsa_stcs(
+                stcs,
+                model_rdm,
+                labels_stcs=labels_stcs,
+                temporal_radius=0.02,
+                tmax=0.1,
+                tmin=0.2,
+            )
 
         # Too small to or large temporal radius
         with pytest.raises(ValueError, match="less than one sample"):
-            next(rsa_stcs(stcs, model_rdm, y=y, temporal_radius=0))
+            next(rsa_stcs(stcs, model_rdm, labels_stcs=labels_stcs, temporal_radius=0))
         with pytest.raises(ValueError, match="too large"):
-            next(rsa_stcs(stcs, model_rdm, y=y, temporal_radius=100))
+            next(
+                rsa_stcs(stcs, model_rdm, labels_stcs=labels_stcs, temporal_radius=100)
+            )
 
     def test_rsa_spatial(self):
         """Test performing RSA with a searchlight across vertices."""
-        stcs, src, y = make_stcs()
+        stcs, src, labels_stcs = make_stcs()
         model_rdm = np.array([0.5, 1, 1, 1, 1, 0.5])
-        rsa_result = rsa_stcs(stcs, model_rdm, y=y, src=src, spatial_radius=0.05)
+        rsa_result = rsa_stcs(
+            stcs, model_rdm, labels_stcs=labels_stcs, src=src, spatial_radius=0.05
+        )
         assert rsa_result.data.shape == (stcs[0].shape[0], 1)
         assert len(rsa_result.times) == 1
         assert_equal(rsa_result.times, stcs[0].times[len(stcs[0].times) // 2])
@@ -330,7 +384,12 @@ class TestStcRSA:
             "sample", subjects_dir=mne.datasets.sample.data_path() / "subjects"
         )[0]
         rsa_result = rsa_stcs(
-            stcs, model_rdm, src=src, y=y, spatial_radius=0.05, sel_vertices=label
+            stcs,
+            model_rdm,
+            src=src,
+            labels_stcs=labels_stcs,
+            spatial_radius=0.05,
+            sel_vertices=label,
         )
         assert_equal(rsa_result.vertices[0], stcs[0].in_label(label).vertices[0])
         assert_equal(rsa_result.vertices[1], [])
@@ -340,7 +399,7 @@ class TestStcRSA:
             stcs,
             model_rdm,
             src=src,
-            y=y,
+            labels_stcs=labels_stcs,
             spatial_radius=0.05,
             sel_vertices_by_index=[0, 1],
         )
@@ -353,7 +412,7 @@ class TestStcRSA:
             stcs_restricted,
             model_rdm,
             src=src,
-            y=y,
+            labels_stcs=labels_stcs,
             spatial_radius=0.05,
             sel_vertices_by_index=[0, 1],
         )
@@ -366,7 +425,7 @@ class TestStcRSA:
                 stcs,
                 model_rdm,
                 src=src,
-                y=y,
+                labels_stcs=labels_stcs,
                 spatial_radius=0.05,
                 sel_vertices=[[-1, 109209], [-304, 120930904]],
             )
@@ -377,21 +436,26 @@ class TestStcRSA:
                 stcs,
                 model_rdm,
                 src=src,
-                y=y,
+                labels_stcs=labels_stcs,
                 spatial_radius=0.05,
                 sel_vertices_by_index=[1, 1],
             )
 
         # Invalid inputs.
         with pytest.raises(ValueError, match="you also need to set `src`"):
-            rsa_stcs(stcs, model_rdm, y=y, spatial_radius=0.05)
+            rsa_stcs(stcs, model_rdm, labels_stcs=labels_stcs, spatial_radius=0.05)
 
     def test_rsa_spatio_temporal(self):
         """Test performing RSA with a searchlight across both vertices and time."""
-        stcs, src, y = make_stcs()
+        stcs, src, labels_stcs = make_stcs()
         model_rdm = np.array([0.5, 1, 1, 1, 1, 0.5])
         rsa_result = rsa_stcs(
-            stcs, model_rdm, y=y, src=src, temporal_radius=0.02, spatial_radius=0.05
+            stcs,
+            model_rdm,
+            labels_stcs=labels_stcs,
+            src=src,
+            temporal_radius=0.02,
+            spatial_radius=0.05,
         )
         assert rsa_result.data.shape == (
             stcs[0].data.shape[0],
@@ -400,21 +464,23 @@ class TestStcRSA:
 
     def test_rsa_vol(self):
         """Test performing RSA on volumetric source estimates."""
-        stcs, src, y = make_vol_stcs()
+        stcs, src, labels_stcs = make_vol_stcs()
         model_rdm = np.array([0.5, 1, 1, 1, 1, 0.5])
 
         # Single patch
-        rsa_result = rsa_stcs(stcs, model_rdm, y=y)
+        rsa_result = rsa_stcs(stcs, model_rdm, labels_stcs=labels_stcs)
         assert isinstance(rsa_result, np.ndarray)
         assert rsa_result.shape == tuple()
 
         # Two model RDMs
         model_rdm2 = np.array([0.2, 0.5, 1, 1, 0.5, 0.2])
-        rsa_result = rsa_stcs(stcs, [model_rdm, model_rdm2], y=y)
+        rsa_result = rsa_stcs(stcs, [model_rdm, model_rdm2], labels_stcs=labels_stcs)
         assert rsa_result.shape == (2,)
 
         # Temporal
-        rsa_result = rsa_stcs(stcs, model_rdm, y=y, temporal_radius=0.02)  # 2 samples
+        rsa_result = rsa_stcs(
+            stcs, model_rdm, labels_stcs=labels_stcs, temporal_radius=0.02
+        )  # 2 samples
         assert rsa_result.data.shape == (1, len(stcs[0].times) - 2 * 2)
         assert rsa_result.times[0].round(2) == 0.12
         assert rsa_result.times[-1].round(2) == 0.18
@@ -424,7 +490,7 @@ class TestStcRSA:
         rsa_result = rsa_stcs(
             stcs,
             [model_rdm, model_rdm2],
-            y=y,
+            labels_stcs=labels_stcs,
             temporal_radius=0.02,
         )
         assert len(rsa_result) == 2
@@ -434,14 +500,21 @@ class TestStcRSA:
         assert rsa_result[0].times[-1].round(2) == 0.18
 
         # Spatial
-        rsa_result = rsa_stcs(stcs, model_rdm, y=y, src=src, spatial_radius=0.05)
+        rsa_result = rsa_stcs(
+            stcs, model_rdm, labels_stcs=labels_stcs, src=src, spatial_radius=0.05
+        )
         assert rsa_result.data.shape == (stcs[0].shape[0], 1)
         assert len(rsa_result.times) == 1
         assert_equal(rsa_result.times, stcs[0].times[len(stcs[0].times) // 2])
 
         # Spatio-temporal
         rsa_result = rsa_stcs(
-            stcs, model_rdm, y=y, src=src, temporal_radius=0.02, spatial_radius=0.05
+            stcs,
+            model_rdm,
+            labels_stcs=labels_stcs,
+            src=src,
+            temporal_radius=0.02,
+            spatial_radius=0.05,
         )
         assert rsa_result.data.shape == (
             stcs[0].data.shape[0],
@@ -454,13 +527,21 @@ class TestRoiRSA:
 
     def test_rsa_rois(self):
         """Test performing RSA with a searchlight across ROIs."""
-        stcs, src, y = make_stcs()
+        stcs, src, labels_stcs = make_stcs()
         model_rdm = np.array([0.5, 1, 1, 1, 1, 0.5])
         rois = mne.read_labels_from_annot(
             "sample", subjects_dir=mne.datasets.sample.data_path() / "subjects"
         )
 
-        rsa_result, rsa_stc = rsa_stcs_rois(stcs, model_rdm, src, rois, y=y)
+        rsa_result, rsa_stc = rsa_stcs_rois(
+            stcs, model_rdm, src, rois, labels_stcs=labels_stcs
+        )
+        assert rsa_result.shape == (len(rois),)
+        assert rsa_stc.data.shape == (stcs[0].shape[0], 1)
+        assert len(rsa_stc.times) == 1
+        assert_equal(rsa_stc.times, stcs[0].times[len(stcs[0].times) // 2])
+
+        rsa_result, rsa_stc = rsa_stcs_rois(stcs, model_rdm, src, rois, y=labels_stcs)
         assert rsa_result.shape == (len(rois),)
         assert rsa_stc.data.shape == (stcs[0].shape[0], 1)
         assert len(rsa_stc.times) == 1
@@ -469,7 +550,7 @@ class TestRoiRSA:
         # Two model RDMs
         model_rdm2 = np.array([0.2, 0.5, 1, 1, 0.5, 0.2])
         rsa_result, rsa_stc = rsa_stcs_rois(
-            stcs, [model_rdm, model_rdm2], src, rois, y=y
+            stcs, [model_rdm, model_rdm2], src, rois, labels_stcs=labels_stcs
         )
         assert rsa_result.shape == (2, len(rois))
         assert not np.array_equal(rsa_result[0], rsa_result[1])
@@ -481,19 +562,19 @@ class TestRoiRSA:
         # Invalid inputs.
         with pytest.raises(ValueError, match="The number of source estimates"):
             rsa_stcs_rois(stcs, model_rdm, src, rois)
-        with pytest.raises(ValueError, match="the number of items encoded in the `y`"):
-            rsa_stcs_rois(stcs, model_rdm, src, rois, y=[1, 2, 3])
+        with pytest.raises(ValueError, match="items encoded in the `labels_stcs`"):
+            rsa_stcs_rois(stcs, model_rdm, src, rois, labels_stcs=[1, 2, 3])
 
     def test_rsa_rois_temporal(self):
         """Test performing temporal RSA with a searchlight across ROIs."""
-        stcs, src, y = make_stcs()
+        stcs, src, labels_stcs = make_stcs()
         model_rdm = np.array([0.5, 1, 1, 1, 1, 0.5])
         rois = mne.read_labels_from_annot(
             "sample", subjects_dir=mne.datasets.sample.data_path() / "subjects"
         )
 
         rsa_result, rsa_stc = rsa_stcs_rois(
-            stcs, model_rdm, src, rois, y=y, temporal_radius=0.02
+            stcs, model_rdm, src, rois, labels_stcs=labels_stcs, temporal_radius=0.02
         )
         assert rsa_result.shape == (len(rois), len(stcs[0].times) - 2 * 2)
         assert rsa_stc.data.shape == (stcs[0].shape[0], len(stcs[0].times) - 2 * 2)
@@ -503,17 +584,31 @@ class TestRoiRSA:
         # Out of bounds and wrong order of tmin/tmax
         with pytest.raises(ValueError, match="`tmin=-5` is before the first sample"):
             rsa_stcs_rois(
-                stcs, model_rdm, src, rois, y=y, temporal_radius=0.02, tmin=-5
+                stcs,
+                model_rdm,
+                src,
+                rois,
+                labels_stcs=labels_stcs,
+                temporal_radius=0.02,
+                tmin=-5,
             )
         with pytest.raises(ValueError, match="`tmax=5` is after the last sample"):
-            rsa_stcs_rois(stcs, model_rdm, src, rois, y=y, temporal_radius=0.02, tmax=5)
+            rsa_stcs_rois(
+                stcs,
+                model_rdm,
+                src,
+                rois,
+                labels_stcs=labels_stcs,
+                temporal_radius=0.02,
+                tmax=5,
+            )
         with pytest.raises(ValueError, match="`tmax=0.1` is smaller than `tmin=0.2`"):
             rsa_stcs_rois(
                 stcs,
                 model_rdm,
                 src,
                 rois,
-                y=y,
+                labels_stcs=labels_stcs,
                 temporal_radius=0.02,
                 tmax=0.1,
                 tmin=0.2,
@@ -521,9 +616,27 @@ class TestRoiRSA:
 
         # Too small to or large temporal radius
         with pytest.raises(ValueError, match="less than one sample"):
-            next(rsa_stcs_rois(stcs, model_rdm, src, rois, y=y, temporal_radius=0))
+            next(
+                rsa_stcs_rois(
+                    stcs,
+                    model_rdm,
+                    src,
+                    rois,
+                    labels_stcs=labels_stcs,
+                    temporal_radius=0,
+                )
+            )
         with pytest.raises(ValueError, match="too large"):
-            next(rsa_stcs_rois(stcs, model_rdm, src, rois, y=y, temporal_radius=100))
+            next(
+                rsa_stcs_rois(
+                    stcs,
+                    model_rdm,
+                    src,
+                    rois,
+                    labels_stcs=labels_stcs,
+                    temporal_radius=100,
+                )
+            )
 
 
 class TestNiftiRSA:
@@ -534,6 +647,14 @@ class TestNiftiRSA:
         bold, mask = make_nifti()
         model_rdm = np.array([0.5, 1, 1, 1, 1, 0.5])
         rsa_result = rsa_nifti(bold, model_rdm)
+        assert isinstance(rsa_result, np.ndarray)
+        assert rsa_result.shape == tuple()
+
+        # Specify labels
+        rsa_result = rsa_nifti(bold, model_rdm, labels_image=[1, 0, 2, 3])
+        assert isinstance(rsa_result, np.ndarray)
+        assert rsa_result.shape == tuple()
+        rsa_result = rsa_nifti(bold, model_rdm, y=[1, 0, 2, 3])
         assert isinstance(rsa_result, np.ndarray)
         assert rsa_result.shape == tuple()
 
@@ -548,8 +669,8 @@ class TestNiftiRSA:
             rsa_result = rsa_nifti(bold.get_fdata(), model_rdm)
         with pytest.raises(ValueError, match="The number of images"):
             rsa_result = rsa_nifti(bold.slicer[:, :, :, :3], model_rdm)
-        with pytest.raises(ValueError, match="The number of items"):
-            rsa_result = rsa_nifti(bold, model_rdm, y=[1, 2, 3])
+        with pytest.raises(ValueError, match="items encoded in the `labels_image`"):
+            rsa_result = rsa_nifti(bold, model_rdm, labels_image=[1, 2, 3])
 
     def test_rsa_spatial(self):
         """Test performing RSA with a searchlight across vertices."""

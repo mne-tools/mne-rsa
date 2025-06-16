@@ -49,26 +49,32 @@ class TestEpochRDMs:
         """Test inserting NaNs at dropped epochs."""
         # Start with a clean drop log
         epochs = load_epochs()
-        y = epochs.events[:, 2]
+        labels = epochs.events[:, 2]
         epochs.drop_log = tuple(len(epochs) * [tuple()])
         epochs.selection = np.arange(len(epochs))
 
         # If we still have some epochs for each event type, the RDMs should not have any
         # NaNs in them.
         epochs.drop([4])
-        rdms = list(rdm_epochs(epochs, y=y, dropped_as_nan=True))
+        rdms = list(rdm_epochs(epochs, labels=labels, dropped_as_nan=True))
         assert not np.any(np.isnan(rdms))
         assert squareform(rdms[0]).shape == (4, 4)
 
         # When we drop all the epochs of some event type, the RDM should have NaNs in
         # those places.
         epochs.drop(np.flatnonzero(epochs.events[:, 2] == 4))
-        rdms = list(rdm_epochs(epochs, y=y, dropped_as_nan=True))
+        rdms = list(rdm_epochs(epochs, labels=labels, dropped_as_nan=True))
         assert np.all(np.isnan(squareform(rdms[0])[:3, 3]))
         assert np.all(np.isnan(squareform(rdms[0])[3, :3]))
 
-        # For this to work, a proper `y` must be supplied
-        with pytest.raises(ValueError, match="you must specify a list/array `y`"):
+        # This should also work with the legacy `y` parameter.
+        epochs.drop(np.flatnonzero(epochs.events[:, 2] == 4))
+        rdms = list(rdm_epochs(epochs, y=labels, dropped_as_nan=True))
+        assert np.all(np.isnan(squareform(rdms[0])[:3, 3]))
+        assert np.all(np.isnan(squareform(rdms[0])[3, :3]))
+
+        # For this to work, a proper `labels` must be supplied
+        with pytest.raises(ValueError, match="you must specify a list/array `labels`"):
             next(rdm_epochs(epochs, dropped_as_nan=True))
 
     def test_rdm_temporal(self):

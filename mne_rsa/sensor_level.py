@@ -15,6 +15,7 @@ from mne.cov import compute_whitener
 from mne.utils import logger
 from scipy.spatial import distance
 
+from .folds import _match_order
 from .rdm import _n_items_from_rdm, rdm_array
 from .rsa import rsa_array
 from .searchlight import searchlight
@@ -362,7 +363,7 @@ def rsa_epochs(
     y : ndarray of int, shape (n_items,) | None
         Deprecated, use ``labels_epochs`` and ``labels_rdm_model`` instead.
         For each epoch, a number indicating the item to which it belongs.
-        Defaults to ``None``, in which case ``labels_evokeds`` is used.
+        Defaults to ``None``, in which case ``labels_epochs`` is used.
     labels_epochs : list | None
         For each epoch, a label that identifies the item to which it corresponds. This
         is used in combination with ``labels_rdm_model`` to align the data and model
@@ -370,8 +371,8 @@ def rsa_epochs(
         which case they should have the same label and will either be averaged when
         computing the data RDM (``n_folds=1``) or used for cross-validation
         (``n_folds>1``). Labels may be of any python type that can be compared with
-        ``==`` (int, float, string, tuple, etc). By default (``None``), the integers
-        ``0:len(epochs)`` are used as labels.
+        ``==`` (int, float, string, tuple, etc). By default (``None``), the epoch event
+        codes are used as labels.
 
         .. versionadded:: 0.10
     labels_rdm_model: list | None
@@ -442,20 +443,22 @@ def rsa_epochs(
 
     logger.info(f"Performing RSA between Epochs and {len(rdm_model)} model RDM(s)")
 
-    if y is None:
-        y_source = "Epoch object"
-        y = epochs.events[:, 2]
-    else:
-        y_source = "`y` matrix"
+    if labels_epochs is None:
+        if y is not None:
+            labels_epochs = y
+            labels_source = "`y` matrix"
+        else:
+            labels_source = "Epochs object"
+            labels_epochs = epochs.events[:, 2]
 
     # Check for compatibility of the epochs and the model features
     for rdm in rdm_model:
         n_items = _n_items_from_rdm(rdm)
-        if len(np.unique(y)) != n_items:
+        if len(set(labels_epochs)) != n_items:
             raise ValueError(
                 "The number of items in `rdm_model` (%d) does not match "
                 "the number of items encoded in the %s (%d)."
-                % (n_items, y_source, len(np.unique(y)))
+                % (n_items, labels_source, len(set(labels_epochs)))
             )
 
     # Convert the temporal radius to samples
@@ -494,6 +497,7 @@ def rsa_epochs(
 
     if temporal_radius is not None:
         logger.info(f"    Temporal radius: {temporal_radius} samples")
+    if tmin is not None or tmax is not None:
         logger.info(f"    Time interval: {tmin}-{tmax} seconds")
 
     # Perform the RSA
@@ -514,7 +518,6 @@ def rsa_epochs(
         data_rdm_params=epochs_rdm_params,
         rsa_metric=rsa_metric,
         ignore_nan=ignore_nan,
-        y=y,
         labels_X=labels_epochs,
         labels_rdm_model=labels_rdm_model,
         n_folds=n_folds,
@@ -740,7 +743,7 @@ def rdm_epochs(
         the same label and will either be averaged when computing the data RDM
         (``n_folds=1``) or used for cross-validation (``n_folds>1``). Labels may be of
         any python type that can be compared with ``==`` (int, float, string, tuple,
-        etc). By default (``None``), the integers ``0:len(epochs)`` are used as labels.
+        etc). By default (``None``), the epochs event codes are used as labels.
 
         .. versionadded:: 0.10
     n_folds : int | sklearn.model_selection.BaseCrollValidator | None
@@ -781,8 +784,10 @@ def rdm_epochs(
         A RDM for each searchlight patch.
 
     """
-    if y is None:
-        y = epochs.events[:, 2]
+    if labels is None and y is not None:
+        labels = y
+    if labels is None:
+        labels = epochs.events[:, 2]
 
     # Convert the temporal radius to samples
     if temporal_radius is not None:
@@ -796,18 +801,24 @@ def rdm_epochs(
     X = epochs.get_data(copy=False)
 
     if dropped_as_nan:
-        if len(y) != len(epochs.drop_log):
+        if labels is not None and len(labels) != len(epochs.drop_log):
             raise ValueError(
-                "When using `dropped_as_nan=True` you must specify a list/array `y` "
-                "containing the event codes for all of the original epochs, such that "
-                "`len(y) == len(epochs.drop_log)`."
+                "When using `dropped_as_nan=True` you must specify a list/array "
+                "`labels` containing the event codes for all of the original epochs, "
+                "such that len(labels) == len(epochs.drop_log)`."
             )
-        unique_ys = np.unique(y)
-        y_filtered = [y_ for i, y_ in enumerate(y) if len(epochs.drop_log[i]) == 0]
-        unique_ys_filtered = np.unique(y_filtered)
-        missing_ys = np.setdiff1d(unique_ys, unique_ys_filtered, assume_unique=True)
-        nan_rdm_indices = np.searchsorted(unique_ys, missing_ys)
-        y = y_filtered
+        unique_labels = np.unique(labels)
+        labels_filtered = [
+            label for i, label in enumerate(labels) if len(epochs.drop_log[i]) == 0
+        ]
+        unique_labels_filtered = np.unique(labels_filtered)
+        missing_labels = np.setdiff1d(
+            unique_labels, unique_labels_filtered, assume_unique=True
+        )
+        nan_rdm_indices = np.searchsorted(unique_labels, missing_labels)
+        labels = labels_filtered
+        if y is not None:
+            y = labels_filtered
     else:
         nan_rdm_indices = []
 

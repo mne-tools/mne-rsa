@@ -277,7 +277,7 @@ class rdm_array:
             patches = searchlight(X.shape)
 
         if y is None:
-            y = _match_order(len_X=len(X), labels_X=labels)
+            y = _match_order(len_X=len(X), labels_X=labels, var="labels")
 
         # Create folds for cross-validated RDM metrics
         self.X = create_folds(X, y, n_folds)

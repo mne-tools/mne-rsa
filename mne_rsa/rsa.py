@@ -436,10 +436,11 @@ def rsa_array(
         rdm_model = [_ensure_condensed(rdm_model, "rdm_model")]
 
     # Align data with model RDM given the provided labels.
-    if y is None:
-        y = _match_order(
-            len(X), _n_items_from_rdm(rdm_model[0]), labels_X, labels_rdm_model
-        )
+    if labels_X is None and y is not None:
+        labels_X = y
+    y = _match_order(
+        len(X), _n_items_from_rdm(rdm_model[0]), labels_X, labels_rdm_model
+    )
 
     # Create folds for cross-validated RDM metrics.
     X = create_folds(X, y, n_folds)

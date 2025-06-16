@@ -57,13 +57,12 @@ epochs.metadata.sample(10)
 # stimuli. To illustrate cross-validation, we will treat words with the same number of
 # letters as being repeated measurements of the same stimulus type.
 #
-# To denote which epochs are repetitions of the same stimulus, we create a list ``y``
-# that contains integer labels for each epoch. Repetitions of the same stimulus have the
-# same label in the ``y`` list. This scheme is lifted from the machine learning
-# literature (and the Scikit-Learn API). In this example, we use the number of letters
-# in the stimulus words as the labels for the epochs.
+# To denote which epochs are repetitions of the same stimulus, we create a list
+# ``labels`` that contains a label for each epoch indicating to which stimulus it
+# belongs. Repetitions of the same stimulus need to have the same label, hence we will
+# use the ``NumberOfLetters`` field of the metadata as label.
 
-y = epochs.metadata.NumberOfLetters.astype(int)
+labels = epochs.metadata.NumberOfLetters.astype(int)
 
 
 ########################################################################################
@@ -74,7 +73,7 @@ y = epochs.metadata.NumberOfLetters.astype(int)
 
 rdms = mne_rsa.rdm_epochs(
     epochs,  # The EEG data
-    y=y,  # Set labels to enable cross validation
+    labels=labels,  # Set labels to enable cross validation
     n_folds=5,  # Number of folds to use during cross validation
     dist_metric="sqeuclidean",  # Distance metric to compute the RDMs
     spatial_radius=0.45,  # Spatial radius of the searchlight patch in meters.

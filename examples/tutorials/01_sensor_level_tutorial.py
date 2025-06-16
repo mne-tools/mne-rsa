@@ -231,6 +231,7 @@ neural_rdm_gen = rdm_epochs(epochs, tmin=0.1, tmax=0.2)
 # unpacking the first (and only) RDM from the generator
 neural_rdm = next(neural_rdm_gen)
 plot_rdms(neural_rdm)
+
 ########################################################################################
 # Take note that :func:`mne_rsa.rdm_epochs` returns a `generator
 # <https://wiki.python.org/moin/Generators>`__ of RDMs. This is because one of the main
@@ -238,37 +239,35 @@ plot_rdms(neural_rdm)
 # space), which can produce a large amount of RDMs that can take up a lot of memory of
 # you’re not careful.
 #
-# The ``y`` parameter that solves most alignment problems
-# -------------------------------------------------------
+# Alignment between model and data RDM ordering
+# ---------------------------------------------
 #
 # Looking at the neural RDM above, something is clearly different from the
 # one we made before. This one has 9 rows and columns. Closely inspecting
-# the docstring of :class:`mne_rsa.rdm_epochs` reveals that it is the ``y`` parameter
-# that is responsible for this:
+# the docstring of :class:`mne_rsa.rdm_epochs` reveals that it is the ``labels``
+# parameter that is responsible for this:
 #
 # ::
 #
-#    y : ndarray of int, shape (n_items,) | None
-#        For each Epoch, a number indicating the item to which it belongs. When
-#        None, the event codes are used to differentiate between items.
-#        Defaults to None.
+#   labels : list | None
+#       For each epoch, a label that identifies the item to which it corresponds.
+#       Multiple epochs may correspond to the same item, in which case they should have
+#       the same label and will either be averaged when computing the data RDM
+#       (``n_folds=1``) or used for cross-validation (``n_folds>1``). Labels may be of
+#       any python type that can be compared with ``==`` (int, float, string, tuple,
+#       etc). By default (``None``), the epochs event codes are used as labels.
 #
 # Instead of producing one row per epoch, :func:`mne_rsa.rdm_epochs` produced one row
 # per event type, averaging across epochs of the same type before computing
 # dissimilarity. This is not quite what we want though. If we want to match
 # ``pixel_rdm`` and ``facenet_rdm``, we want every single one of the 450 images to be
-# its own stimulus type. We can achieve this by setting the ``y`` parameter of
-# :func:`mne_rsa.rdm_epochs` to a list that assigns each of the 879 epochs to a number
-# from 1-450 (or 0-449) indicating which image was shown. We must take care to assign
-# the numbers according to the order in which they appear in ``pixel_rdm`` and
-# ``facenet_rdm``. An image is identified by its filename, and we have the ``filenames``
-# variable left over from earlier that contains all the images in the proper order. The
-# ``epochs.metadata["file"]`` column contains the filenames corresponding to the epochs
-# and we can use NumPy’s :func:`numpy.searchsorted` function to align it with
-# ``filenames``.
+# its own stimulus type. We can achieve this by setting the ``labels`` parameter of
+# :func:`mne_rsa.rdm_epochs` to a list that assigns each of the 879 epochs to a label
+# that indicates which image was shown. An image is identified by its filename, and the
+# ``epochs.metadata.file`` column contains the filenames corresponding to the epochs,
+# so let's use that.
 
-y = np.searchsorted(filenames, epochs.metadata.file)
-neural_rdm = next(rdm_epochs(epochs, y=y, tmin=0.1, tmax=0.2))
+neural_rdm = next(rdm_epochs(epochs, labels=epochs.metadata.file, tmin=0.1, tmax=0.2))
 
 # This plots your RDM
 plot_rdms(neural_rdm)
@@ -313,7 +312,7 @@ epochs.pick(picks).pick("grad").crop(-0.1, 1)
 # entire time range (``tmin=None`` and ``tmax=None``) and leave the result as a
 # generator (so no ``next()`` calls).
 
-neural_rdms_gen = rdm_epochs(epochs, y=y, temporal_radius=0.1)
+neural_rdms_gen = rdm_epochs(epochs, labels=epochs.metadata.file, temporal_radius=0.1)
 
 ########################################################################################
 # And now we can consume the generator (with a nice progress bar) and plot
@@ -337,9 +336,10 @@ plot_rdms(neural_rdms_list[::10], names=[f"t={t:.2f}" for t in times[::10]])
 #
 # The signature of :func:`mne_rsa.rsa_epochs` is very similar to that of
 # :func:`mne_rsa.rdm_epochs` The main difference is that we also give it the “model”
-# RDMs, in our case the pixel and FaceNet RDMs. :func:`mne_rsa.rsa_epochs` will return
-# the RSA scores as a list of :class:`mne.Evoked` objects: one for each model RDM we
-# gave it.
+# RDMs, in our case the pixel and FaceNet RDMs. We can also specify ``labels_rdm_model``
+# to indicate which rows of the model RDMs correspond to which images to make sure the
+# ordering is the same. :func:`mne_rsa.rsa_epochs` will return the RSA scores as a list
+# of :class:`mne.Evoked` objects: one for each model RDM we gave it.
 #
 # We compute the RSA scores for ``epochs`` against ``[pixel_rdm, facenet_rdm]`` and do
 # this in a sliding windows across time, with a temporal radius of 0.1 seconds. Setting
@@ -349,7 +349,13 @@ plot_rdms(neural_rdms_list[::10], names=[f"t={t:.2f}" for t in times[::10]])
 from mne_rsa import rsa_epochs
 
 ev_rsa = rsa_epochs(
-    epochs, [pixel_rdm, facenet_rdm], y=y, temporal_radius=0.1, verbose=True, n_jobs=-1
+    epochs,
+    [pixel_rdm, facenet_rdm],
+    labels_epochs=epochs.metadata.file,
+    labels_rdm_model=filenames,
+    temporal_radius=0.1,
+    verbose=True,
+    n_jobs=-1,
 )
 
 # Create a nice plot of the result

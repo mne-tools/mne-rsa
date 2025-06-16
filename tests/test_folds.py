@@ -73,10 +73,10 @@ class TestConvertToOneHot:
             [[1, 0, 0], [0, 1, 0], [0, 0, 1], [1, 0, 0], [0, 1, 0], [0, 0, 1]]
         )
 
-        assert_equal(_convert_to_one_hot(y), y_one_hot)
-        assert_equal(_convert_to_one_hot(y.tolist()), y_one_hot)
-        assert_equal(_convert_to_one_hot(y[:, np.newaxis]), y_one_hot)
-        assert_equal(_convert_to_one_hot(y_one_hot), y_one_hot)
+        assert_equal(_convert_to_one_hot(y)[0], y_one_hot)
+        assert_equal(_convert_to_one_hot(y.tolist())[0], y_one_hot)
+        assert_equal(_convert_to_one_hot(y[:, np.newaxis])[0], y_one_hot)
+        assert_equal(_convert_to_one_hot(y_one_hot)[0], y_one_hot)
 
     def test_invalid_input(self):
         """Test passing invalid input to _convert_to_one_hot."""
@@ -90,8 +90,9 @@ class TestComputeItemMeans:
     def test_basic(self):
         """Test basic invocation of _compute_item_means."""
         data = np.array([1, 1, 1, 2, 2, 2, 3, 3, 3])
-        y_one_hot = _convert_to_one_hot([1, 2, 3, 1, 2, 3, 1, 2, 3])
+        y_one_hot, y = _convert_to_one_hot([1, 2, 3, 1, 2, 3, 1, 2, 3])
         assert_equal(_compute_item_means(data, y_one_hot), [2, 2, 2])
+        assert_equal(y, np.array([1, 2, 3, 1, 2, 3, 1, 2, 3]))
 
 
 class TestMatchOrder:
@@ -101,61 +102,81 @@ class TestMatchOrder:
         """Test basic invocation of _match_order."""
         invoke = partial(_match_order, len_X=3, len_rdm_model=3)
         assert invoke() is None
-        assert_equal(invoke(labels_X=None, labels_rdm_model=[0, 1, 2]), [0, 1, 2])
-        assert_equal(invoke(labels_X=[1, 0, 2], labels_rdm_model=None), [1, 0, 2])
-        assert_equal(invoke(labels_X=[0, 1, 2], labels_rdm_model=[0, 1, 2]), [0, 1, 2])
+        assert_equal(
+            invoke(labels_X=[1, 0, 2], labels_rdm_model=None),
+            _convert_to_one_hot([1, 0, 2])[0],
+        )
+        assert_equal(invoke(labels_X=[0, 1, 2], labels_rdm_model=[0, 1, 2]), np.eye(3))
         assert_equal(
             invoke(labels_X=["a", "b", "c"], labels_rdm_model=["a", "b", "c"]),
-            [0, 1, 2],
+            np.eye(3),
         )
         assert_equal(
             invoke(labels_X=["a", "c", "b"], labels_rdm_model=["a", "b", "c"]),
-            [0, 2, 1],
+            _convert_to_one_hot([0, 2, 1])[0],
         )
 
         # Test not having to align with labels_rdm_model
         assert _match_order(len_X=3, labels_X=None) is None
-        assert_equal(_match_order(len_X=3, labels_X=["a", "b", "c"]), [0, 1, 2])
-        assert_equal(_match_order(len_X=4, labels_X=["a", "b", "b", "c"]), [0, 1, 1, 2])
+        assert_equal(_match_order(len_X=3, labels_X=["a", "b", "c"]), np.eye(3))
+        assert_equal(
+            _match_order(len_X=4, labels_X=["a", "b", "b", "c"]),
+            _convert_to_one_hot([0, 1, 1, 2])[0],
+        )
 
     def test_invalid_input(self):
         """Test passing invalid input to _match_order."""
+        with pytest.raises(ValueError, match="you must also specify `labels_X`"):
+            _match_order(len_X=3, labels_X=None, labels_rdm_model=[0, 1, 2])
         with pytest.raises(ValueError, match="The number of labels in `labels_X`"):
             _match_order(len_X=3, labels_X=[0, 1])
-        with pytest.raises(ValueError, match="The number of labels in `labels_epochs`"):
-            _match_order(len_X=3, labels_X=[0, 1], var="labels_epochs")
+
         invoke = partial(_match_order, len_X=3, len_rdm_model=3)
         with pytest.raises(ValueError, match="The number of labels in `labels_X`"):
             invoke(labels_X=[0, 1, 2, 3, 4, 5])
+        with pytest.raises(ValueError, match="The number of unique labels in"):
+            invoke(labels_X=[0, 1, 1])
+        with pytest.raises(ValueError, match="The number of labels in `labels_epochs`"):
+            invoke(labels_X=[0, 1], var="labels_epochs")
         with pytest.raises(
             ValueError, match="The number of labels in `labels_rdm_model`"
         ):
-            invoke(labels_rdm_model=[0, 1, 2, 4, 5])
-        with pytest.raises(ValueError, match="The data types"):
-            invoke(labels_X=[0, 1, 2], labels_rdm_model=["a", "b", "c"])
-        with pytest.raises(ValueError, match="The data types"):
-            invoke(labels_X=None, labels_rdm_model=["a", "b", "c"])
-        with pytest.raises(ValueError, match="The data types"):
-            invoke(labels_X=["a", "b", "c"], labels_rdm_model=None)
+            invoke(labels_X=[0, 1, 2], labels_rdm_model=[0, 1, 2, 4, 5])
+        with pytest.raises(
+            ValueError, match="The number of labels in `labels_rdm_model`"
+        ):
+            invoke(labels_X=[0, 1, 2], labels_rdm_model=[0, 1, 2, 4, 5])
         with pytest.raises(ValueError, match="Not all labels in `labels_rdm_model`"):
             invoke(labels_X=["a", "b", "c"], labels_rdm_model=["a", "a", "c"])
         with pytest.raises(ValueError, match="Some labels in `labels_X`"):
             invoke(labels_X=["a", "a", "z"], labels_rdm_model=["a", "b", "c"])
         with pytest.raises(ValueError, match="Some labels in `labels_rdm_model`"):
             invoke(labels_X=["a", "a", "c"], labels_rdm_model=["a", "b", "c"])
-        with pytest.raises(ValueError, match=r"The data types of `labels_X` \(<U1\)"):
-            invoke(labels_X=["a", "b", "c"])
-        with pytest.raises(ValueError, match=r"The data types of `labels_X` \(int64\)"):
-            invoke(labels_rdm_model=["a", "b", "c"])
 
-    def many_to_one(self):
+    def test_many_to_one(self):
         """Test many-to-one mapping of data to rdm_model."""
         invoke = partial(_match_order, len_X=6, len_rdm_model=3)
-        assert_equal(invoke(labels_X=[0, 0, 1, 1, 2, 2]), [0, 0, 1, 1, 2, 2])
+        assert_equal(
+            invoke(labels_X=[0, 0, 1, 1, 2, 2]),
+            _convert_to_one_hot([0, 0, 1, 1, 2, 2])[0],
+        )
         assert_equal(
             invoke(
                 labels_X=["a", "b", "b", "c", "a", "c"],
                 labels_rdm_model=["a", "b", "c"],
             ),
-            [0, 1, 1, 2, 0, 2],
+            _convert_to_one_hot([0, 1, 1, 2, 0, 2])[0],
         )
+
+    def test_no_model_rdm(self):
+        """Test passing labels_X without labels_rdm_model."""
+        assert_equal(_match_order(3, labels_X=[1, 2, 3]), np.eye(3))
+        assert_equal(
+            _match_order(3, labels_X=[2, 1, 3]), _convert_to_one_hot([1, 0, 2])[0]
+        )
+        assert_equal(_match_order(3, labels_X=["a", "b", "c"]), np.eye(3))
+        assert_equal(
+            _match_order(3, labels_X=["b", "a", "c"]), _convert_to_one_hot([1, 0, 2])[0]
+        )
+        with pytest.raises(ValueError, match="The number of labels in `labels_X`"):
+            assert_equal(_match_order(5, labels_X=["a", "b", "c"]), np.eye(3))

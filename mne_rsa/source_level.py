@@ -190,21 +190,24 @@ def rsa_stcs(
     if one_model:
         rdm_model = [rdm_model]
 
+    if labels_stcs is None and y is not None:
+        labels_stcs = y
+
     # Check for compatibility of the stcs and the model features
     for rdm in rdm_model:
         n_items = _n_items_from_rdm(rdm)
-        if len(stcs) != n_items and y is None:
+        if len(stcs) != n_items and labels_stcs is None:
             raise ValueError(
                 "The number of source estimates (%d) should be equal to the "
                 "number of items in `rdm_model` (%d). Alternatively, use "
                 "the `y` parameter to assign source estimates to items."
                 % (len(stcs), n_items)
             )
-        if y is not None and len(np.unique(y)) != n_items:
+        if labels_stcs is not None and len(set(labels_stcs)) != n_items:
             raise ValueError(
                 "The number of items in `rdm_model` (%d) does not match "
-                "the number of items encoded in the `y` matrix (%d)."
-                % (n_items, len(np.unique(y)))
+                "the number of items encoded in the `labels_stcs` list (%d)."
+                % (n_items, len(set(labels_stcs)))
             )
 
     _check_stcs_compatibility(stcs)
@@ -271,7 +274,6 @@ def rsa_stcs(
         data_rdm_params=stc_rdm_params,
         rsa_metric=rsa_metric,
         ignore_nan=ignore_nan,
-        y=y,
         labels_X=labels_stcs,
         labels_rdm_model=labels_rdm_model,
         n_folds=n_folds,
@@ -467,6 +469,9 @@ def rdm_stcs(
     if len(sel_series) != len(set(sel_series)):
         raise ValueError("Selected vertices are not unique. Please remove duplicates.")
 
+    if labels is None and y is not None:
+        labels = y
+
     X = np.array([stc.data for stc in stcs])
     patches = searchlight(
         X.shape,
@@ -482,7 +487,6 @@ def rdm_stcs(
         patches,
         dist_metric=dist_metric,
         dist_params=dist_params,
-        y=y,
         labels=labels,
         n_folds=n_folds,
         n_jobs=n_jobs,
@@ -640,21 +644,24 @@ def rsa_stcs_rois(
     if one_model:
         rdm_model = [rdm_model]
 
+    if labels_stcs is None and y is not None:
+        labels_stcs = y
+
     # Check for compatibility of the stcs and the model features
     for rdm in rdm_model:
         n_items = _n_items_from_rdm(rdm)
-        if len(stcs) != n_items and y is None:
+        if len(stcs) != n_items and labels_stcs is None:
             raise ValueError(
                 "The number of source estimates (%d) should be equal to the "
                 "number of items in `rdm_model` (%d). Alternatively, use "
-                "the `y` parameter to assign source estimates to items."
+                "the `labels_stcs` parameter to assign source estimates to items."
                 % (len(stcs), n_items)
             )
-        if y is not None and len(np.unique(y)) != n_items:
+        if labels_stcs is not None and len(set(labels_stcs)) != n_items:
             raise ValueError(
                 "The number of items in `rdm_model` (%d) does not match "
-                "the number of items encoded in the `y` matrix (%d)."
-                % (n_items, len(np.unique(y)))
+                "the number of items encoded in the `labels_stcs` matrix (%d)."
+                % (n_items, len(set(labels_stcs)))
             )
 
     _check_stcs_compatibility(stcs)
@@ -689,7 +696,6 @@ def rsa_stcs_rois(
         data_rdm_params=stc_rdm_params,
         rsa_metric=rsa_metric,
         ignore_nan=ignore_nan,
-        y=y,
         labels_X=labels_stcs,
         labels_rdm_model=labels_rdm_model,
         n_folds=n_folds,
@@ -860,21 +866,24 @@ def rsa_nifti(
     ):
         raise ValueError("The image data must be 4-dimensional Nifti-like images")
 
+    if labels_image is None and y is not None:
+        labels_image = y
+
     # Check for compatibility of the BOLD images and the model features
     for rdm in rdm_model:
         n_items = _n_items_from_rdm(rdm)
-        if image.shape[3] != n_items and y is None:
+        if image.shape[3] != n_items and labels_image is None:
             raise ValueError(
                 "The number of images (%d) should be equal to the "
                 "number of items in `rdm_model` (%d). Alternatively, use "
                 "the `y` parameter to assign evokeds to items."
                 % (image.shape[3], n_items)
             )
-        if y is not None and len(np.unique(y)) != n_items:
+        if labels_image is not None and len(set(labels_image)) != n_items:
             raise ValueError(
                 "The number of items in `rdm_model` (%d) does not match "
-                "the number of items encoded in the `y` matrix (%d)."
-                % (n_items, len(np.unique(y)))
+                "the number of items encoded in the `labels_image` list (%d)."
+                % (n_items, len(set(labels_image)))
             )
 
     # Get data as (n_items x n_voxels)
@@ -943,7 +952,6 @@ def rsa_nifti(
         data_rdm_params=image_rdm_params,
         rsa_metric=rsa_metric,
         ignore_nan=ignore_nan,
-        y=y,
         labels_X=labels_image,
         labels_rdm_model=labels_rdm_model,
         n_folds=n_folds,
@@ -1064,6 +1072,9 @@ def rdm_nifti(
     # Get data as (n_items x n_voxels)
     X = image.get_fdata().reshape(-1, image.shape[3]).T
 
+    if labels is None and y is not None:
+        labels = y
+
     # Find voxel positions
     voxels = np.array(list(np.ndindex(image.shape[:-1])))
     voxel_loc = voxels @ image.affine[:3, :3]
@@ -1116,7 +1127,6 @@ def rdm_nifti(
         patches,
         dist_metric=dist_metric,
         dist_params=dist_params,
-        y=y,
         labels=labels,
         n_folds=n_folds,
         n_jobs=n_jobs,

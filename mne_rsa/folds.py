@@ -6,6 +6,8 @@ Marijn van Vliet <marijn.vanvliet@aalto.fi>
 Yuan-Fang Zhao <distancejay@gmail.com>
 """
 
+import re
+
 import numpy as np
 from mne.utils import logger
 from sklearn.model_selection import StratifiedKFold
@@ -24,10 +26,11 @@ def create_folds(X, y=None, n_folds=None):
     X : ndarray, shape (n_items, ...)
         For each item, all the features. The first dimension are the items and all other
         dimensions will be flattened and treated as features.
-    y : ndarray of int, shape (n_items,) | None
-        For each item, a number indicating the class to which the item belongs. When
-        ``None``, each item is assumed to belong to a different class. Defaults to
-        ``None``.
+    y : ndarray of int, shape (n_items, [n_classes]) | None
+        For each item, a number indicating the class to which the item belongs.
+        Alternatively, for each item, a one-hot encoded row vector incidating the class
+        to which the item belongs. When ``None``, each item is assumed to belong to a
+        different class. Defaults to ``None``.
     n_folds : int | sklearn.BaseCrossValidator | None
         Number of cross-validation folds to use when computing the distance metric.
         Folds are created based on the ``y`` parameter. Specify ``None`` to use the
@@ -51,7 +54,7 @@ def create_folds(X, y=None, n_folds=None):
             f"The length of y ({len(y)}) does not match the number of items ({len(X)})."
         )
 
-    y_one_hot = _convert_to_one_hot(y)
+    y_one_hot, y = _convert_to_one_hot(y)
     n_items = y_one_hot.shape[1]
 
     if n_folds is None:
@@ -88,13 +91,13 @@ def _convert_to_one_hot(y):
     if y.ndim == 2 and y.shape[1] == 1:
         # y needs to be converted
         enc = OneHotEncoder(categories="auto").fit(y)
-        return enc.transform(y).toarray()
+        return enc.transform(y).toarray(), y[:, 0]
     elif y.ndim > 2:
         raise ValueError("Wrong number of dimensions for `y`.")
     else:
         # y is probably already in one-hot form. We're not going to test this
         # explicitly, as it would take too long.
-        return y
+        return y, np.nonzero(y)[1]
 
 
 def _compute_item_means(X, y_one_hot, fold=slice(None)):
@@ -118,10 +121,14 @@ def _match_order(
     len_X, len_rdm_model=None, labels_X=None, labels_rdm_model=None, var="labels_X"
 ):
     """Find ordering y to re-order labels_X to match labels_rdm_model."""
-    if labels_X is None and labels_rdm_model is None:
+    if labels_X is None:
+        if labels_rdm_model is not None:
+            raise ValueError(
+                f"When using `labels_rdm_model`, you must also specify `{var}`."
+            )
         return None  # use the shortcut of not re-ordering anything
 
-    if labels_X is not None and len(labels_X) != len_X:
+    if len(labels_X) != len_X:
         raise ValueError(
             f"The number of labels in `{var}` does not match the number of items "
             f"in the data ({len_X})."
@@ -129,25 +136,22 @@ def _match_order(
 
     # If we don't need to align with labels_rdm_model, we can take a shortcut.
     if labels_X is not None and len_rdm_model is None:
-        i = 0
-        mapping = dict()
-        y = list()
-        for label in labels_X:
-            if label not in mapping:
-                mapping[label] = i
-                y.append(i)
-                i += 1
-            else:
-                y.append(mapping[label])
-        return y
+        mapping = {label: i for i, label in enumerate(sorted(set(labels_X)))}
+        y_one_hot = np.zeros((len_X, len(mapping)), dtype="int")
+        for i, label in enumerate(labels_X):
+            y_one_hot[i, mapping[label]] = 1
+        return y_one_hot
 
-    # We need to align labels_X and labels_rdm_model, go prepate both of them.
-    if labels_X is None:
-        labels_X = np.arange(len_X)
+    # We need to align with labels_rdm_model.
     if labels_rdm_model is None:
-        labels_rdm_model = np.arange(len_rdm_model)
-    labels_X = np.asarray(labels_X)
-    labels_rdm_model = np.asarray(labels_rdm_model)
+        labels_rdm_model = sorted(set(labels_X))
+        if len(labels_rdm_model) != len_rdm_model:
+            raise ValueError(
+                f"The number of unique labels in `{var}` does not match the number of "
+                f"items in the model RDM."
+            )
+    # labels_X = np.asarray(labels_X)
+    # labels_rdm_model = np.asarray(labels_rdm_model)
 
     # Perform sanity checks. It's easy to get these labels wrong.
     if len(labels_rdm_model) != len_rdm_model:
@@ -155,21 +159,20 @@ def _match_order(
             f"The number of labels in `labels_rdm_model` does not match the number of "
             f"items in the model RDM ({len_rdm_model})."
         )
-    if labels_X.dtype != labels_rdm_model.dtype:
-        raise ValueError(
-            f"The data types of `{var}` ({labels_X.dtype}) and "
-            f"`labels_rdm_model` ({labels_rdm_model.dtype}) do not match."
-        )
-    unique_labels_rdm_model = np.unique(labels_rdm_model)
+
+    unique_labels_rdm_model = set(labels_rdm_model)
     if len(unique_labels_rdm_model) != len(labels_rdm_model):
         raise ValueError("Not all labels in `labels_rdm_model` are unique.")
     if len(np.setdiff1d(labels_X, labels_rdm_model)) > 0:
         raise ValueError(
             f"Some labels in `{var}` are not present in `labels_rdm_model`."
         )
-    if len(np.setdiff1d(labels_rdm_model, labels_X)) > 0:
+    if len(set(labels_rdm_model) - set(labels_X)) > 0:
         raise ValueError(
             f"Some labels in `labels_rdm_model` are not present in `{var}`."
         )
     order = {label: i for i, label in enumerate(labels_rdm_model)}
-    return np.array([order[label] for label in labels_X])
+    y_one_hot = np.zeros((len_X, len(order)), dtype="int")
+    for i, label in enumerate(labels_X):
+        y_one_hot[i, order[label]] = 1
+    return y_one_hot
