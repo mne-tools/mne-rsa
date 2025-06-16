@@ -9,4 +9,4 @@ from .viz import plot_rdms, plot_rdms_topo, plot_roi_map
 from .folds import create_folds
 
 # This function is useful to have nearby
-urom scipy.spatial.distance import squareform
+from scipy.spatial.distance import squareform
