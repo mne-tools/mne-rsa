@@ -3,15 +3,14 @@
 
 """
 Plot sensor-level RDMs
-======================
+----------------------
 
 This example demonstrates how to visualize representational dissimilarity matrices
 (RDMs) computed from EEG data. We will compute them using a spatial searchlight and plot
 the RDM computed for each searchlight-patch.
 
-Authors
--------
-Marijn van Vliet <marijn.vanvliet@aalto.fi>
+| Authors:
+| Marijn van Vliet <marijn.vanvliet@aalto.fi>
 """
 
 # Import required packages
