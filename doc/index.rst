@@ -115,21 +115,21 @@ Support
 ^^^^^^^
 
 This free software comes without any form of official support.
-However, if you think you have encountered a bug or have a particularly great idea for improvements, please open an `issue on Github <https://github.com/wmvanvliet/mne-rsa/issues>`_.
+However, if you think you have encountered a bug or have a particularly great idea for improvements, please open an `issue on Github <https://github.com/mne-tools/mne-rsa/issues>`_.
 For questions and help with your analysis, you are welcome to post on the `MNE forum <https://mne.discourse.group/>`_.
 
 
 Contributing
 ^^^^^^^^^^^^
 
-Development of the package happens on `Github <https://github.com/wmvanvliet/mne-rsa>`_.
-Everyone is welcome to raise `issues <https://github.com/wmvanvliet/mne-rsa/issues>`_ or contribute `pull requests <https://github.com/wmvanvliet/mne-rsa/pulls>`_.
+Development of the package happens on `Github <https://github.com/mne-tools/mne-rsa>`_.
+Everyone is welcome to raise `issues <https://github.com/mne-tools/mne-rsa/issues>`_ or contribute `pull requests <https://github.com/mne-tools/mne-rsa/pulls>`_.
 
 Here is how to install the additional required packages for developing MNE-RSA and set up the package in development mode:
 
 .. code:: bash
 
-   git clone git@github.com:wmvanvliet/mne-rsa.git
+   git clone git@github.com:mne-tools/mne-rsa.git
    cd mne-rsa
    pip install -r requirements-dev.txt
    pip install -e .
@@ -144,7 +144,7 @@ If you end up using this package for the data analysis that is part of a scienti
 article, please cite:
 
 Marijn van Vliet, Takao Shimizu, Stefan Appelhoff, Yuan-Fang Zhao, & Richard
-Höchenberger. (2024). wmvanvliet/mne-rsa: Version 0.9.1 (0.9.1). Zenodo.
+Höchenberger. (2024). mne-tools/mne-rsa: Version 0.9.1 (0.9.1). Zenodo.
 https://doi.org/10.5281/zenodo.11258133
 
 .. toctree::

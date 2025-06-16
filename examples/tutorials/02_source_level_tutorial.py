@@ -1,7 +1,7 @@
 """
 .. _tut-source-level:
 
-Tutorial part 2: RSA on sourse-level MEG data
+Tutorial part 2: RSA on source-level MEG data
 ---------------------------------------------
 
 In this tutorial, we will perform source-level RSA analysis on MEG data.

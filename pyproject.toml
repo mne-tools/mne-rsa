@@ -27,9 +27,9 @@ dependencies = ["mne", "nibabel", "scikit-learn", "pyvista", "pyside6", "pyvista
 dynamic = ["version"]
 
 [project.urls]
-"Homepage" = "https://wmvanvliet.github.io/mne-rsa"
-"Bug Tracker" = "https://github.com/wmvanvliet/mne-rsa/issues/"
-"Source Code" = "https://github.com/wmvanvliet/mne-rsa"
+"Homepage" = "https://mne.tools/mne-rsa"
+"Bug Tracker" = "https://github.com/mne-tools/mne-rsa/issues/"
+"Source Code" = "https://github.com/mne-tools/mne-rsa"
 
 [tool.setuptools]
 packages = ["mne_rsa"]
