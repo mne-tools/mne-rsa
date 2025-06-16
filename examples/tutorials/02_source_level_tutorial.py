@@ -216,8 +216,7 @@ stc_rsa = rsa_stcs(
 )
 
 ########################################################################################
-# If everyting went as planned, executing the cell below will plot the
-# result.
+# If everything went as planned, executing the cell below will plot the result.
 
 # For clarity, only show positive RSA scores
 stc_rsa[0].data[stc_rsa[0].data < 0] = 0

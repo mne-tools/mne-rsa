@@ -59,3 +59,15 @@ per-file-ignores = {"examples/*.py" = ["D205", "D400", "D415", "D212"]}
 
 [tool.ruff.format]
 quote-style = "double"
+
+[tool.rstcheck]
+ignore_directives = [
+    "autoclass",
+    "autofunction",
+    "automodule",
+    "autosummary",
+	"currentmodule",
+	"toctree",
+	"include",
+ ]
+report_level = "WARNING"

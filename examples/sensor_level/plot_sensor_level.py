@@ -40,7 +40,7 @@ import mne
 import mne_rsa
 
 ########################################################################################
-# MNE-Python contains a build-in data loader for the kiloword dataset. We use it here to
+# MNE-Python contains a built-in data loader for the kiloword dataset. We use it here to
 # read it as 960 epochs. Each epoch represents the brain response to a single word,
 # averaged across all the participants. For this example, we speed up the computation,
 # at a cost of temporal precision, by downsampling the data from the original 250 Hz. to
@@ -51,7 +51,7 @@ epochs = mne.read_epochs(data_path / "kword_metadata-epo.fif")
 epochs = epochs.resample(100)
 
 ########################################################################################
-# The kiloword datas was erroneously stored with sensor locations given in centimeters
+# The kiloword dataset was erroneously stored with sensor locations given in centimeters
 # instead of meters. We will fix it now. For your own data, the sensor locations are
 # likely properly stored in meters, so you can skip this step.
 for ch in epochs.info["chs"]:
@@ -112,6 +112,6 @@ rsa_result.plot_topomap(
 )
 
 ########################################################################################
-# Unsurprisingly, we get the highest correspondance between number of letters and EEG
+# Unsurprisingly, we get the highest correspondence between number of letters and EEG
 # signal in areas in the `visual word form area
 # <https://en.wikipedia.org/wiki/Visual_word_form_area>`_.

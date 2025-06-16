@@ -131,7 +131,7 @@ def rsa_evokeds(
         channels of those types, channel *name* strings (e.g., ``['MEG0111',
         'MEG2623']`` will pick the given channels. Can also be the string values "all"
         to pick all channels, or "data" to pick data channels. ``None`` (default) will
-        pick all MEG and EEG channels, excluding those maked as "bad".
+        pick all MEG and EEG channels, excluding those marked as "bad".
     tmin : float | None
         When set, searchlight patches will only be generated from subsequent time points
         starting from this time point. This value is given in seconds. Defaults to
@@ -396,7 +396,7 @@ def rsa_epochs(
         channels of those types, channel *name* strings (e.g., ``['MEG0111',
         'MEG2623']`` will pick the given channels. Can also be the string values "all"
         to pick all channels, or "data" to pick data channels. ``None`` (default) will
-        pick all MEG and EEG channels, excluding those maked as "bad".
+        pick all MEG and EEG channels, excluding those marked as "bad".
     tmin : float | None
         When set, searchlight patches will only be generated from subsequent time points
         starting from this time point. This value is given in seconds. Defaults to
@@ -409,7 +409,7 @@ def rsa_epochs(
     dropped_as_nan : bool
         When this is set to ``True``, the drop log will be used to inject NaN values in
         the RDMs at the locations where a bad epoch was dropped. This is useful to
-        ensure the dimensions of the RDM are the same, irregardless of any bad epochs
+        ensure the dimensions of the RDM are the same, regardless of any bad epochs
         that were dropped. Make sure to use ``ignore_nan=True`` when using RDMs with
         NaNs in them during subsequent RSA computations. Defaults to ``False``.
 
@@ -626,7 +626,7 @@ def rdm_evokeds(
         channels of those types, channel *name* strings (e.g., ``['MEG0111',
         'MEG2623']`` will pick the given channels. Can also be the string values "all"
         to pick all channels, or "data" to pick data channels. ``None`` (default) will
-        pick all MEG and EEG channels, excluding those maked as "bad".
+        pick all MEG and EEG channels, excluding those marked as "bad".
     tmin : float | None
         When set, searchlight patches will only be generated from subsequent time points
         starting from this time point. This value is given in seconds. Defaults to
@@ -758,7 +758,7 @@ def rdm_epochs(
         channels of those types, channel *name* strings (e.g., ``['MEG0111',
         'MEG2623']`` will pick the given channels. Can also be the string values "all"
         to pick all channels, or "data" to pick data channels. ``None`` (default) will
-        pick all MEG and EEG channels, excluding those maked as "bad".
+        pick all MEG and EEG channels, excluding those marked as "bad".
     tmin : float | None
         When set, searchlight patches will only be generated from subsequent time points
         starting from this time point. This value is given in seconds. Defaults to
@@ -771,7 +771,7 @@ def rdm_epochs(
     dropped_as_nan : bool
         When this is set to ``True``, the drop log will be used to inject NaN values in
         the RDMs at the locations where a bad epoch was dropped. This is useful to
-        ensure the dimensions of the RDM are the same, irregardless of any bad epochs
+        ensure the dimensions of the RDM are the same, regardless of any bad epochs
         that were dropped. Make sure to use ``ignore_nan=True`` when using RDMs with
         NaNs in them during subsequent RSA computations. Defaults to ``False``.
 

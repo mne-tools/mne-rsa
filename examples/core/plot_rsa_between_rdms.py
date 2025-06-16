@@ -21,7 +21,7 @@ import pandas as pd
 from matplotlib import pyplot as plt
 
 ########################################################################################
-# MNE-Python contains a build-in data loader for the kiloword dataset, which is used
+# MNE-Python contains a built-in data loader for the kiloword dataset, which is used
 # here as an example dataset. Since we only need the words shown during the experiment,
 # which are in the metadata, we can pass ``preload=False`` to prevent MNE-Python from
 # loading the EEG data, which is a nice speed gain.

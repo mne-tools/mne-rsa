@@ -17,7 +17,7 @@ class searchlight:
     searchlight patch along time, space or both.
 
     This function is flexible in regards to shape of the data array. The
-    intepretation of the dimensions is as follows:
+    interpretation of the dimensions is as follows:
 
     4 or more dimensions
         ``(n_folds, n_items, n_series, n_samples, ...)``
@@ -138,7 +138,7 @@ class searchlight:
         self.temporal_radius = temporal_radius
         self.sel_series = sel_series
 
-        # Boundry checking for samples_from and samples_to. Only relevant if
+        # Boundary checking for samples_from and samples_to. Only relevant if
         # there is a temporal dimension to the data.
         if samples_from != 0 or samples_to != -1:
             if self.samples_dim is None:

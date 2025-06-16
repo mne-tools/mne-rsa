@@ -239,7 +239,7 @@ class rdm_array:
     Attributes
     ----------
     shape : tuple of int
-        Multidimensional shape of the generted RDMs.
+        Multidimensional shape of the generated RDMs.
 
         This is useful for re-shaping the result obtained after consuming the this
         generator.

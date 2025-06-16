@@ -19,7 +19,7 @@ import mne
 import mne_rsa
 
 ########################################################################################
-# MNE-Python contains a build-in data loader for the kiloword dataset. We use it here to
+# MNE-Python contains a built-in data loader for the kiloword dataset. We use it here to
 # read it as 960 epochs. Each epoch represents the brain response to a single word,
 # averaged across all the participants. For this example, we speed up the computation,
 # at a cost of temporal precision, by downsampling the data from the original 250 Hz. to

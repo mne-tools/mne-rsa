@@ -216,7 +216,7 @@ def rsa_stcs(
             raise ValueError(
                 "When using `spatial_radius` to construct spatial searchlight patches, "
                 "you also need to set `src` to the corresponding source space to "
-                "allow distance calcultations."
+                "allow distance calculations."
             )
         src = _check_src_compatibility(src, stcs[0])
         dist = _get_distance_matrix(src, dist_lim=spatial_radius, n_jobs=n_jobs)
@@ -444,7 +444,7 @@ def rdm_stcs(
             raise ValueError(
                 "When using `spatial_radius` to construct spatial searchlight patches, "
                 "you also need to set `src` to the corresponding source space to "
-                "allow distance calcultations."
+                "allow distance calculations."
             )
         src = _check_src_compatibility(src, stcs[0])
         dist = _get_distance_matrix(src, dist_lim=spatial_radius, n_jobs=n_jobs)
@@ -1259,7 +1259,7 @@ def _add_volume_source_space_distances(src, dist_limit):
 
     """
     # Lazy import to not have to load the huge scipy module every time mne_rsa
-    # get's loaded.
+    # gets loaded.
     from scipy.sparse import csr_matrix
 
     assert src.kind == "volume"
@@ -1301,7 +1301,7 @@ def backfill_stc_from_rois(values, rois, src, tmin=0, tstep=1, subject=None):
         The source space used by the source estimates specified in the `stcs`
         parameter.
     tmin : float
-        Time corrsponding to the first sample.
+        Time corresponding to the first sample.
     tstep : float
         Difference in time between two samples.
     subject : str | None

@@ -4,9 +4,8 @@ repos:
     rev: v0.8.4
     hooks:
       - id: ruff
-        name: ruff lint mne-rsa
-        args: ["--fix"]
-        files: ^mne/
+        name: ruff-lint
+        files: ^mne_rsa/
       - id: ruff-format
         files: ^mne_rsa|^doc/|^examples/
 

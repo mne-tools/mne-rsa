@@ -104,7 +104,7 @@ rois = mne.read_labels_from_annot(
 ########################################################################################
 # Performing the RSA. To save time, we don't use a searchlight over time, just over the
 # ROIs. The results are returned not only as a NumPy `ndarray`, but also as an
-# `mne.SourceEstimate` object, where each vertex beloning to the same ROI has the same
+# `mne.SourceEstimate` object, where each vertex belonging to the same ROI has the same
 # value.
 rsa_vals, stc = mne_rsa.rsa_stcs_rois(
     epochs_stc,
