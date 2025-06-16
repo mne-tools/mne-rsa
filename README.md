@@ -17,9 +17,9 @@ systems neuroscience. Frontiers in Systems Neuroscience, 2(4).
 https://doi.org/10.3389/neuro.06.004.2008
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/wmvanvliet/mne-rsa/main/doc/rsa_dark.png">
-  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/wmvanvliet/mne-rsa/main/doc/rsa.png">
-  <img src="https://raw.githubusercontent.com/wmvanvliet/mne-rsa/main/doc/rsa.png" width="600">
+  <source media="(prefers-color-scheme: dark)" srcset="doc/rsa_dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="doc/rsa.png">
+  <img src="doc/rsa.png" width="600">
 </picture>
 
 
@@ -74,11 +74,9 @@ evoked_rsa = rsa.rsa_epochs(epochs, rdm_model,
 ## Documentation
 
 For quick guides on how to do specific things, see the
-[examples](<https://users.aalto.fi/~vanvlm1/mne-rsa/auto_examples/index.html>).
+[examples](auto_examples/index.html).
 
-Finally, there is the
-[API reference](<https://users.aalto.fi/~vanvlm1/mne-rsa/api.html>)
-documentation.
+Finally, there is the [API reference](api.html) documentation.
 
 ## Integration with other packages
 
