@@ -10,7 +10,7 @@ import numpy as np
 from joblib import Parallel, delayed
 from scipy.spatial import distance
 
-from .folds import create_folds
+from .folds import create_folds, _match_order
 from .searchlight import searchlight
 
 
@@ -210,9 +210,19 @@ class rdm_array:
         :mod:`scipy.spatial.distance` for a list of all other metrics and their
         arguments. Defaults to an empty dictionary.
     y : ndarray of int, shape (n_items,) | None
-        For each item, a number indicating the class to which the item belongs. When
-        ``None``, each item is assumed to belong to a different class.
-        Defaults to ``None``.
+        Deprecated, use ``labels`` instead.
+        For each item, a number indicating the class to which the item belongs.
+        Defaults to ``None``, in which case ``labels`` is used.
+    labels : list | None
+        For each element in ``X`` (=the first dimension), a label that identifies the
+        item to which it corresponds. Multiple elements in ``X`` may correspond to the
+        same item, in which case they should have the same label and will either be
+        averaged when computing the data RDM (``n_folds=1``) or used for
+        cross-validation (``n_folds>1``). Labels may be of any python type that can be
+        compared with ``==`` (int, float, string, tuple, etc). By default (``None``),
+        the integers ``0:len(X)`` are used as labels.
+
+        .. versionadded:: 0.10
     n_folds : int | sklearn.model_selection.BaseCrollValidator | None
         Number of cross-validation folds to use when computing the distance metric.
         Folds are created based on the ``y`` parameter. Specify ``None`` to use the
@@ -259,11 +269,15 @@ class rdm_array:
         dist_metric="correlation",
         dist_params=dict(),
         y=None,
+        labels=None,
         n_folds=1,
         n_jobs=1,
     ):
         if patches is None:
             patches = searchlight(X.shape)
+
+        if y is None:
+            y = _match_order(len_X=len(X), labels_X=labels)
 
         # Create folds for cross-validated RDM metrics
         self.X = create_folds(X, y, n_folds)

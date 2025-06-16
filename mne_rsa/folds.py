@@ -114,30 +114,62 @@ def _compute_item_means(X, y_one_hot, fold=slice(None)):
     return means.reshape((len(means),) + orig_shape[1:])
 
 
-def _match_order(len_X=None, len_rdm_model=None, labels_X=None, labels_rdm_model=None):
+def _match_order(
+    len_X, len_rdm_model=None, labels_X=None, labels_rdm_model=None, var="labels_X"
+):
     """Find ordering y to re-order labels_X to match labels_rdm_model."""
     if labels_X is None and labels_rdm_model is None:
         return None  # use the shortcut of not re-ordering anything
 
+    if labels_X is not None and len(labels_X) != len_X:
+        raise ValueError(
+            f"The number of labels in `{var}` does not match the number of items "
+            f"in the data ({len_X})."
+        )
+
+    # If we don't need to align with labels_rdm_model, we can take a shortcut.
+    if labels_X is not None and len_rdm_model is None:
+        i = 0
+        mapping = dict()
+        y = list()
+        for label in labels_X:
+            if label not in mapping:
+                mapping[label] = i
+                y.append(i)
+                i += 1
+            else:
+                y.append(mapping[label])
+        return y
+
+    # We need to align labels_X and labels_rdm_model, go prepate both of them.
     if labels_X is None:
         labels_X = np.arange(len_X)
     if labels_rdm_model is None:
         labels_rdm_model = np.arange(len_rdm_model)
     labels_X = np.asarray(labels_X)
     labels_rdm_model = np.asarray(labels_rdm_model)
-    if labels_X.dtype != labels_rdm_model.dtype:
-        raise ValueError(
-            f"The data types of labels_X ({labels_X.dtype}) and "
-            f"labels_rdm_model ({labels_X.dtype}) do not match."
-        )
 
     # Perform sanity checks. It's easy to get these labels wrong.
+    if len(labels_rdm_model) != len_rdm_model:
+        raise ValueError(
+            f"The number of labels in `labels_rdm_model` does not match the number of "
+            f"items in the model RDM ({len_rdm_model})."
+        )
+    if labels_X.dtype != labels_rdm_model.dtype:
+        raise ValueError(
+            f"The data types of `{var}` ({labels_X.dtype}) and "
+            f"`labels_rdm_model` ({labels_rdm_model.dtype}) do not match."
+        )
     unique_labels_rdm_model = np.unique(labels_rdm_model)
     if len(unique_labels_rdm_model) != len(labels_rdm_model):
-        raise ValueError("Not all labels in labels_rdm_model are unique.")
+        raise ValueError("Not all labels in `labels_rdm_model` are unique.")
     if len(np.setdiff1d(labels_X, labels_rdm_model)) > 0:
-        raise ValueError("Some labels in labels_X are not present in labels_rdm_model.")
+        raise ValueError(
+            f"Some labels in `{var}` are not present in `labels_rdm_model`."
+        )
     if len(np.setdiff1d(labels_rdm_model, labels_X)) > 0:
-        raise ValueError("Some labels in labels_rdm_model are not present in labels_X.")
+        raise ValueError(
+            f"Some labels in `labels_rdm_model` are not present in `{var}`."
+        )
     order = {label: i for i, label in enumerate(labels_rdm_model)}
     return np.array([order[label] for label in labels_X])

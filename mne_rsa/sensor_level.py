@@ -31,6 +31,8 @@ def rsa_evokeds(
     rsa_metric="spearman",
     ignore_nan=False,
     y=None,
+    labels_evokeds=None,
+    labels_rdm_model=None,
     n_folds=1,
     picks=None,
     tmin=None,
@@ -93,9 +95,29 @@ def rsa_evokeds(
 
         .. versionadded:: 0.8
     y : ndarray of int, shape (n_items,) | None
-        For each Evoked, a number indicating the item to which it belongs. When
-        ``None``, each Evoked is assumed to belong to a different item. Defaults to
-        ``None``.
+        Deprecated, use ``labels_evokeds`` and ``labels_rdm_model`` instead.
+        For each Evoked object, a number indicating the item to which it belongs.
+        Defaults to ``None``, in which case ``labels_evokeds`` is used.
+    labels_evokeds : list | None
+        For each Evoked object, a label that identifies the item to which it
+        corresponds. This is used in combination with ``labels_rdm_model`` to align the
+        data and model RDMs before comparing them. Multiple Evoked objects may
+        correspond to the same item, in which case they should have the same label and
+        will either be averaged when computing the data RDM (``n_folds=1``) or used for
+        cross-validation (``n_folds>1``). Labels may be of any python type that can be
+        compared with ``==`` (int, float, string, tuple, etc). By default (``None``),
+        the integers ``0:len(evokeds)`` are used as labels.
+
+        .. versionadded:: 0.10
+    labels_rdm_model: list | None
+        For each row in ``rdm_model``, a label that identifies the item to which it
+        corresponds. This is used in combination with ``labels_evokeds`` to align the
+        data and model RDMs before comparing them. Each row should have a unique label.
+        Labels may be of any python type that can be compared with ``==`` (int, float,
+        string, tuple, etc). By default (``None``), the integers ``0:n_rows`` are used
+        as labels.
+
+        .. versionadded:: 0.10
     n_folds : int | sklearn.model_selection.BaseCrollValidator | None
         Number of cross-validation folds to use when computing the distance metric.
         Folds are created based on the ``y`` parameter. Specify ``None`` to use the
@@ -206,6 +228,7 @@ def rsa_evokeds(
 
     # Perform the RSA
     X = np.array([evoked.data for evoked in evokeds])
+
     patches = searchlight(
         X.shape,
         dist=dist,
@@ -224,6 +247,8 @@ def rsa_evokeds(
         rsa_metric=rsa_metric,
         ignore_nan=ignore_nan,
         y=y,
+        labels_X=labels_evokeds,
+        labels_rdm_model=labels_rdm_model,
         n_folds=n_folds,
         n_jobs=n_jobs,
         verbose=verbose,
@@ -271,6 +296,8 @@ def rsa_epochs(
     rsa_metric="spearman",
     ignore_nan=False,
     y=None,
+    labels_epochs=None,
+    labels_rdm_model=None,
     n_folds=1,
     picks=None,
     tmin=None,
@@ -333,9 +360,29 @@ def rsa_epochs(
 
         .. versionadded:: 0.8
     y : ndarray of int, shape (n_items,) | None
-        For each Epoch, a number indicating the item to which it belongs. When
-        ``None``, the event codes are used to differentiate between items. Defaults to
-        ``None``.
+        Deprecated, use ``labels_epochs`` and ``labels_rdm_model`` instead.
+        For each epoch, a number indicating the item to which it belongs.
+        Defaults to ``None``, in which case ``labels_evokeds`` is used.
+    labels_epochs : list | None
+        For each epoch, a label that identifies the item to which it corresponds. This
+        is used in combination with ``labels_rdm_model`` to align the data and model
+        RDMs before comparing them. Multiple epochs may correspond to the same item, in
+        which case they should have the same label and will either be averaged when
+        computing the data RDM (``n_folds=1``) or used for cross-validation
+        (``n_folds>1``). Labels may be of any python type that can be compared with
+        ``==`` (int, float, string, tuple, etc). By default (``None``), the integers
+        ``0:len(epochs)`` are used as labels.
+
+        .. versionadded:: 0.10
+    labels_rdm_model: list | None
+        For each row in ``rdm_model``, a label that identifies the item to which it
+        corresponds. This is used in combination with ``labels_epochs`` to align the
+        data and model RDMs before comparing them. Each row should have a unique label.
+        Labels may be of any python type that can be compared with ``==`` (int, float,
+        string, tuple, etc). By default (``None``), the integers ``0:n_rows`` are used
+        as labels.
+
+        .. versionadded:: 0.10
     n_folds : int | sklearn.model_selection.BaseCrollValidator | None
         Number of cross-validation folds to use when computing the distance metric.
         Folds are created based on the ``y`` parameter. Specify ``None`` to use the
@@ -468,6 +515,8 @@ def rsa_epochs(
         rsa_metric=rsa_metric,
         ignore_nan=ignore_nan,
         y=y,
+        labels_X=labels_epochs,
+        labels_rdm_model=labels_rdm_model,
         n_folds=n_folds,
         n_jobs=n_jobs,
         verbose=verbose,
@@ -513,6 +562,7 @@ def rdm_evokeds(
     dist_metric="correlation",
     dist_params=dict(),
     y=None,
+    labels=None,
     n_folds=1,
     picks=None,
     tmin=None,
@@ -547,9 +597,19 @@ def rdm_evokeds(
         :mod:`scipy.spatial.distance` for a list of all other metrics and their
         arguments. Defaults to an empty dictionary.
     y : ndarray of int, shape (n_items,) | None
-        For each Evoked, a number indicating the item to which it belongs. When
-        ``None``, each Evoked is assumed to belong to a different item.
-        Defaults to ``None``.
+        Deprecated, use ``labels`` instead.
+        For each Evoked object, a number indicating the item to which it belongs.
+        Defaults to ``None``, in which case ``labels_evokeds`` is used.
+    labels : list | None
+        For each Evoked object, a label that identifies the item to which it
+        corresponds. Multiple Evoked objects may correspond to the same item, in which
+        case they should have the same label and will either be averaged when computing
+        the data RDM (``n_folds=1``) or used for cross-validation (``n_folds>1``).
+        Labels may be of any python type that can be compared with ``==`` (int, float,
+        string, tuple, etc). By default (``None``), the integers ``0:len(evokeds)`` are
+        used as labels.
+
+        .. versionadded:: 0.10
     n_folds : int | sklearn.model_selection.BaseCrollValidator | None
         Number of cross-validation folds to use when computing the distance
         metric. Folds are created based on the ``y`` parameter. Specify
@@ -623,6 +683,7 @@ def rdm_evokeds(
         dist_metric=dist_metric,
         dist_params=dist_params,
         y=y,
+        labels=labels,
         n_folds=n_folds,
     )
 
@@ -635,6 +696,7 @@ def rdm_epochs(
     dist_metric="correlation",
     dist_params=dict(),
     y=None,
+    labels=None,
     n_folds=1,
     picks=None,
     tmin=None,
@@ -669,9 +731,18 @@ def rdm_epochs(
         :mod:`scipy.spatial.distance` for a list of all other metrics and their
         arguments. Defaults to an empty dictionary.
     y : ndarray of int, shape (n_items,) | None
-        For each Epoch, a number indicating the item to which it belongs. When
-        ``None``, the event codes are used to differentiate between items. Defaults to
-        ``None``.
+        Deprecated, use ``labels` instead.
+        For each epoch, a number indicating the item to which it belongs.
+        Defaults to ``None``, in which case ``labels`` is used.
+    labels : list | None
+        For each epoch, a label that identifies the item to which it corresponds.
+        Multiple epochs may correspond to the same item, in which case they should have
+        the same label and will either be averaged when computing the data RDM
+        (``n_folds=1``) or used for cross-validation (``n_folds>1``). Labels may be of
+        any python type that can be compared with ``==`` (int, float, string, tuple,
+        etc). By default (``None``), the integers ``0:len(epochs)`` are used as labels.
+
+        .. versionadded:: 0.10
     n_folds : int | sklearn.model_selection.BaseCrollValidator | None
         Number of cross-validation folds to use when computing the distance metric.
         Folds are created based on the ``y`` parameter. Specify ``None`` to use the
@@ -776,6 +847,7 @@ def rdm_epochs(
         dist_metric=dist_metric,
         dist_params=dist_params,
         y=y,
+        labels=labels,
         n_folds=n_folds,
     )
     if not dropped_as_nan or len(nan_rdm_indices) == 0:

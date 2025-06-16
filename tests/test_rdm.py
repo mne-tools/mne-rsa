@@ -163,7 +163,7 @@ class TestDsmsSearchlight:
         rdms = rdm_array(data, patches, dist_metric="correlation")
         assert len(rdms) == len(patches)
         assert rdms.shape == (2, 1, 3)
-        assert_allclose(list(rdms), [[0, 0, 0], [0, 0, 0]], atol=1e-15)
+        assert_allclose(list(rdms), 0, atol=1e-15)
 
     def test_single_patch(self):
         """Test computing RDMs using a single searchlight patch."""
@@ -173,7 +173,7 @@ class TestDsmsSearchlight:
         rdms = rdm_array(data, dist_metric="correlation")
         assert len(rdms) == 1
         assert rdms.shape == (3,)
-        assert_allclose(list(rdms), [[0, 0, 0]], atol=1e-15)
+        assert_allclose(list(rdms), 0, atol=1e-15)
 
     def test_crossvalidation(self):
         """Test computing RDMs using a searchlight and cross-validation."""
@@ -192,7 +192,7 @@ class TestDsmsSearchlight:
         rdms = rdm_array(data, patches, y=[1, 2, 3, 1, 2, 3], n_folds=2)
         assert len(rdms) == len(patches)
         assert rdms.shape == (2, 1, 3)
-        assert_allclose(list(rdms), [[0, 0, 0], [0, 0, 0]], atol=1e-15)
+        assert_allclose(list(rdms), 0, atol=1e-15)
 
     def test_generator(self):
         """Test generator behavior when computing RDMs."""
@@ -205,3 +205,21 @@ class TestDsmsSearchlight:
         rdm_list1 = [rdm for rdm in iter(rdms)]
         rdm_list2 = [rdm for rdm in iter(rdms)]
         assert len(rdm_list1) == len(rdm_list2) == 2
+
+    def test_match_order(self):
+        """Test order matching of rdm_array."""
+        data = np.array(
+            [[[1, 2, 3], [2, 3, 4]], [[2, 3, 4], [3, 4, 5]], [[3, 4, 5], [4, 5, 6]]]
+        )
+        rdms = rdm_array(data, labels=[0, 0, 1], dist_metric="correlation")
+        assert len(rdms) == 1
+        assert rdms.shape == (1,)
+        assert_allclose(list(rdms), 0, atol=1e-15)
+
+        data = np.array(
+            [[[1, 2, 3], [2, 3, 4]], [[2, 3, 4], [3, 4, 5]], [[3, 4, 5], [4, 5, 6]]]
+        )
+        rdms = rdm_array(data, labels=["b", "c", "b"], dist_metric="correlation")
+        assert len(rdms) == 1
+        assert rdms.shape == (1,)
+        assert_allclose(list(rdms), 0, atol=1e-15)

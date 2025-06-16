@@ -113,21 +113,40 @@ class TestMatchOrder:
             [0, 2, 1],
         )
 
+        # Test not having to align with labels_rdm_model
+        assert _match_order(len_X=3, labels_X=None) is None
+        assert_equal(_match_order(len_X=3, labels_X=["a", "b", "c"]), [0, 1, 2])
+        assert_equal(_match_order(len_X=4, labels_X=["a", "b", "b", "c"]), [0, 1, 1, 2])
+
     def test_invalid_input(self):
         """Test passing invalid input to _match_order."""
+        with pytest.raises(ValueError, match="The number of labels in `labels_X`"):
+            _match_order(len_X=3, labels_X=[0, 1])
+        with pytest.raises(ValueError, match="The number of labels in `labels_epochs`"):
+            _match_order(len_X=3, labels_X=[0, 1], var="labels_epochs")
         invoke = partial(_match_order, len_X=3, len_rdm_model=3)
+        with pytest.raises(ValueError, match="The number of labels in `labels_X`"):
+            invoke(labels_X=[0, 1, 2, 3, 4, 5])
+        with pytest.raises(
+            ValueError, match="The number of labels in `labels_rdm_model`"
+        ):
+            invoke(labels_rdm_model=[0, 1, 2, 4, 5])
         with pytest.raises(ValueError, match="The data types"):
             invoke(labels_X=[0, 1, 2], labels_rdm_model=["a", "b", "c"])
         with pytest.raises(ValueError, match="The data types"):
             invoke(labels_X=None, labels_rdm_model=["a", "b", "c"])
         with pytest.raises(ValueError, match="The data types"):
             invoke(labels_X=["a", "b", "c"], labels_rdm_model=None)
-        with pytest.raises(ValueError, match="Not all labels in labels_rdm_model"):
+        with pytest.raises(ValueError, match="Not all labels in `labels_rdm_model`"):
             invoke(labels_X=["a", "b", "c"], labels_rdm_model=["a", "a", "c"])
-        with pytest.raises(ValueError, match="Some labels in labels_X"):
+        with pytest.raises(ValueError, match="Some labels in `labels_X`"):
             invoke(labels_X=["a", "a", "z"], labels_rdm_model=["a", "b", "c"])
-        with pytest.raises(ValueError, match="Some labels in labels_rdm_model"):
+        with pytest.raises(ValueError, match="Some labels in `labels_rdm_model`"):
             invoke(labels_X=["a", "a", "c"], labels_rdm_model=["a", "b", "c"])
+        with pytest.raises(ValueError, match=r"The data types of `labels_X` \(<U1\)"):
+            invoke(labels_X=["a", "b", "c"])
+        with pytest.raises(ValueError, match=r"The data types of `labels_X` \(int64\)"):
+            invoke(labels_rdm_model=["a", "b", "c"])
 
     def many_to_one(self):
         """Test many-to-one mapping of data to rdm_model."""
