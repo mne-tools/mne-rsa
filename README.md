@@ -16,8 +16,8 @@ Frontiers in Systems Neuroscience, 2(4).
 [https://doi.org/10.3389/neuro.06.004.2008](https://doi.org/10.3389/neuro.06.004.2008)
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="doc/rsa_dark.png">
   <source media="(prefers-color-scheme: light)" srcset="doc/rsa.png">
+  <source media="(prefers-color-scheme: dark)" srcset="doc/rsa_dark.png">
   <img src="doc/rsa.png" width="600">
 </picture>
 
@@ -71,30 +71,23 @@ mne.viz.plot_compare_evokeds({column: result for column, result in zip(columns, 
                             picks="rsa", legend="lower center", title="RSA result")
 ```
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="doc/rsa_result.png">
-  <source media="(prefers-color-scheme: light)" srcset="doc/rsa_result_dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="doc/rsa_result.png">
+  <source media="(prefers-color-scheme: dark)" srcset="doc/rsa_result_dark.png">
   <img src="rsa_result.png" width="600">
 </picture>
 
 ## Documentation
-For a detailed guide on RSA analyis from start to finish on an example dataset, see the [tutorial]().
+For a detailed guide on RSA analyis from start to finish on an example dataset, see the [tutorials](auto_examples/tutorials/index.html).
 
-For quick guides on how to do specific things, see the [examples](https://users.aalto.fi/~vanvlm1/mne-rsa/auto_examples/index.html).
+For quick guides on how to do specific things, see the [examples](auto_examples/index.html).
 
-Finally, there is the [API reference](https://users.aalto.fi/~vanvlm1/mne-rsa/api.html) documentation.
+Finally, there is the [API reference](api.html) documentation.
 
 ## Integration with other packages
 
 The main purpose of this package is to perform RSA analysis on MEG data.
 Hence, integration functions with [MNE-Python](https://mne.tools) are provided.
 However, there is also some integration with [nipy](https://nipy.org) for fMRI that should well in a [nilearn](https://nilearn.github.io) setup.
-
-## Performance
-
-This package aims to be fast and memory efficient.
-An important design feature is that under the hood, everything operates on generators.
-The searchlight routines produce a generator of RDMs which are consumed by a generator of RSA values.
-Parallel processing is also supported, so you can use all of your CPU cores.
 
 
 ## Support
