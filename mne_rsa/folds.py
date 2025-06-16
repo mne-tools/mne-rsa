@@ -1,4 +1,10 @@
-"""Functions concerning the creation of cross-validation folds."""
+"""Functions concerning the creation of cross-validation folds.
+
+Authors
+-------
+Marijn van Vliet <marijn.vanvliet@aalto.fi>
+Yuan-Fang Zhao <distancejay@gmail.com>
+"""
 
 import numpy as np
 from mne.utils import logger

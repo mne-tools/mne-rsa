@@ -3,7 +3,7 @@
 
 """
 Using cross-validation when computing RDMs
-==========================================
+------------------------------------------
 
 This example demonstrates how to perform cross-validation when computing dissimilarity
 matrices (RDMs). When the data has repeated measurements of the same stimulus type,
@@ -23,6 +23,9 @@ being repeated measurements of the same stimulus type.
 .. [1] Dufau, S., Grainger, J., Midgley, KJ., Holcomb, PJ (2015). A thousand words are
        worth a picture: Snapshots of printed-word processing in an event-related
        potential megastudy. Psychological science.
+
+| Authors:
+| Marijn van Vliet <marijn.vanvliet@aalto.fi>
 """
 
 # Import required packages
@@ -90,7 +93,7 @@ mne_rsa.plot_rdms_topo(rdms, epochs.info)
 ########################################################################################
 # For performance reasons, the low-level functions of MNE-RSA do not take a ``y`` list
 # for cross-validation. Instead, they require the data to be already split into folds.
-# The :func:`create_folds` function can create these folds.
+# The :func:`mne_rsa.create_folds` function can create these folds.
 
 X = epochs.get_data()
 y = epochs.metadata.NumberOfLetters.astype(int)

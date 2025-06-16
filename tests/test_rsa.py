@@ -35,8 +35,8 @@ class TestRSAGen:
         model_rdm = np.array([2, 3, 3.5])
         assert next(rsa_gen(data_rdm, model_rdm, metric="spearman")) == 1.0
 
-        data_rdm = rdm_gen([[np.NaN, 2, 3, 4, 5]])
-        model_rdm = np.array([2, np.NaN, 3.5, 4, 5])
+        data_rdm = rdm_gen([[np.nan, 2, 3, 4, 5]])
+        model_rdm = np.array([2, np.nan, 3.5, 4, 5])
         assert (
             next(rsa_gen(data_rdm, model_rdm, metric="spearman", ignore_nan=True))
             == 1.0
@@ -48,8 +48,8 @@ class TestRSAGen:
         model_rdm = np.array([2, 3, 3.5])
         assert next(rsa_gen(data_rdm, model_rdm, metric="pearson")) < 1.0
 
-        data_rdm = rdm_gen([[np.NaN, 2, 3, 4, 5]])
-        model_rdm = np.array([2, np.NaN, 3.5, 4, 5])
+        data_rdm = rdm_gen([[np.nan, 2, 3, 4, 5]])
+        model_rdm = np.array([2, np.nan, 3.5, 4, 5])
         assert (
             next(rsa_gen(data_rdm, model_rdm, metric="pearson", ignore_nan=True)) < 1.0
         )
@@ -61,8 +61,8 @@ class TestRSAGen:
         rsa_val = next(rsa_gen(data_rdm, model_rdm, metric="kendall-tau-a"))
         assert rsa_val == 2 / 3
 
-        data_rdm = rdm_gen([[1, np.NaN, 2, 3, 4]])
-        model_rdm = np.array([1, 2, 3, 3, np.NaN])
+        data_rdm = rdm_gen([[1, np.nan, 2, 3, 4]])
+        model_rdm = np.array([1, 2, 3, 3, np.nan])
         rsa_val = next(
             rsa_gen(data_rdm, model_rdm, metric="kendall-tau-a", ignore_nan=True)
         )
@@ -76,8 +76,8 @@ class TestRSAGen:
         rsa_val = next(rsa_gen(data_rdm, [model_rdm1, model_rdm2], metric="regression"))
         assert_allclose(rsa_val, [3, 5])
 
-        model_rdm1 = np.array([-1, np.NaN, 0, 1, 1])
-        model_rdm2 = np.array([1, 3, -2, 1, np.NaN])
+        model_rdm1 = np.array([-1, np.nan, 0, 1, 1])
+        model_rdm2 = np.array([1, 3, -2, 1, np.nan])
         data_rdm = rdm_gen([3 * model_rdm1 + 5 * model_rdm2])
         rsa_val = next(
             rsa_gen(
@@ -95,9 +95,9 @@ class TestRSAGen:
         rsa_val = next(rsa_gen(data_rdm, [model_rdm1, model_rdm2], metric="partial"))
         assert_allclose(rsa_val, [0.919145, 0.912871])
 
-        model_rdm1 = np.array([1, np.NaN, 2, 3, 4, 4])
-        model_rdm2 = np.array([0, 0, 0, 1, 1, np.NaN])
-        data_rdm = rdm_gen([[2, np.NaN, 4, 15, 20, np.NaN]])
+        model_rdm1 = np.array([1, np.nan, 2, 3, 4, 4])
+        model_rdm2 = np.array([0, 0, 0, 1, 1, np.nan])
+        data_rdm = rdm_gen([[2, np.nan, 4, 15, 20, np.nan]])
         rsa_val = next(
             rsa_gen(
                 data_rdm, [model_rdm1, model_rdm2], metric="partial", ignore_nan=True
@@ -116,9 +116,9 @@ class TestRSAGen:
         )
         assert_allclose(rsa_val, [0, 2 / 3], atol=1e-15)
 
-        model_rdm1 = np.array([1, np.NaN, 2, 3, 4, 4])
-        model_rdm2 = np.array([0, 0, 0, 1, 1, np.NaN])
-        data_rdm = rdm_gen([[2, np.NaN, 4, 20, 15, np.NaN]])
+        model_rdm1 = np.array([1, np.nan, 2, 3, 4, 4])
+        model_rdm2 = np.array([0, 0, 0, 1, 1, np.nan])
+        data_rdm = rdm_gen([[2, np.nan, 4, 20, 15, np.nan]])
         rsa_val = next(
             rsa_gen(
                 data_rdm,
@@ -141,10 +141,10 @@ class TestRSAGen:
             next(rsa_gen(rdm_gen([rdm()]), rdm(), metric="partial-spearman"))
 
     def test_nan(self):
-        """Test whether NaNs generate an error when appropriate."""
-        assert np.isnan(next(rsa_gen(rdm_gen([[1, 2, np.NaN, 4, 5, 6]]), rdm())))
+        """Test whether nans are dealt with correctly."""
+        assert np.isnan(next(rsa_gen(rdm_gen([[1, 2, np.nan, 4, 5, 6]]), rdm())))
         assert_allclose(
-            next(rsa_gen(rdm_gen([[1, 2, np.NaN, 4, 5, 6]]), rdm(), ignore_nan=True)),
+            next(rsa_gen(rdm_gen([[1, 2, np.nan, 4, 5, 6]]), rdm(), ignore_nan=True)),
             1,
             atol=1e-15,
         )
@@ -241,7 +241,7 @@ class TestRSASearchlight:
         rsa_result = rsa_array(
             data, [model_rdm, model_rdm], patches, data_rdm_metric="euclidean"
         )
-        assert rsa_result.shape == (3, 2)
+        assert rsa_result.shape == (2, 3)
         assert_equal(rsa_result, 1)
 
         # One model RDM, paralellization across 2 CPUs
@@ -257,7 +257,7 @@ class TestRSASearchlight:
         rsa_result = rsa_array(
             data, [model_rdm, model_rdm], patches, data_rdm_metric="euclidean", n_jobs=2
         )
-        assert rsa_result.shape == (3, 2)
+        assert rsa_result.shape == (2, 3)
         assert_equal(rsa_result, 1)
 
     def test_rsa_spat_temp(self):
@@ -279,7 +279,7 @@ class TestRSASearchlight:
         rsa_result = rsa_array(
             data, [model_rdm, model_rdm], patches, data_rdm_metric="euclidean"
         )
-        assert rsa_result.shape == (2, 1, 2)
+        assert rsa_result.shape == (2, 2, 1)
         assert_equal(rsa_result, 1)
 
         # One model RDM, paralellization across 2 CPUs
@@ -293,9 +293,35 @@ class TestRSASearchlight:
         # Multiple model RDMs, paralellization across 2 CPUs
         patches = searchlight(data.shape, dist, spatial_radius=1, temporal_radius=1)
         rsa_result = rsa_array(
-            data, [model_rdm, model_rdm], patches, data_rdm_metric="euclidean", n_jobs=2
+            data,
+            [model_rdm, model_rdm],
+            patches,
+            data_rdm_metric="euclidean",
+            n_jobs=2,
+            verbose=True,
         )
-        assert rsa_result.shape == (2, 1, 2)
+        assert rsa_result.shape == (2, 2, 1)
+        assert_equal(rsa_result, 1)
+
+    def test_nan(self):
+        """Test whether nans are dealt with correctly."""
+        data = np.array(
+            [[1, 2, 3, 4, 5], [2, 3, 4, np.nan, 6], [3, 4, 5, 6, 7], [4, 5, 6, 7, 8]]
+        )
+        model_rdm = np.array([1, 2, 3, 1, 2, 1])
+        patches = searchlight(data.shape, temporal_radius=1)
+
+        # Without ignoring NaNs, the result should contain NaNs where data is missing.
+        rsa_result = rsa_array(data, model_rdm, patches, data_rdm_metric="euclidean")
+        assert rsa_result.shape == (3,)
+        assert ~np.isnan(rsa_result[0])
+        assert np.all(np.isnan(rsa_result[1:]))
+
+        # When ignoring NaNs, the result should never contain NaNs.
+        rsa_result = rsa_array(
+            data, model_rdm, patches, data_rdm_metric="euclidean", ignore_nan=True
+        )
+        assert rsa_result.shape == (3,)
         assert_equal(rsa_result, 1)
 
 

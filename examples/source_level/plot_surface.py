@@ -3,7 +3,7 @@
 
 """
 Source-level RSA using a searchlight on surface data
-====================================================
+----------------------------------------------------
 
 This example demonstrates how to perform representational similarity analysis (RSA) on
 source localized MEG data, using a searchlight approach.
@@ -19,6 +19,9 @@ our searchlight will have a spatial radius of 2 cm. and a temporal radius of 20 
 The dataset will be the MNE-sample dataset: a collection of 288 epochs in which the
 participant was presented with an auditory beep or visual stimulus to either the left or
 right ear or visual field.
+
+| Authors:
+| Marijn van Vliet <marijn.vanvliet@aalto.fi>
 """
 # sphinx_gallery_thumbnail_number=2
 
@@ -115,7 +118,7 @@ rsa_vals = mne_rsa.rsa_stcs(
     tmin=0,
     tmax=0.3,  # To save time, only analyze this time interval
     n_jobs=1,  # Only use one CPU core. Increase this for more speed.
-    verbose=False,
+    verbose=True,
 )  # Set to True to display a progress bar
 
 # Find the searchlight patch with highest RSA score

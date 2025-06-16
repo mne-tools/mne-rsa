@@ -23,8 +23,13 @@ classifiers = [
 	"Operating System :: Unix",
 	"Operating System :: MacOS",
 ]
-dependencies = ["mne"]
+dependencies = ["mne", "nibabel", "scikit-learn", "pyvista", "pyside6", "pyvistaqt"]
 dynamic = ["version"]
+
+[project.urls]
+"Homepage" = "https://users.aalto.fi/~vanvlm1/mne-rsa"
+"Bug Tracker" = "https://github.com/wmvanvliet/mne-rsa/issues/"
+"Source Code" = "https://github.com/wmvanvliet/mne-rsa"
 
 [tool.setuptools]
 packages = ["mne_rsa"]

@@ -1,4 +1,4 @@
-__version__ = "0.10.dev0"
+__version__ = "1.0-dev"
 
 from .source_level import rsa_stcs, rdm_stcs, rsa_stcs_rois, rsa_nifti, rdm_nifti
 from .sensor_level import rsa_evokeds, rsa_epochs, rdm_evokeds, rdm_epochs

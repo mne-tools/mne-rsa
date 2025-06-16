@@ -1,5 +1,11 @@
 # encoding: utf-8
-"""Methods to compute representational similarity analysis (RSA)."""
+"""Methods to compute representational similarity analysis (RSA).
+
+Authors
+-------
+Marijn van Vliet <marijn.vanvliet@aalto.fi>
+Egor Eremin <egor.eremin@aalto.fi>
+"""
 
 import numpy as np
 from joblib import Parallel, delayed
@@ -76,7 +82,8 @@ def _kendall_tau_a(x, y):
 
 
 def _consolidate_masks(masks):
-    if type(masks[0]) == slice:
+    """Compute the union of multiple masks."""
+    if type(masks[0]) is slice:
         mask = slice(None)
     else:
         mask = masks[0]
@@ -89,10 +96,10 @@ def _partial_correlation(rdm_data, rdm_model, masks=None, type="pearson"):
     """Compute partial Pearson/Spearman correlation."""
     if len(rdm_model) == 1:
         raise ValueError(
-            "Need more than one model RDM to use partial " "correlation as metric."
+            "Need more than one model RDM to use partial correlation as metric."
         )
     if type not in ["pearson", "spearman"]:
-        raise ValueError("Correlation type must be either 'pearson' or " "'spearman'")
+        raise ValueError("Correlation type must be either 'pearson' or 'spearman'")
 
     if masks is not None:
         mask = _consolidate_masks(masks)
@@ -160,26 +167,38 @@ def rsa_gen(rdm_data_gen, rdm_model, metric="spearman", ignore_nan=False):
         masks = [~np.isnan(rdm) for rdm in rdm_model]
     else:
         masks = [slice(None)] * len(rdm_model)
+        # Precompute ranks for Spearman
+        if metric == "spearman":
+            rdm_model = [stats.rankdata(rdm) for rdm in rdm_model]
 
     for rdm_data in rdm_data_gen:
         rdm_data = _ensure_condensed(rdm_data, "rdm_data")
         if ignore_nan:
             data_mask = ~np.isnan(rdm_data)
             masks = [m & data_mask for m in masks]
-        rsa_vals = _rsa_single_rdm(rdm_data, rdm_model, metric, masks)
+        rsa_vals = _rsa_single_rdm(rdm_data, rdm_model, metric, masks, ignore_nan)
         if return_array:
             yield np.asarray(rsa_vals)
         else:
             yield rsa_vals[0]
 
 
-def _rsa_single_rdm(rdm_data, rdm_model, metric, masks):
+def _rsa_single_rdm(rdm_data, rdm_model, metric, masks, ignore_nan):
     """Compute RSA between a single data RDM and one or more model RDMs."""
     if metric == "spearman":
-        rsa_vals = [
-            stats.spearmanr(rdm_data[mask], rdm_model_[mask])[0]
-            for rdm_model_, mask in zip(rdm_model, masks)
-        ]
+        if not ignore_nan:
+            rdm_data = stats.rankdata(rdm_data)
+            rsa_vals = [
+                np.corrcoef(rdm_data, rdm_model_[mask])[0, 1]
+                for rdm_model_, mask in zip(rdm_model, masks)
+            ]
+        else:
+            rsa_vals = [
+                np.corrcoef(
+                    stats.rankdata(rdm_data[mask]), stats.rankdata(rdm_model_[mask])
+                )[0, 1]
+                for rdm_model_, mask in zip(rdm_model, masks)
+            ]
     elif metric == "pearson":
         rsa_vals = [
             stats.pearsonr(rdm_data[mask], rdm_model_[mask])[0]
@@ -395,11 +414,11 @@ def rsa_array(
 
     Returns
     -------
-    rsa_vals : ndarray, shape ([n_series,] [n_times,] [n_model_rdms])
+    rsa_vals : ndarray, shape ([n_model_rdms,] [n_series,] [n_times,])
         The RSA value for each searchlight patch. When ``spatial_radius`` is set to
         ``None``, there will only be no ``n_series`` dimension. When ``temporal_radius``
         is set to ``None``, there will be no time dimension. When multiple models have
-        been supplied, the last dimension will contain RSA results for each model.
+        been supplied, the first dimension will contain RSA results for each model.
 
     See Also
     --------
@@ -430,6 +449,9 @@ def rsa_array(
         masks = [~np.isnan(rdm) for rdm in rdm_model]
     else:
         masks = [slice(None)] * len(rdm_model)
+        # Precompute ranks for Spearman
+        if rsa_metric == "spearman":
+            rdm_model = [stats.rankdata(rdm) for rdm in rdm_model]
 
     if verbose:
         from tqdm import tqdm
@@ -456,7 +478,7 @@ def rsa_array(
             patch_masks = [m & data_mask for m in masks]
         else:
             patch_masks = masks
-        return _rsa_single_rdm(rdm_data, rdm_model, rsa_metric, patch_masks)
+        return _rsa_single_rdm(rdm_data, rdm_model, rsa_metric, patch_masks, ignore_nan)
 
     # Call RSA multiple times in parallel for each searchlight patch.
     data = Parallel(n_jobs=n_jobs)(
@@ -465,7 +487,9 @@ def rsa_array(
 
     # Figure out the desired dimensions of the resulting array.
     dims = getattr(patches, "shape", (-1,))
-    if len(rdm_model) > 1:
+    if len(rdm_model) == 1:
+        return np.array(data).reshape(dims)
+    else:
         dims = dims + (len(rdm_model),)
-
-    return np.array(data).reshape(dims)
+        data = np.array(data).reshape(dims)
+        return np.rollaxis(data, axis=-1)  # put n_models dim first
