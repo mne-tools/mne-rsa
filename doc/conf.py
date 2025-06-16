@@ -88,7 +88,7 @@ html_theme_options = {
     "icon_links": [
         dict(
             name="GitHub",
-            url="https://github.com/wmvanvliet/mne-rsa",
+            url="https://github.com/mne-tools/mne-rsa",
             icon="fa-brands fa-square-github",
         ),
     ],
@@ -106,8 +106,8 @@ html_theme_options = {
 html_context = {
     "default_mode": "auto",
     # next 3 are for the "edit this page" button
-    "github_user": "wmvanvliet",
-    "github_repo": "mne-mne",
+    "github_user": "mne-tools",
+    "github_repo": "mne-rsa",
     "github_version": "main",
 }
 
@@ -119,12 +119,13 @@ html_static_path = ["_static"]
 # If true, links to the reST sources are added to the pages.
 html_show_sourcelink = False
 
+html_baseurl = "https://mne.tools/mne-rsa/"
+
 # Output file base name for HTML help builder.
 htmlhelp_basename = "mnersadoc"
 
 intersphinx_mapping = {
     "mne": ("https://mne.tools/stable/", None),
-    "mne_rsa": ("https://wmvanvliet.github.io/mne-rsa/", None),
 }
 intersphinx_mapping.update(
     get_intersphinx_mapping(packages={"matplotlib", "numpy", "python", "scipy"})
@@ -136,6 +137,6 @@ sphinx_gallery_conf = {
     "backreferences_dir": "generated",
     "image_scrapers": ["matplotlib", mne.viz._brain._BrainScraper()],
     "reference_url": dict(mne=None),
-    'filename_pattern': r'.*\.py',
-    'within_subsection_order': 'FileNameSortKey',
+    "filename_pattern": r".*\.py",
+    "within_subsection_order": "FileNameSortKey",
 }

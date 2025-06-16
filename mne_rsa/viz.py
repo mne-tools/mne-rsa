@@ -236,7 +236,7 @@ def plot_roi_map(values, rois, subject, subjects_dir, cmap="plasma", alpha=1.0):
     values : array-like, shape (n_rois,)
         The values to plot. One value per ROI.
     rois : list of mne.Label
-        The labels corrsponding to the ROIs.
+        The labels corresponding to the ROIs.
     subject : str
         The name of the FreeSurfer subject to plot the brain for.
     subjects_dir : str
@@ -245,7 +245,7 @@ def plot_roi_map(values, rois, subject, subjects_dir, cmap="plasma", alpha=1.0):
     cmap : str
         The name of the matplotlib colormap to use. Defaults to 'plasma'.
     alpha : float
-        The alpha (opacity, 1.0 is fully opaque, 0.0 is fully transparant) of the data
+        The alpha (opacity, 1.0 is fully opaque, 0.0 is fully transparent) of the data
         being plotted on top of the brain.
 
     Returns
