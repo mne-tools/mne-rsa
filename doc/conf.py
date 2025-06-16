@@ -52,7 +52,7 @@ master_doc = "index"
 
 # General information about the project.
 project = "mne-rsa"
-copyright = "2024, Aalto University"
+copyright = "2025, Marijn van Vliet, Aalto University"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -124,7 +124,7 @@ htmlhelp_basename = "mnersadoc"
 
 intersphinx_mapping = {
     "mne": ("https://mne.tools/stable/", None),
-    "mne_rsa": ("https://users.aalto.fi/~vanvlm1/mne-rsa/", None),
+    "mne_rsa": ("https://wmvanvliet.github.io/mne-rsa/", None),
 }
 intersphinx_mapping.update(
     get_intersphinx_mapping(packages={"matplotlib", "numpy", "python", "scipy"})
