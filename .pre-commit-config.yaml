@@ -1,0 +1,30 @@
+repos:
+  # Ruff mne-rsa
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.8.4
+    hooks:
+      - id: ruff
+        name: ruff lint mne-rsa
+        args: ["--fix"]
+        files: ^mne/
+      - id: ruff-format
+        files: ^mne-rsa|^doc/|^examples/
+
+  # Codespell
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.3.0
+    hooks:
+      - id: codespell
+        additional_dependencies:
+          - tomli
+        files: ^mne/|^doc/|^examples/
+        types_or: [python, bib, rst]
+
+  # rstcheck
+  - repo: https://github.com/rstcheck/rstcheck.git
+    rev: v6.2.4
+    hooks:
+      - id: rstcheck
+        additional_dependencies:
+          - tomli
+        files: ^doc/.*\.rst$
