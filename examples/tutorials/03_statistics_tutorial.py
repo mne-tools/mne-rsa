@@ -447,12 +447,12 @@ assert -0.17 < X.min() < -0.16, "Your `X` array does not have the correct values
 assert 0.29 < X.max() < 0.30, "Your `X` array does not have the correct values. 🤔"
 
 assert tvals.shape == (20484, 109), "Your `tvals` array has the wrong shape. 🤔"
-assert (
-    -6.6 < tvals.min() < -6.5
-), "Your `tvals` array does not have the correct values. 🤔"
-assert (
-    7.4 < tvals.max() < 7.5
-), "Your `tvals` array does not have the correct values. 🤔"
+assert -6.6 < tvals.min() < -6.5, (
+    "Your `tvals` array does not have the correct values. 🤔"
+)
+assert 7.4 < tvals.max() < 7.5, (
+    "Your `tvals` array does not have the correct values. 🤔"
+)
 
 print("All good! 😊")
 
