@@ -33,3 +33,7 @@ junit-results.xml
 TAGS
 tags
 tests/.coverage*
+examples/source_level/subj1
+examples/tutorials/data
+__pycache__
+sg_execution_times.rst
