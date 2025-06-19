@@ -15,8 +15,8 @@ serve to show the default.
 
 import mne
 import mne_rsa
-from numpydoc import docscrape, numpydoc  # noqa
 from intersphinx_registry import get_intersphinx_mapping
+from numpydoc import docscrape, numpydoc  # noqa
 
 # -- General configuration ------------------------------------------------
 
@@ -40,6 +40,7 @@ autosummary_imported_members = True
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
+html_static_path = ["_static"]
 
 # The suffix(es) of source filenames.
 source_suffix = {".rst": "restructuredtext"}
@@ -98,9 +99,13 @@ html_theme_options = {
     "show_toc_level": 2,
     "article_header_start": [],  # disable breadcrumbs
     "navbar_center": ["navbar-nav"],
-    "navbar_end": ["theme-switcher", "navbar-icon-links"],
+    "navbar_end": ["theme-switcher", "version-switcher", "navbar-icon-links"],
     "footer_start": ["copyright"],
     "secondary_sidebar_items": ["page-toc", "edit-this-page"],
+    "switcher": {
+        "json_url": "_static/versions.json",
+        "version_match": "dev" if "dev" in release else version,
+    },
 }
 
 html_context = {
