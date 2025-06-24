@@ -13,9 +13,34 @@ authors:
     surname: Vliet
     orcid: 0000-0002-6537-6899
     affiliation: "1"
+  - name: Stefan Appelhoff
+    orcid: 0000-0001-8002-0877
+    affiliation: "2"
+  - name: Takao Shimizu
+    affiliation: "1"
+  - name: Egor Eremin
+    orcid: 0000-0001-9696-2519
+    affiliation: "1"
+  - name: Ossi Lehtonen
+    affiliation: "1"
+  - name: Annika Hultén
+    orcid: 0000-0001-7305-4606
+    affiliation: "1"
+  - name: Yuanfang Zhao 
+    orcid: 0009-0002-7034-1743
+    affiliation: "3"
+  - name: Richard Höchenberger 
+    orcid: 0000-0002-0380-4798
+    affiliation: "4"
 affiliations:
  - name: Department of Neuroscience and Biomedical Engineering, Aalto University, Finland
    index: 1
+ - name: Max Planck Institute for Human Development, Berlin, Germany
+   index: 2
+ - name: Department of Cognitive Science, Johns Hopkins University, Baltimore, USA
+   index: 3
+ - name: Inria, CEA, Université Paris-Saclay, Palaiseau, France
+   index: 4
 date: 14 June 2025
 bibliography: paper.bib
 
@@ -77,7 +102,7 @@ MNE-RSA provides turn-key solutions for all of these details by interfacing with
 
 ![Depiction of geodesic versus Euclidean distance between points along the cortex.\label{fig:distances}](distances.pdf){width="6cm"}
 
-At the time of writing, MNE-RSA has been used in five studies, two of which involve the author [@Hulten2021; @Xu2024; @Messi2025; @Ghazaryan2023; @Klimovich-Gray2021].
+At the time of writing, MNE-RSA has been used in five studies, two of which involve the authors [@Hulten2021; @Xu2024; @Messi2025; @Ghazaryan2023; @Klimovich-Gray2021].
 
 ## Software ecosystem
 
@@ -91,9 +116,6 @@ Hence its focus is mostly on MEG and EEG analysis, providing a streamlined user 
 
 # Acknowledgements
 
-At the time of writing, MNE-RSA has received contributions from Stefan
-Appelhoff, Egor Eremin, Richard Höchenberger, Ossi Lehtonen, Takao Shimizu, and
-Yuan-Fang Zhao. Annika Hultén helped write the first RSA script that eventually
-led to the creation of this package.
+Development of MNE-RSA was funded by the Research Council of Finland (grants #310988 and #343385 to M.v.V).
 
 # References
