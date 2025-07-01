@@ -21,8 +21,6 @@ authors:
   - name: Egor Eremin
     orcid: 0000-0001-9696-2519
     affiliation: "1"
-  - name: Ossi Lehtonen
-    affiliation: "1"
   - name: Annika Hultén
     orcid: 0000-0001-7305-4606
     affiliation: "1"
