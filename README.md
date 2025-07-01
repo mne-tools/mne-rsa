@@ -3,6 +3,7 @@
 [![Unit tests](https://github.com/mne-tools/mne-rsa/workflows/unit%20tests/badge.svg)](https://github.com/mne-tools/mne-rsa/actions?query=workflow%3A%22unit+tests%22)
 [![docs](https://github.com/mne-tools/mne-rsa/workflows/build-docs/badge.svg)](https://github.com/mne-tools/mne-rsa/actions?query=workflow%3Abuild-docs)
 [![doi](https://zenodo.org/badge/194268560.svg)](https://zenodo.org/doi/10.5281/zenodo.11242874)
+[![joss](https://joss.theoj.org/papers/224328eb22eab91aaae44579fb00fdaa/status.svg)](https://joss.theoj.org/papers/224328eb22eab91aaae44579fb00fdaa)
 
 This is a Python package for performing representational similarity analysis (RSA) using [MNE-Python](https://martinos.org/mne/stable/index.html>) data structures.
 The main use-case is to perform RSA using a “searchlight” approach through time and/or a
@@ -16,13 +17,8 @@ Frontiers in Systems Neuroscience, 2(4).
 [https://doi.org/10.3389/neuro.06.004.2008](https://doi.org/10.3389/neuro.06.004.2008)
 
 <picture>
-<<<<<<< HEAD
   <source media="(prefers-color-scheme: light)" srcset="doc/rsa.png">
   <source media="(prefers-color-scheme: dark)" srcset="doc/rsa_dark.png">
-=======
-  <source media="(prefers-color-scheme: dark)" srcset="doc/rsa_dark.png">
-  <source media="(prefers-color-scheme: light)" srcset="doc/rsa.png">
->>>>>>> main
   <img src="doc/rsa.png" width="600">
 </picture>
 
