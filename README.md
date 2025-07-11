@@ -82,11 +82,11 @@ mne.viz.plot_compare_evokeds({column: result for column, result in zip(columns, 
 </picture>
 
 ## Documentation
-For a detailed guide on RSA analyis from start to finish on an example dataset, see the [tutorials](https://mne.tools/mne-rsa/auto_examples/tutorials/index.html).
+For a detailed guide on RSA analyis from start to finish on an example dataset, see the [tutorials](https://mne.tools/mne-rsa/stable/auto_examples/tutorials/index.html).
 
-For quick guides on how to do specific things, see the [examples](https://mne.tools/mne-rsa/auto_examples/index.html).
+For quick guides on how to do specific things, see the [examples](https://mne.tools/mne-rsa/stable/auto_examples/index.html).
 
-Finally, there is the [API reference](https://mne.tools/mne-rsa/api.html) documentation.
+Finally, there is the [API reference](https://mne.tools/mne-rsa/stable/api.html) documentation.
 
 ## Integration with other packages
 
