@@ -1,0 +1,1969 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" data-theme="auto">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Tutorial part 3: statistical analysis of group-level RSA results &#8212; mne-rsa 1.0-dev documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "auto";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "auto";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=a2628a1b"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/tutorials/03_statistics_tutorial';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '_static/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'dev';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <link rel="canonical" href="https://mne.tools/mne-rsa/auto_examples/tutorials/03_statistics_tutorial.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Examples" href="../index.html" />
+    <link rel="prev" title="Tutorial part 2: RSA on source-level MEG data" href="02_source_level_tutorial.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.0-dev" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="auto">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">mne-rsa 1.0-dev documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/mne-tools/mne-rsa" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/mne-tools/mne-rsa" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_sensor_level_tutorial.html">Tutorial part 1: RSA on sensor-level MEG data</a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="02_source_level_tutorial.html">Tutorial part 2: RSA on source-level MEG data</a></li>
+
+
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Tutorial part 3: statistical analysis of group-level RSA results</a></li>
+
+
+
+
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none"></div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-auto-examples-tutorials-03-statistics-tutorial-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code.</p>
+</div>
+<section class="sphx-glr-example-title" id="tutorial-part-3-statistical-analysis-of-group-level-rsa-results">
+<span id="tut-statistics"></span><span id="sphx-glr-auto-examples-tutorials-03-statistics-tutorial-py"></span><h1>Tutorial part 3: statistical analysis of group-level RSA results<a class="headerlink" href="#tutorial-part-3-statistical-analysis-of-group-level-rsa-results" title="Link to this heading">#</a></h1>
+<p>In this tutorial, we’ll dive into cluster-based permutation testing for group-level
+statistical analysis.</p>
+<p>The statistical test is described in <a class="reference external" href="https://doi.org/10.1016/j.jneumeth.2007.03.024">Maris &amp; Oostenveld, 2007</a>. This functionality is not part of
+the MNE-RSA package, but rather MNE-Python, but it is a large part of a proper RSA
+analysis so I figures any decent RSA tutorial should cover this.</p>
+<p>Cluster-based permutation testing is becoming the standard “go-to” method for testing
+for significant differences between experimental conditions in MEG and EEG studies.
+However, applying the technique correctly is not always straightforward and there are a
+lot of caveats to beware of. On top of this, the API of MNE-Python regarding these tests
+could use a bit more work. (If you are inspired by this tutorial, could you <a class="reference external" href="https://github.com/mne-tools/mne-python/issues/4859">lend a hand</a> with this? ❤)</p>
+</section>
+<section id="the-purpose-of-cluster-based-permutation-testing">
+<h1>The purpose of cluster-based permutation testing<a class="headerlink" href="#the-purpose-of-cluster-based-permutation-testing" title="Link to this heading">#</a></h1>
+<p>When exploring differences between conditions, a good first step is to perform separate
+t-tests for each channel/sourcepoint/timepoint and visualize them. While this gives you
+a good feel of where and when significant differences may occur, one cannot always make
+solid statistical inferences based on these values. Cluster-based permutation testing is
+designed to solve two problems that arise when using mass t-tests:</p>
+<ol class="arabic simple">
+<li><p>The multiple-comparisons problem: solved by using a cluster-based
+statistic</p></li>
+<li><p>The non-Gaussian data problem: solved by using random permutations</p></li>
+</ol>
+<p>The solutions to these problems come at a hefty price though: the test can only infer
+the data is different between conditions. <strong>The test can not be used to infer when and
+where there is a significant difference.</strong> Researchers get this wrong a lot. The
+Fieldtrip manual even has a <a class="reference external" href="https://www.fieldtriptoolbox.org/faq/how_not_to_interpret_results_from_a_cluster-based_permutation_test">dedicated page about this</a>
+which I encourage you to read.</p>
+<p>Now that I’ve scared you enough, let’s do this!</p>
+<p>In the cell below, update the <code class="docutils literal notranslate"><span class="pre">data_path</span></code> variable to point to where you have
+extracted the
+<code class="docutils literal notranslate"><span class="pre">`rsa-data.zip</span></code> &lt;<a class="github reference external" href="https://github.com/wmvanvliet/neuroscience_tutorials/releases/download/2/rsa-data.zip">wmvanvliet/neuroscience_tutorials</a>&gt;`__
+file to.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># ruff: noqa: E402</span>
+<span class="c1"># sphinx_gallery_thumbnail_number=2</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">mne</span>
+
+<a href="https://mne.tools/stable/generated/mne.set_log_level.html#mne.set_log_level" title="mne.set_log_level" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-function"><span class="n">mne</span><span class="o">.</span><span class="n">set_log_level</span></a><span class="p">(</span><span class="s2">&quot;warning&quot;</span><span class="p">)</span>  <span class="c1"># Make the output less verbose</span>
+
+<span class="c1"># Set this to where you&#39;ve extracted `rsa-data.zip` to</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a> <span class="o">=</span> <span class="s2">&quot;data&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="cluster-permutation-testing-on-a-single-channel">
+<h1>Cluster permutation testing on a single channel<a class="headerlink" href="#cluster-permutation-testing-on-a-single-channel" title="Link to this heading">#</a></h1>
+<p>In the classic EEG event-related potential (ERP) literature, statistical
+testing between two conditions was done by first identifying one or more
+sensors and stretches of time that seem likely to hold a significant
+difference, then averaging the signal across those sensors and time
+region, followed by a single t-test or ANOVA test. Time would tell
+whether the chosen channels and time region would replicate across
+studies.</p>
+<p>Let’s do this for our sensor-level RSA result that we obtained in
+<a class="reference internal" href="01_sensor_level_tutorial.html#tut-sensor-level"><span class="std std-ref">Tutorial part 1: RSA on sensor-level MEG data</span></a>. I’ve ran the same analysis across multiple subjects and
+placed it in the <code class="docutils literal notranslate"><span class="pre">group_analysis</span></code> subfolder of the data package you’ve downloaded.
+Executing the call below will load them.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">mne</span>
+
+<a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">subjects</span></a> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">19</span><span class="p">]</span>
+
+<span class="c1"># RSA against the RDM based on the pixels in each image</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">rsa_pixels</span></a> <span class="o">=</span> <span class="p">[</span>
+    <a href="https://mne.tools/stable/generated/mne.read_evokeds.html#mne.read_evokeds" title="mne.read_evokeds" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-function"><span class="n">mne</span><span class="o">.</span><span class="n">read_evokeds</span></a><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a><span class="si">}</span><span class="s2">/group_analysis/sub-</span><span class="si">{</span><span class="n">subject</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">-rsa-ave.fif&quot;</span><span class="p">,</span> <span class="n">condition</span><span class="o">=</span><span class="s2">&quot;pixels&quot;</span>
+    <span class="p">)</span>
+    <span class="k">for</span> <span class="n">subject</span> <span class="ow">in</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">subjects</span></a>
+<span class="p">]</span>
+
+<span class="c1"># RSA against the RDM based on the FaceNet embeddings of each image</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">rsa_facenet</span></a> <span class="o">=</span> <span class="p">[</span>
+    <a href="https://mne.tools/stable/generated/mne.read_evokeds.html#mne.read_evokeds" title="mne.read_evokeds" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-function"><span class="n">mne</span><span class="o">.</span><span class="n">read_evokeds</span></a><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a><span class="si">}</span><span class="s2">/group_analysis/sub-</span><span class="si">{</span><span class="n">subject</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">-rsa-ave.fif&quot;</span><span class="p">,</span> <span class="n">condition</span><span class="o">=</span><span class="s2">&quot;facenet&quot;</span>
+    <span class="p">)</span>
+    <span class="k">for</span> <span class="n">subject</span> <span class="ow">in</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">subjects</span></a>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">rsa_pixels</span></code> and <code class="docutils literal notranslate"><span class="pre">rsa_facenet</span></code> are now lists of <a class="reference external" href="https://mne.tools/stable/generated/mne.Evoked.html#mne.Evoked" title="(in MNE v1.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mne.Evoked</span></code></a> objects. Here
+are the first 5 of them:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">rsa_pixels</span></a><span class="p">[:</span><span class="mi">5</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[&lt;Evoked | &#39;pixels&#39; (average, N=450), 0 – 0.9 s, baseline off, 1 ch, ~8 KiB&gt;, &lt;Evoked | &#39;pixels&#39; (average, N=450), 0 – 0.9 s, baseline off, 1 ch, ~8 KiB&gt;, &lt;Evoked | &#39;pixels&#39; (average, N=450), 0 – 0.9 s, baseline off, 1 ch, ~8 KiB&gt;, &lt;Evoked | &#39;pixels&#39; (average, N=448), 0 – 0.9 s, baseline off, 1 ch, ~8 KiB&gt;, &lt;Evoked | &#39;pixels&#39; (average, N=450), 0 – 0.9 s, baseline off, 1 ch, ~8 KiB&gt;]
+</pre></div>
+</div>
+<p>Every <code class="xref py py-class docutils literal notranslate"><span class="pre">mne.Evoked`</span></code> object has data defined for a single channel, for the time
+region 0 – 0.9 seconds. The cell below compares the grand averages for pixels versus
+FaceNet and gives the 95% confidence intervals for the means:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://mne.tools/stable/generated/mne.viz.plot_compare_evokeds.html#mne.viz.plot_compare_evokeds" title="mne.viz.plot_compare_evokeds" class="sphx-glr-backref-module-mne-viz sphx-glr-backref-type-py-function"><span class="n">mne</span><span class="o">.</span><span class="n">viz</span><span class="o">.</span><span class="n">plot_compare_evokeds</span></a><span class="p">(</span>
+    <span class="nb">dict</span><span class="p">(</span><span class="n">pixels</span><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">rsa_pixels</span></a><span class="p">,</span> <span class="n">facenet</span><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">rsa_facenet</span></a><span class="p">),</span>
+    <span class="n">picks</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">show_sensors</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">ylim</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">misc</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">]),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_03_statistics_tutorial_001.png" srcset="../../_images/sphx_glr_03_statistics_tutorial_001.png" alt="rsa" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[&lt;Figure size 800x600 with 1 Axes&gt;]
+</pre></div>
+</div>
+<p>Based on the above plot, there might be a significant difference very
+early on: 0 – 0.16 seconds. Let’s run a t-test in this time-window.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_rel.html#scipy.stats.ttest_rel" title="scipy.stats.ttest_rel" class="sphx-glr-backref-module-scipy-stats sphx-glr-backref-type-py-function"><span class="n">ttest_rel</span></a>
+
+<span class="c1"># Construct arrays with the data of all participants combined</span>
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_pixels</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.array.html#numpy.array" title="numpy.array" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">array</span></a><span class="p">(</span>
+    <span class="p">[</span><span class="n">ev</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">ev</span> <span class="ow">in</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">rsa_pixels</span></a><span class="p">]</span>
+<span class="p">)</span>  <span class="c1"># shape: 16 x 199 (participants x timepoints)</span>
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_facenet</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.array.html#numpy.array" title="numpy.array" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">array</span></a><span class="p">(</span>
+    <span class="p">[</span><span class="n">ev</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">ev</span> <span class="ow">in</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">rsa_facenet</span></a><span class="p">]</span>
+<span class="p">)</span>  <span class="c1"># shape: 16 x 199 (participants x timepoints)</span>
+
+<span class="c1"># Time region we are interested in</span>
+<a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.int64" title="numpy.int64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">tmin</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.int64" title="numpy.int64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">tmax</span></a> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.16</span>  <span class="c1"># seconds</span>
+
+<span class="c1"># Convert tmin/tmax to sample indices</span>
+<a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.int64" title="numpy.int64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">tmin</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.int64" title="numpy.int64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">tmax</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.searchsorted.html#numpy.searchsorted" title="numpy.searchsorted" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">rsa_pixels</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">times</span></a><span class="p">,</span> <span class="p">[</span><a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.int64" title="numpy.int64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">tmin</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.int64" title="numpy.int64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">tmax</span></a><span class="p">])</span>
+
+<span class="c1"># Average the data across the time window</span>
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_pixels_avg</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_pixels</span></a><span class="p">[:,</span> <a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.int64" title="numpy.int64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">tmin</span></a><span class="p">:</span><a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.int64" title="numpy.int64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">tmax</span></a><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_facenet_avg</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_facenet</span></a><span class="p">[:,</span> <a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.int64" title="numpy.int64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">tmin</span></a><span class="p">:</span><a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.int64" title="numpy.int64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">tmax</span></a><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Perform the t-test</span>
+<a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">tval</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">pval</span></a> <span class="o">=</span> <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_rel.html#scipy.stats.ttest_rel" title="scipy.stats.ttest_rel" class="sphx-glr-backref-module-scipy-stats sphx-glr-backref-type-py-function"><span class="n">ttest_rel</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_pixels_avg</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_facenet_avg</span></a><span class="p">)</span>
+
+<span class="k">assert</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.isscalar.html#numpy.isscalar" title="numpy.isscalar" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">isscalar</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">tval</span></a><span class="p">),</span> <span class="s2">&quot;We want a single t-value&quot;</span>
+<span class="k">assert</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.isscalar.html#numpy.isscalar" title="numpy.isscalar" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">isscalar</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">pval</span></a><span class="p">),</span> <span class="s2">&quot;We want a single p-value&quot;</span>
+<span class="k">assert</span> <a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">pval</span></a> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;p-value is not significant </span><span class="si">{</span><a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">pval</span></a><span class="si">=}</span><span class="s2">&quot;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">tval</span></a><span class="si">=}</span><span class="s2">, </span><span class="si">{</span><a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">pval</span></a><span class="si">=}</span><span class="s2">   Looking great! 😊&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>tval=np.float64(2.9768295878272895), pval=np.float64(0.009406024901266791)   Looking great! 😊
+</pre></div>
+</div>
+</section>
+<section id="the-cluster-part-of-cluster-permutation-tests">
+<h1>The “cluster” part of cluster permutation tests<a class="headerlink" href="#the-cluster-part-of-cluster-permutation-tests" title="Link to this heading">#</a></h1>
+<p>In essence, the permutation cluster test automates what we’ve just done
+above, but with a twist that we will get to later.</p>
+<p>First, it must determine “clusters”, i.e. regions of interest where
+there might be a significant difference between the conditions. We
+eyeballed this based on the confidence interval of the mean, but the
+algorithm must use some form of automated function. We can specify the
+function that the algorithm should use, but it comes with a useful
+default: a t-test: <a class="reference external" href="https://mne.tools/stable/generated/mne.stats.ttest_1samp_no_p.html#mne.stats.ttest_1samp_no_p" title="(in MNE v1.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mne.stats.ttest_1samp_no_p()</span></code></a></p>
+<p>Let’s do this step manually first, so you get an understanding what is going on: -
+First, we do the t-test for every timepoint - This is a t-test against 0. To perform a
+paired t-test, we test <code class="docutils literal notranslate"><span class="pre">data_pixels</span> <span class="pre">-</span> <span class="pre">data_facenet</span></code> - Then, we set a threshold -
+Everything above the threshold becomes a cluster - We compute the sum of all the
+t-values inside the cluster</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mne.stats</span><span class="w"> </span><span class="kn">import</span> <a href="https://mne.tools/stable/generated/mne.stats.ttest_1samp_no_p.html#mne.stats.ttest_1samp_no_p" title="mne.stats.ttest_1samp_no_p" class="sphx-glr-backref-module-mne-stats sphx-glr-backref-type-py-function"><span class="n">ttest_1samp_no_p</span></a>
+
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tvals</span></a> <span class="o">=</span> <a href="https://mne.tools/stable/generated/mne.stats.ttest_1samp_no_p.html#mne.stats.ttest_1samp_no_p" title="mne.stats.ttest_1samp_no_p" class="sphx-glr-backref-module-mne-stats sphx-glr-backref-type-py-function"><span class="n">ttest_1samp_no_p</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_pixels</span></a> <span class="o">-</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_facenet</span></a><span class="p">)</span>
+
+
+<span class="c1"># Plot the t-values and form a cluster</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_cluster</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tvals</span></a><span class="p">,</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">data_cond1</span><span class="p">,</span> <span class="n">data_cond2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot a cluster.&quot;&quot;&quot;</span>
+    <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">times</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">rsa_pixels</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">times</span></a>
+
+    <span class="c1"># Make the cluster</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cluster</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.where.html#numpy.where" title="numpy.where" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">where</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tvals</span></a> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># This is an important statistec: the sum of all t-values in the cluster</span>
+    <a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">cluster_tvals_sum</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tvals</span></a><span class="p">[</span><a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cluster</span></a><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+    <span class="c1"># Show the t-values and how the cluster is determined</span>
+    <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="matplotlib.pyplot.figure" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+    <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="matplotlib.pyplot.plot" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">times</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tvals</span></a><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;t-values&quot;</span><span class="p">)</span>
+    <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.axhline.html#matplotlib.pyplot.axhline" title="matplotlib.pyplot.axhline" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">axhline</span></a><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.axhline.html#matplotlib.pyplot.axhline" title="matplotlib.pyplot.axhline" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">axhline</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;threshold&quot;</span><span class="p">)</span>
+    <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.fill_between.html#matplotlib.pyplot.fill_between" title="matplotlib.pyplot.fill_between" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span></a><span class="p">(</span>
+        <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">times</span></a><span class="p">[</span><a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cluster</span></a><span class="p">],</span>
+        <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tvals</span></a><span class="p">[</span><a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cluster</span></a><span class="p">],</span>
+        <span class="n">threshold</span> <span class="o">*</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ones.html#numpy.ones" title="numpy.ones" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">ones</span></a><span class="p">(</span><span class="nb">len</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cluster</span></a><span class="p">)),</span>
+        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;C1&quot;</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="s2">&quot;cluster&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.legend.html#matplotlib.pyplot.legend" title="matplotlib.pyplot.legend" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">legend</span></a><span class="p">()</span>
+    <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.xlabel.html#matplotlib.pyplot.xlabel" title="matplotlib.pyplot.xlabel" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span></a><span class="p">(</span><span class="s2">&quot;Time samples&quot;</span><span class="p">)</span>
+    <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.ylabel.html#matplotlib.pyplot.ylabel" title="matplotlib.pyplot.ylabel" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span></a><span class="p">(</span><span class="s2">&quot;t-value&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">cluster_tvals_sum</span></a>
+
+
+<a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">cluster_tvals_sum</span></a> <span class="o">=</span> <span class="n">plot_cluster</span><span class="p">(</span>
+    <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tvals</span></a><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">data_cond1</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_pixels</span></a><span class="p">,</span> <span class="n">data_cond2</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_facenet</span></a>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sum of t-values in the cluster: </span><span class="si">{</span><a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">cluster_tvals_sum</span></a><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_03_statistics_tutorial_002.png" srcset="../../_images/sphx_glr_03_statistics_tutorial_002.png" alt="03 statistics tutorial" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Sum of t-values in the cluster: 105.259
+</pre></div>
+</div>
+<p>Based on the figure above, a threshold value of <code class="docutils literal notranslate"><span class="pre">2</span></code> seems to obtain a reasonable
+cluster. We could have chosen a different threshold, and there is no reason to choose
+a threshold that corresponds to some p-value, other than perhaps providing a sensible
+default value. The statistical function and the threshold used to form clusters are
+completely up to the researcher. The idea here is to use your domain knowledge to
+increase statistical power: when clusters “make sense” regarding to what we know about
+the experimental setup and how MEG data behaves, we are likely to obtain better
+p-values in the end.</p>
+<section id="the-permutation-part-of-the-cluster-permutation-test">
+<h2>The “permutation” part of the cluster permutation test<a class="headerlink" href="#the-permutation-part-of-the-cluster-permutation-test" title="Link to this heading">#</a></h2>
+<p>Now that we have our cluster, we can “permute” it to find what random clusters looks
+like. In order to generate random clusters, we mix up the class labels. Read the code
+in the cell below carefully to find out how this is done:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Throw the data onto one big pile</span>
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">big_pile</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.vstack.html#numpy.vstack" title="numpy.vstack" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">vstack</span></a><span class="p">((</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_pixels</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_facenet</span></a><span class="p">))</span>
+
+<span class="c1"># Shuffle the rows. This is what a &quot;random permutation&quot; means.</span>
+<a href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.shuffle.html#numpy.random.shuffle" title="numpy.random.shuffle" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">big_pile</span></a><span class="p">)</span>
+
+<span class="c1"># Divide again into the &quot;pixels&quot; and &quot;facenet&quot; conditions</span>
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">permuted_pixels</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">permuted_facenet</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">big_pile</span></a><span class="p">[:</span> <span class="nb">len</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">subjects</span></a><span class="p">)],</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">big_pile</span></a><span class="p">[</span><span class="nb">len</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">subjects</span></a><span class="p">)</span> <span class="p">:]</span>
+
+<span class="c1"># Compute t-values, which should be nice and low</span>
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">permuted_tvals</span></a> <span class="o">=</span> <a href="https://mne.tools/stable/generated/mne.stats.ttest_1samp_no_p.html#mne.stats.ttest_1samp_no_p" title="mne.stats.ttest_1samp_no_p" class="sphx-glr-backref-module-mne-stats sphx-glr-backref-type-py-function"><span class="n">ttest_1samp_no_p</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">permuted_pixels</span></a> <span class="o">-</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">permuted_facenet</span></a><span class="p">)</span>
+
+<span class="c1"># See what the clusters look like now</span>
+<a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">permuted_cluster_tvals_sum</span></a> <span class="o">=</span> <span class="n">plot_cluster</span><span class="p">(</span>
+    <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">permuted_tvals</span></a><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">data_cond1</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">permuted_pixels</span></a><span class="p">,</span> <span class="n">data_cond2</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">permuted_facenet</span></a>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sum of t-values in cluster:&quot;</span><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">permuted_cluster_tvals_sum</span></a><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_03_statistics_tutorial_003.png" srcset="../../_images/sphx_glr_03_statistics_tutorial_003.png" alt="03 statistics tutorial" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Sum of t-values in cluster: 32.342
+</pre></div>
+</div>
+<p>You can run the cell above multiple times to see what different permutations look
+like. If it is very rare that we get a cluster with larger max t-value than the one we
+found in the original data, we can say that there is a significant difference in the
+original data. Finally, the percentage of times you find a larger max t-value in the
+randomly permuted data is your p-value.</p>
+<p>And that is the cluster permutation test!</p>
+<p>So, with all of this in mind, we can now use the MNE-Python
+<a class="reference external" href="https://mne.tools/stable/generated/mne.stats.permutation_cluster_1samp_test.html#mne.stats.permutation_cluster_1samp_test" title="(in MNE v1.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mne.stats.permutation_cluster_1samp_test()</span></code></a>
+to perform everything we have done above in a single line of code. When
+studying the line of code, keep the following in mind:</p>
+<ul class="simple">
+<li><p>Read the documentation of <a class="reference external" href="https://mne.tools/stable/generated/mne.stats.permutation_cluster_1samp_test.html#mne.stats.permutation_cluster_1samp_test" title="(in MNE v1.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mne.stats.permutation_cluster_1samp_test()</span></code></a> first!</p></li>
+<li><p>The first parameter, <code class="docutils literal notranslate"><span class="pre">X</span></code> is your data matrix (<code class="docutils literal notranslate"><span class="pre">n_participants</span> <span class="pre">x</span> <span class="pre">n_times</span></code>). Since
+we are using paired t-tests to define clusters, you need to set this to
+<code class="docutils literal notranslate"><span class="pre">data_pixels</span> <span class="pre">-</span> <span class="pre">data_facenet</span></code> like we did before</p></li>
+<li><p>The threshold to form clusters is <code class="docutils literal notranslate"><span class="pre">2</span></code> like we used before - We set <code class="docutils literal notranslate"><span class="pre">tail=1</span></code> to
+only look for positive t-values to mimic what we did before. You can also experiment
+with <code class="docutils literal notranslate"><span class="pre">-1</span></code> and <code class="docutils literal notranslate"><span class="pre">0</span></code> to look for clusters with negative t-values or both positive
+and negative.</p></li>
+</ul>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mne.stats</span><span class="w"> </span><span class="kn">import</span> <a href="https://mne.tools/stable/generated/mne.stats.permutation_cluster_1samp_test.html#mne.stats.permutation_cluster_1samp_test" title="mne.stats.permutation_cluster_1samp_test" class="sphx-glr-backref-module-mne-stats sphx-glr-backref-type-py-function"><span class="n">permutation_cluster_1samp_test</span></a>
+
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">t_obs</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">clusters</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pvals</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">H0</span></a> <span class="o">=</span> <a href="https://mne.tools/stable/generated/mne.stats.permutation_cluster_1samp_test.html#mne.stats.permutation_cluster_1samp_test" title="mne.stats.permutation_cluster_1samp_test" class="sphx-glr-backref-module-mne-stats sphx-glr-backref-type-py-function"><span class="n">permutation_cluster_1samp_test</span></a><span class="p">(</span>
+    <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_pixels</span></a> <span class="o">-</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_facenet</span></a><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">tail</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Executing the cell below will explain what all the return values mean:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">times</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">rsa_pixels</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">times</span></a>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;t_obs (an array of length </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">t_obs</span></a><span class="p">)</span><span class="si">}</span><span class="s2">) contains the initial t-values that are &quot;</span>
+    <span class="s2">&quot;used to create the clusters.&quot;</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;clusters (a list of length </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">clusters</span></a><span class="p">)</span><span class="si">}</span><span class="s2">) contains for each cluster, the &quot;</span>
+    <span class="s2">&quot;indices in the data array that are part of the cluster.&quot;</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;pvals (an array of length </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pvals</span></a><span class="p">)</span><span class="si">}</span><span class="s2">) contains for each cluster a p-value, &quot;</span>
+    <span class="s2">&quot;more about this later.&quot;</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;H0 (an array of length </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">H0</span></a><span class="p">)</span><span class="si">}</span><span class="s2">) contains the largest &quot;</span>
+    <span class="s2">&quot;`permuted_cluster_tvals_sum` found in each random permutation.&quot;</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The cluster permutation test found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">clusters</span></a><span class="p">)</span><span class="si">}</span><span class="s2"> clusters.&quot;</span><span class="p">)</span>
+<span class="k">for</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">i</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cluster</span></a> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">clusters</span></a><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;Cluster </span><span class="si">{</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">i</span></a><span class="si">}</span><span class="s2">: </span><span class="si">{</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">times</span></a><span class="p">[</span><a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cluster</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">times</span></a><span class="p">[</span><a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cluster</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> &quot;</span>
+        <span class="s2">&quot;seconds.&quot;</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>t_obs (an array of length 199) contains the initial t-values that are used to create the clusters.
+clusters (a list of length 1) contains for each cluster, the indices in the data array that are part of the cluster.
+pvals (an array of length 1) contains for each cluster a p-value, more about this later.
+H0 (an array of length 1024) contains the largest `permuted_cluster_tvals_sum` found in each random permutation.
+
+The cluster permutation test found 1 clusters.
+Cluster 0: 0.000-0.164 seconds.
+</pre></div>
+</div>
+</section>
+<section id="computing-the-p-value">
+<h2>Computing the p-value<a class="headerlink" href="#computing-the-p-value" title="Link to this heading">#</a></h2>
+<p>Depending on the value of <code class="docutils literal notranslate"><span class="pre">tail</span></code> you used in your call to
+<a class="reference external" href="https://mne.tools/stable/generated/mne.stats.permutation_cluster_1samp_test.html#mne.stats.permutation_cluster_1samp_test" title="(in MNE v1.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mne.stats.permutation_cluster_1samp_test()</span></code></a> you have either 1, 2, or 3 clusters.
+The clusters that your test found each have an associated p-value.</p>
+<ul class="simple">
+<li><p>If the sum-of-t-values for the cluster was <strong>positive</strong>, then the p-value is the
+fraction of random permutations that produced a cluster which a sum-of-t-values that
+was equal or <strong>greater</strong></p></li>
+<li><p>If the sum-of-t-values for the cluster was <strong>negative</strong>, then the p-value is the
+fraction of random permutations that produced a cluster which a sum-of-t-values that
+was equal or <strong>smaller</strong></p></li>
+</ul>
+<p>To understand this better, lets use the <code class="docutils literal notranslate"><span class="pre">t_obs</span></code>, <code class="docutils literal notranslate"><span class="pre">clusters</span></code> and <code class="docutils literal notranslate"><span class="pre">H0</span></code> return
+values that you produced above to compute this p-value ourselves to test our knowledge
+of what these return values mean. We will:</p>
+<ul class="simple">
+<li><p>Loop over all the clusters you found</p></li>
+<li><p>Determine the <code class="docutils literal notranslate"><span class="pre">sum_of_t_values</span></code> inside the cluster</p></li>
+<li><p>Compute the fraction of <code class="docutils literal notranslate"><span class="pre">H0</span></code> whose absolute value is equal or larger than the
+absolute <code class="docutils literal notranslate"><span class="pre">sum_of_t_values</span></code></p></li>
+</ul>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The cluster p-values should be:</span><span class="se">\t</span><span class="si">{</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pvals</span></a><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">our_pvals</span></a> <span class="o">=</span> <span class="p">[(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">H0</span></a> <span class="o">&gt;=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">t_obs</span></a><span class="p">[</span><a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cluster</span></a><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="k">for</span> <a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cluster</span></a> <span class="ow">in</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">clusters</span></a><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Our manually computed cluster p-values are:</span><span class="se">\t</span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">our_pvals</span></a><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>The cluster p-values should be: [0.04003906]
+Our manually computed cluster p-values are:     [np.float64(0.0400390625)]
+</pre></div>
+</div>
+</section>
+<section id="interpreting-the-p-value">
+<h2>Interpreting the p-value<a class="headerlink" href="#interpreting-the-p-value" title="Link to this heading">#</a></h2>
+<p>Now comes the twist that I mentioned in the beginning. The final part of the cluster
+permutation test is that you use the <strong>smallest</strong> cluster p-value as final outcome of
+the test. You might be tempted to judge the significance of each cluster separately
+based on its associated p-value, but that would be statistically incorrect.</p>
+<p>So what can you do? <a class="reference external" href="https://onlinelibrary.wiley.com/doi/10.1111/psyp.13335">Sassenhagen &amp; Draschkow
+2019</a> offer
+some good advice. Personally, I would go for something like:</p>
+<blockquote>
+<div><p>The cluster-based permutation test revealed a significant difference
+between the conditions (p=SMALLEST_P_VALUE). This result was mostly
+driven by clusters at X (CLUSTER_PVAL) and Y (CLUSTER_PVAL), which
+correspond roughly to DESCRIPTION_OF_ROIS”.</p>
+</div></blockquote>
+</section>
+</section>
+<section id="clusters-across-space-and-time">
+<h1>Clusters across space and time<a class="headerlink" href="#clusters-across-space-and-time" title="Link to this heading">#</a></h1>
+<p>The formation of clusters becomes a bit more tricky in the case of
+<a class="reference external" href="https://mne.tools/stable/generated/mne.SourceEstimate.html#mne.SourceEstimate" title="(in MNE v1.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mne.SourceEstimate</span></code></a> objects, where data is defines across vertices in space as
+well as samples in time.</p>
+<p>In this case, the first order of business is to morph everything to a template brain,
+so that the vertices are aligned. This is common practice in MEG group analysis, so
+I’m not going to cover that process in this tutorial.</p>
+<p>Instead, I have run the spatio-temporal RSA analysis that we did
+<a class="reference internal" href="02_source_level_tutorial.html#tut-source-level"><span class="std std-ref">Tutorial part 2: RSA on source-level MEG data</span></a> across multiple subjects and placed the results in the
+<code class="docutils literal notranslate"><span class="pre">group_analysis</span></code> folder of your data package. Let’s load them and see if we can run
+a spatio-temporal cluster-based permutation test (quite a mouthful).</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mne</span><span class="w"> </span><span class="kn">import</span> <a href="https://mne.tools/stable/generated/mne.read_source_estimate.html#mne.read_source_estimate" title="mne.read_source_estimate" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-function"><span class="n">read_source_estimate</span></a>
+
+<a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">stc_pixels</span></a> <span class="o">=</span> <span class="p">[</span>
+    <a href="https://mne.tools/stable/generated/mne.read_source_estimate.html#mne.read_source_estimate" title="mne.read_source_estimate" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-function"><span class="n">read_source_estimate</span></a><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a><span class="si">}</span><span class="s2">/group_analysis/sub-</span><span class="si">{</span><span class="n">subject</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">-rsa-pixels-morphed&quot;</span>
+    <span class="p">)</span>
+    <span class="k">for</span> <span class="n">subject</span> <span class="ow">in</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">subjects</span></a>
+<span class="p">]</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">stc_facenet</span></a> <span class="o">=</span> <span class="p">[</span>
+    <a href="https://mne.tools/stable/generated/mne.read_source_estimate.html#mne.read_source_estimate" title="mne.read_source_estimate" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-function"><span class="n">read_source_estimate</span></a><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a><span class="si">}</span><span class="s2">/group_analysis/sub-</span><span class="si">{</span><span class="n">subject</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">-rsa-facenet-morphed&quot;</span>
+    <span class="p">)</span>
+    <span class="k">for</span> <span class="n">subject</span> <span class="ow">in</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">subjects</span></a>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>Now, <code class="docutils literal notranslate"><span class="pre">stc_pixels</span></code> and <code class="docutils literal notranslate"><span class="pre">stc_facenet</span></code> are two lists containing the
+<a class="reference external" href="https://mne.tools/stable/generated/mne.SourceEstimate.html#mne.SourceEstimate" title="(in MNE v1.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mne.SourceEstimate</span></code></a>’s for all subjects. Here are 5 of them:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">stc_pixels</span></a><span class="p">[:</span><span class="mi">5</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[&lt;SourceEstimate | 20484 vertices, tmin : 4.545454502105713 (ms), tmax : 495.45454072952265 (ms), tstep : 4.545454502105713 (ms), data shape : (20484, 109), ~8.7 MiB&gt;, &lt;SourceEstimate | 20484 vertices, tmin : 4.545454502105713 (ms), tmax : 495.45454072952265 (ms), tstep : 4.545454502105713 (ms), data shape : (20484, 109), ~8.7 MiB&gt;, &lt;SourceEstimate | 20484 vertices, tmin : 4.545454502105713 (ms), tmax : 495.45454072952265 (ms), tstep : 4.545454502105713 (ms), data shape : (20484, 109), ~8.7 MiB&gt;, &lt;SourceEstimate | 20484 vertices, tmin : 4.545454502105713 (ms), tmax : 495.45454072952265 (ms), tstep : 4.545454502105713 (ms), data shape : (20484, 109), ~8.7 MiB&gt;, &lt;SourceEstimate | 20484 vertices, tmin : 4.545454502105713 (ms), tmax : 495.45454072952265 (ms), tstep : 4.545454502105713 (ms), data shape : (20484, 109), ~8.7 MiB&gt;]
+</pre></div>
+</div>
+<p>Let’s proceed as before by first looking at the difference between the
+means of the two conditions. A neat feature of the
+<a class="reference external" href="https://mne.tools/stable/generated/mne.SourceEstimate.html#mne.SourceEstimate" title="(in MNE v1.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mne.SourceEstimate</span></code></a>
+class is that it supports common math operations such as <code class="docutils literal notranslate"><span class="pre">+</span></code>, <code class="docutils literal notranslate"><span class="pre">-</span></code>,
+<code class="docutils literal notranslate"><span class="pre">*</span></code> and <code class="docutils literal notranslate"><span class="pre">/</span></code>. For example, computing the difference between the
+<code class="docutils literal notranslate"><span class="pre">pixels</span></code> and <code class="docutils literal notranslate"><span class="pre">facenet</span></code> RSA results of the first subject can simply
+be computed as <code class="docutils literal notranslate"><span class="pre">stc_diff</span> <span class="pre">=</span> <span class="pre">stc_pixels[0]</span> <span class="pre">-</span> <span class="pre">stc_facenet[0]</span></code>. In the
+cell below, we compute the difference between the two conditions in a
+pairwise manner for each subject, then compute the mean across the
+pairwise differences. If you want a nice elegant way to write this,
+remember that the
+<code class="docutils literal notranslate"><span class="pre">`zip()</span></code> &lt;<a class="reference external" href="https://docs.python.org/3/library/functions.html#zip">https://docs.python.org/3/library/functions.html#zip</a>&gt;`__
+function exists.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://mne.tools/stable/generated/mne.SourceEstimate.html#mne.SourceEstimate" title="mne.SourceEstimate" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">stc_pairwise_diff</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.mean.html#numpy.mean" title="numpy.mean" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">mean</span></a><span class="p">(</span>
+    <span class="p">[</span><span class="n">stc1</span> <span class="o">-</span> <span class="n">stc2</span> <span class="k">for</span> <span class="n">stc1</span><span class="p">,</span> <span class="n">stc2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">stc_pixels</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">stc_facenet</span></a><span class="p">)]</span>
+<span class="p">)</span>
+
+<span class="c1"># Visualize the result.</span>
+<a href="https://mne.tools/stable/generated/mne.SourceEstimate.html#mne.SourceEstimate.plot" title="mne.SourceEstimate.plot" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-method"><span class="n">stc_pairwise_diff</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span>
+    <span class="s2">&quot;fsaverage&quot;</span><span class="p">,</span>
+    <span class="n">subjects_dir</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a><span class="si">}</span><span class="s2">/freesurfer&quot;</span><span class="p">,</span>
+    <span class="n">hemi</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span>
+    <span class="n">initial_time</span><span class="o">=</span><span class="mf">0.121</span><span class="p">,</span>
+    <span class="n">views</span><span class="o">=</span><span class="s2">&quot;caudal&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_03_statistics_tutorial_004.png" srcset="../../_images/sphx_glr_03_statistics_tutorial_004.png" alt="03 statistics tutorial" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;mne.viz._brain._brain.Brain object at 0x7f17fbcd0230&gt;
+</pre></div>
+</div>
+<p>The figure shows us clear differences between the pixel versus FaceNet
+RSA scores across the visual cortex.</p>
+<p>Let’s explore this difference with a t-value map. In order to compute t-values, we
+need to pull the data out of the <a class="reference external" href="https://mne.tools/stable/generated/mne.SourceEstimate.html#mne.SourceEstimate" title="(in MNE v1.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mne.SourceEstimate</span></code></a> objects. As before, since
+we have a within-subject contrast between the two conditions, we want to perform
+pairwise tests. So, as a first step, create a data array <code class="docutils literal notranslate"><span class="pre">X</span></code> of shape
+<code class="docutils literal notranslate"><span class="pre">(n_participants</span> <span class="pre">x</span> <span class="pre">n_vertices</span> <span class="pre">x</span> <span class="pre">n_times)</span></code> where each slice <code class="docutils literal notranslate"><span class="pre">i</span></code> along the first
+dimension is the difference between <code class="docutils literal notranslate"><span class="pre">stc_pixels[i].data</span> <span class="pre">-</span> <span class="pre">stc_facenet[i].data</span></code>. The
+next step is running <code class="docutils literal notranslate"><span class="pre">X</span></code> through the <a class="reference external" href="https://mne.tools/stable/generated/mne.stats.ttest_1samp_no_p.html#mne.stats.ttest_1samp_no_p" title="(in MNE v1.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mne.stats.ttest_1samp_no_p()</span></code></a> function to
+obtain t-values.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mne.stats</span><span class="w"> </span><span class="kn">import</span> <a href="https://mne.tools/stable/generated/mne.stats.ttest_1samp_no_p.html#mne.stats.ttest_1samp_no_p" title="mne.stats.ttest_1samp_no_p" class="sphx-glr-backref-module-mne-stats sphx-glr-backref-type-py-function"><span class="n">ttest_1samp_no_p</span></a>
+
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.array.html#numpy.array" title="numpy.array" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">array</span></a><span class="p">([</span><span class="n">stc1</span><span class="o">.</span><span class="n">data</span> <span class="o">-</span> <span class="n">stc2</span><span class="o">.</span><span class="n">data</span> <span class="k">for</span> <span class="n">stc1</span><span class="p">,</span> <span class="n">stc2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">stc_pixels</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">stc_facenet</span></a><span class="p">)])</span>
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tvals</span></a> <span class="o">=</span> <a href="https://mne.tools/stable/generated/mne.stats.ttest_1samp_no_p.html#mne.stats.ttest_1samp_no_p" title="mne.stats.ttest_1samp_no_p" class="sphx-glr-backref-module-mne-stats sphx-glr-backref-type-py-function"><span class="n">ttest_1samp_no_p</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="p">)</span>
+
+<span class="c1"># Some sanity checks for our result</span>
+<span class="k">assert</span> <a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span><span class="o">.</span><span class="n">shape</span></a> <span class="o">==</span> <span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">20484</span><span class="p">,</span> <span class="mi">109</span><span class="p">),</span> <span class="s2">&quot;Your `X` array has the wrong shape. 🤔&quot;</span>
+<span class="k">assert</span> <span class="o">-</span><span class="mf">0.17</span> <span class="o">&lt;</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">0.16</span><span class="p">,</span> <span class="s2">&quot;Your `X` array does not have the correct values. 🤔&quot;</span>
+<span class="k">assert</span> <span class="mf">0.29</span> <span class="o">&lt;</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">0.30</span><span class="p">,</span> <span class="s2">&quot;Your `X` array does not have the correct values. 🤔&quot;</span>
+
+<span class="k">assert</span> <a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tvals</span><span class="o">.</span><span class="n">shape</span></a> <span class="o">==</span> <span class="p">(</span><span class="mi">20484</span><span class="p">,</span> <span class="mi">109</span><span class="p">),</span> <span class="s2">&quot;Your `tvals` array has the wrong shape. 🤔&quot;</span>
+<span class="k">assert</span> <span class="o">-</span><span class="mf">6.6</span> <span class="o">&lt;</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tvals</span></a><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">6.5</span><span class="p">,</span> <span class="p">(</span>
+    <span class="s2">&quot;Your `tvals` array does not have the correct values. 🤔&quot;</span>
+<span class="p">)</span>
+<span class="k">assert</span> <span class="mf">7.4</span> <span class="o">&lt;</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tvals</span></a><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">7.5</span><span class="p">,</span> <span class="p">(</span>
+    <span class="s2">&quot;Your `tvals` array does not have the correct values. 🤔&quot;</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;All good! 😊&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>All good! 😊
+</pre></div>
+</div>
+<p>Now we can pack the <code class="docutils literal notranslate"><span class="pre">tvals</span></code> into a new <a class="reference external" href="https://mne.tools/stable/generated/mne.SourceEstimate.html#mne.SourceEstimate" title="(in MNE v1.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mne.SourceEstimate</span></code></a> object in order
+to visualize them:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://mne.tools/stable/generated/mne.SourceEstimate.html#mne.SourceEstimate" title="mne.SourceEstimate" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">stc_tvals</span></a> <span class="o">=</span> <a href="https://mne.tools/stable/generated/mne.SourceEstimate.html#mne.SourceEstimate" title="mne.SourceEstimate" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-class"><span class="n">mne</span><span class="o">.</span><span class="n">SourceEstimate</span></a><span class="p">(</span>
+    <span class="n">data</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tvals</span></a><span class="p">,</span>
+    <span class="n">vertices</span><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">stc_pixels</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">vertices</span><span class="p">,</span>
+    <a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.int64" title="numpy.int64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">tmin</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">stc_pixels</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.int64" title="numpy.int64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">tmin</span></a><span class="p">,</span>
+    <span class="n">tstep</span><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">stc_pixels</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tstep</span><span class="p">,</span>
+    <span class="n">subject</span><span class="o">=</span><span class="s2">&quot;fsaverage&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<a href="https://mne.tools/stable/generated/mne.SourceEstimate.html#mne.SourceEstimate.plot" title="mne.SourceEstimate.plot" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-method"><span class="n">stc_tvals</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span>
+    <span class="s2">&quot;fsaverage&quot;</span><span class="p">,</span>
+    <span class="n">subjects_dir</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a><span class="si">}</span><span class="s2">/freesurfer&quot;</span><span class="p">,</span>
+    <span class="n">hemi</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span>
+    <span class="n">initial_time</span><span class="o">=</span><span class="mf">0.121</span><span class="p">,</span>
+    <span class="n">views</span><span class="o">=</span><span class="s2">&quot;caudal&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_03_statistics_tutorial_005.png" srcset="../../_images/sphx_glr_03_statistics_tutorial_005.png" alt="03 statistics tutorial" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;mne.viz._brain._brain.Brain object at 0x7f17ee69f800&gt;
+</pre></div>
+</div>
+<p>From this figure, it seems that setting a threshold of <code class="docutils literal notranslate"><span class="pre">4</span></code> may result in useful
+clusters for our cluster-based permutation test. The function to perform the test in
+both space and time is called <a class="reference external" href="https://mne.tools/stable/generated/mne.stats.spatio_temporal_cluster_1samp_test.html#mne.stats.spatio_temporal_cluster_1samp_test" title="(in MNE v1.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mne.stats.spatio_temporal_cluster_1samp_test()</span></code></a></p>
+<p>But wait! Before you go and run the test, there’s two things we need to
+take care of.</p>
+<p>The other thing to keep in mind is that in order to form clusters across the cortex,
+we need to make sure that only neighbouring vertices are part of the same cluster.
+This is a similar problem as we faced when computing searchlight patches in space
+during our RSA analysis. The solution is found within the <a class="reference external" href="https://mne.tools/stable/generated/mne.SourceSpaces.html#mne.SourceSpaces" title="(in MNE v1.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mne.SourceSpaces</span></code></a>
+object that keeps track of the distances between source points. Since all of our data
+has been morphed to the <code class="docutils literal notranslate"><span class="pre">fsaverage</span></code> template brain, we need to load the
+<a class="reference external" href="https://mne.tools/stable/generated/mne.SourceSpaces.html#mne.SourceSpaces" title="(in MNE v1.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mne.SourceSpaces</span></code></a> object for that brain. Then, we can compute the spatial
+adjacency matrix from the <a class="reference external" href="https://mne.tools/stable/generated/mne.SourceSpaces.html#mne.SourceSpaces" title="(in MNE v1.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mne.SourceSpaces</span></code></a> object through the
+<a class="reference external" href="https://mne.tools/stable/generated/mne.spatial_src_adjacency.html#mne.spatial_src_adjacency" title="(in MNE v1.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mne.spatial_src_adjacency()</span></code></a> function.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://mne.tools/stable/generated/mne.SourceSpaces.html#mne.SourceSpaces" title="mne.SourceSpaces" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">src</span></a> <span class="o">=</span> <a href="https://mne.tools/stable/generated/mne.read_source_spaces.html#mne.read_source_spaces" title="mne.read_source_spaces" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-function"><span class="n">mne</span><span class="o">.</span><span class="n">read_source_spaces</span></a><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a><span class="si">}</span><span class="s2">/freesurfer/fsaverage/bem/fsaverage-ico-5-src.fif&quot;</span>
+<span class="p">)</span>
+<a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.coo_array.html#scipy.sparse.coo_array" title="scipy.sparse.coo_array" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">adj</span></a> <span class="o">=</span> <a href="https://mne.tools/stable/generated/mne.spatial_src_adjacency.html#mne.spatial_src_adjacency" title="mne.spatial_src_adjacency" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-function"><span class="n">mne</span><span class="o">.</span><span class="n">spatial_src_adjacency</span></a><span class="p">(</span><a href="https://mne.tools/stable/generated/mne.SourceSpaces.html#mne.SourceSpaces" title="mne.SourceSpaces" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">src</span></a><span class="p">)</span>
+
+<span class="k">assert</span> <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.coo_array.shape.html#scipy.sparse.coo_array.shape" title="scipy.sparse.coo_array.shape" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-property"><span class="n">adj</span><span class="o">.</span><span class="n">shape</span></a> <span class="o">==</span> <span class="p">(</span><span class="mi">20484</span><span class="p">,</span> <span class="mi">20484</span><span class="p">),</span> <span class="s2">&quot;You&#39;ve `adj` seems to have the wrong shape. 🤔&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;All good! 😊&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>All good! 😊
+</pre></div>
+</div>
+<p>Now it’s time to run the big spatio-temporal cluster-based permutation test! <cite>Read its
+documentation first (:func:`mne.stats.spatio_temporal_cluster_1samp_test</cite>) and then go
+for it!</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mne.stats</span><span class="w"> </span><span class="kn">import</span> <a href="https://mne.tools/stable/generated/mne.stats.spatio_temporal_cluster_1samp_test.html#mne.stats.spatio_temporal_cluster_1samp_test" title="mne.stats.spatio_temporal_cluster_1samp_test" class="sphx-glr-backref-module-mne-stats sphx-glr-backref-type-py-function"><span class="n">spatio_temporal_cluster_1samp_test</span></a>
+
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">t_obs</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">clusters</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pvals</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">H0</span></a> <span class="o">=</span> <a href="https://mne.tools/stable/generated/mne.stats.spatio_temporal_cluster_1samp_test.html#mne.stats.spatio_temporal_cluster_1samp_test" title="mne.stats.spatio_temporal_cluster_1samp_test" class="sphx-glr-backref-module-mne-stats sphx-glr-backref-type-py-function"><span class="n">spatio_temporal_cluster_1samp_test</span></a><span class="p">(</span>
+    <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">threshold</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">tail</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">adjacency</span><span class="o">=</span><a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.coo_array.html#scipy.sparse.coo_array" title="scipy.sparse.coo_array" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">adj</span></a><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
+<span class="c1"># What is the smallest cluster p-value that we found? Was it significant? (p &lt; 0.05?)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Smallest p-value:&quot;</span><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pvals</span></a><span class="o">.</span><span class="n">min</span><span class="p">())</span>
+<span class="k">if</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pvals</span></a><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;It was significant! 🎉&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;It was not significant 🤔&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>stat_fun(H1): min=-6.571207046508789 max=7.4570088386535645
+Running initial clustering …
+Found 99 clusters
+
+  0%|          | Permuting : 0/1023 [00:00&lt;?,       ?it/s]
+  0%|          | Permuting : 1/1023 [00:03&lt;51:58,    3.05s/it]
+  0%|          | Permuting : 2/1023 [00:03&lt;26:58,    1.58s/it]
+  0%|          | Permuting : 3/1023 [00:03&lt;18:39,    1.10s/it]
+  0%|          | Permuting : 4/1023 [00:03&lt;14:32,    1.17it/s]
+  0%|          | Permuting : 5/1023 [00:03&lt;12:27,    1.36it/s]
+  1%|          | Permuting : 6/1023 [00:04&lt;11:10,    1.52it/s]
+  1%|          | Permuting : 7/1023 [00:04&lt;09:44,    1.74it/s]
+  1%|          | Permuting : 8/1023 [00:04&lt;08:45,    1.93it/s]
+  1%|          | Permuting : 9/1023 [00:04&lt;08:15,    2.04it/s]
+  1%|          | Permuting : 10/1023 [00:04&lt;07:18,    2.31it/s]
+  1%|          | Permuting : 12/1023 [00:05&lt;06:21,    2.65it/s]
+  1%|▏         | Permuting : 13/1023 [00:05&lt;06:13,    2.70it/s]
+  1%|▏         | Permuting : 14/1023 [00:05&lt;05:45,    2.92it/s]
+  1%|▏         | Permuting : 15/1023 [00:06&lt;05:44,    2.93it/s]
+  2%|▏         | Permuting : 16/1023 [00:06&lt;05:20,    3.15it/s]
+  2%|▏         | Permuting : 17/1023 [00:06&lt;05:04,    3.30it/s]
+  2%|▏         | Permuting : 18/1023 [00:06&lt;04:53,    3.43it/s]
+  2%|▏         | Permuting : 19/1023 [00:06&lt;04:32,    3.68it/s]
+  2%|▏         | Permuting : 20/1023 [00:06&lt;04:29,    3.72it/s]
+  2%|▏         | Permuting : 21/1023 [00:06&lt;04:26,    3.76it/s]
+  2%|▏         | Permuting : 22/1023 [00:06&lt;04:12,    3.97it/s]
+  2%|▏         | Permuting : 23/1023 [00:07&lt;04:05,    4.07it/s]
+  2%|▏         | Permuting : 24/1023 [00:07&lt;03:55,    4.24it/s]
+  2%|▏         | Permuting : 25/1023 [00:07&lt;03:48,    4.37it/s]
+  3%|▎         | Permuting : 26/1023 [00:07&lt;03:46,    4.40it/s]
+  3%|▎         | Permuting : 27/1023 [00:07&lt;03:33,    4.66it/s]
+  3%|▎         | Permuting : 28/1023 [00:07&lt;03:32,    4.68it/s]
+  3%|▎         | Permuting : 29/1023 [00:07&lt;03:29,    4.75it/s]
+  3%|▎         | Permuting : 30/1023 [00:08&lt;03:20,    4.95it/s]
+  3%|▎         | Permuting : 31/1023 [00:08&lt;03:09,    5.22it/s]
+  3%|▎         | Permuting : 32/1023 [00:08&lt;03:04,    5.38it/s]
+  3%|▎         | Permuting : 33/1023 [00:08&lt;03:04,    5.35it/s]
+  3%|▎         | Permuting : 34/1023 [00:08&lt;02:57,    5.57it/s]
+  3%|▎         | Permuting : 35/1023 [00:08&lt;02:48,    5.85it/s]
+  4%|▎         | Permuting : 36/1023 [00:08&lt;02:44,    5.99it/s]
+  4%|▎         | Permuting : 38/1023 [00:08&lt;02:39,    6.19it/s]
+  4%|▍         | Permuting : 39/1023 [00:08&lt;02:31,    6.47it/s]
+  4%|▍         | Permuting : 40/1023 [00:08&lt;02:30,    6.52it/s]
+  4%|▍         | Permuting : 42/1023 [00:09&lt;02:26,    6.68it/s]
+  4%|▍         | Permuting : 43/1023 [00:09&lt;02:22,    6.87it/s]
+  4%|▍         | Permuting : 44/1023 [00:09&lt;02:18,    7.06it/s]
+  4%|▍         | Permuting : 45/1023 [00:09&lt;02:24,    6.75it/s]
+  5%|▍         | Permuting : 47/1023 [00:09&lt;02:13,    7.30it/s]
+  5%|▍         | Permuting : 48/1023 [00:09&lt;02:13,    7.31it/s]
+  5%|▍         | Permuting : 49/1023 [00:10&lt;02:18,    7.06it/s]
+  5%|▍         | Permuting : 50/1023 [00:10&lt;02:12,    7.33it/s]
+  5%|▌         | Permuting : 52/1023 [00:10&lt;02:06,    7.69it/s]
+  5%|▌         | Permuting : 53/1023 [00:10&lt;02:07,    7.58it/s]
+  5%|▌         | Permuting : 54/1023 [00:10&lt;02:07,    7.58it/s]
+  5%|▌         | Permuting : 55/1023 [00:10&lt;02:06,    7.66it/s]
+  5%|▌         | Permuting : 56/1023 [00:10&lt;02:04,    7.75it/s]
+  6%|▌         | Permuting : 57/1023 [00:10&lt;02:03,    7.82it/s]
+  6%|▌         | Permuting : 58/1023 [00:10&lt;02:02,    7.90it/s]
+  6%|▌         | Permuting : 59/1023 [00:11&lt;02:00,    7.98it/s]
+  6%|▌         | Permuting : 60/1023 [00:11&lt;01:58,    8.16it/s]
+  6%|▌         | Permuting : 61/1023 [00:11&lt;01:56,    8.23it/s]
+  6%|▌         | Permuting : 62/1023 [00:11&lt;02:00,    7.97it/s]
+  6%|▋         | Permuting : 64/1023 [00:11&lt;01:55,    8.32it/s]
+  6%|▋         | Permuting : 65/1023 [00:11&lt;01:52,    8.50it/s]
+  6%|▋         | Permuting : 66/1023 [00:11&lt;02:00,    7.92it/s]
+  7%|▋         | Permuting : 67/1023 [00:11&lt;01:58,    8.09it/s]
+  7%|▋         | Permuting : 69/1023 [00:12&lt;01:48,    8.77it/s]
+  7%|▋         | Permuting : 70/1023 [00:12&lt;01:55,    8.27it/s]
+  7%|▋         | Permuting : 72/1023 [00:12&lt;01:49,    8.69it/s]
+  7%|▋         | Permuting : 73/1023 [00:12&lt;01:47,    8.85it/s]
+  7%|▋         | Permuting : 74/1023 [00:12&lt;01:50,    8.56it/s]
+  7%|▋         | Permuting : 76/1023 [00:12&lt;01:46,    8.88it/s]
+  8%|▊         | Permuting : 77/1023 [00:12&lt;01:44,    9.03it/s]
+  8%|▊         | Permuting : 78/1023 [00:13&lt;01:48,    8.72it/s]
+  8%|▊         | Permuting : 79/1023 [00:13&lt;01:47,    8.77it/s]
+  8%|▊         | Permuting : 81/1023 [00:13&lt;01:45,    8.96it/s]
+  8%|▊         | Permuting : 82/1023 [00:13&lt;01:44,    9.00it/s]
+  8%|▊         | Permuting : 83/1023 [00:13&lt;01:44,    9.03it/s]
+  8%|▊         | Permuting : 85/1023 [00:13&lt;01:41,    9.21it/s]
+  8%|▊         | Permuting : 86/1023 [00:13&lt;01:41,    9.24it/s]
+  9%|▊         | Permuting : 87/1023 [00:14&lt;01:47,    8.70it/s]
+  9%|▊         | Permuting : 88/1023 [00:14&lt;01:44,    8.96it/s]
+  9%|▊         | Permuting : 89/1023 [00:14&lt;01:42,    9.11it/s]
+  9%|▉         | Permuting : 90/1023 [00:14&lt;01:40,    9.26it/s]
+  9%|▉         | Permuting : 91/1023 [00:14&lt;01:45,    8.82it/s]
+  9%|▉         | Permuting : 93/1023 [00:14&lt;01:39,    9.36it/s]
+  9%|▉         | Permuting : 94/1023 [00:14&lt;01:44,    8.91it/s]
+  9%|▉         | Permuting : 97/1023 [00:14&lt;01:37,    9.47it/s]
+ 10%|▉         | Permuting : 98/1023 [00:15&lt;01:42,    9.03it/s]
+ 10%|▉         | Permuting : 101/1023 [00:15&lt;01:37,    9.44it/s]
+ 10%|▉         | Permuting : 102/1023 [00:15&lt;01:42,    9.03it/s]
+ 10%|█         | Permuting : 104/1023 [00:15&lt;01:40,    9.19it/s]
+ 10%|█         | Permuting : 105/1023 [00:15&lt;01:37,    9.43it/s]
+ 10%|█         | Permuting : 106/1023 [00:15&lt;01:39,    9.22it/s]
+ 10%|█         | Permuting : 107/1023 [00:16&lt;01:42,    8.93it/s]
+ 11%|█         | Permuting : 108/1023 [00:16&lt;01:39,    9.17it/s]
+ 11%|█         | Permuting : 109/1023 [00:16&lt;01:36,    9.43it/s]
+ 11%|█         | Permuting : 110/1023 [00:16&lt;01:37,    9.32it/s]
+ 11%|█         | Permuting : 111/1023 [00:16&lt;01:40,    9.12it/s]
+ 11%|█         | Permuting : 112/1023 [00:16&lt;01:37,    9.38it/s]
+ 11%|█         | Permuting : 113/1023 [00:16&lt;01:35,    9.52it/s]
+ 11%|█         | Permuting : 114/1023 [00:16&lt;01:39,    9.17it/s]
+ 11%|█▏        | Permuting : 116/1023 [00:16&lt;01:34,    9.58it/s]
+ 11%|█▏        | Permuting : 117/1023 [00:17&lt;01:35,    9.46it/s]
+ 12%|█▏        | Permuting : 118/1023 [00:17&lt;01:36,    9.36it/s]
+ 12%|█▏        | Permuting : 119/1023 [00:17&lt;01:35,    9.50it/s]
+ 12%|█▏        | Permuting : 120/1023 [00:17&lt;01:32,    9.77it/s]
+ 12%|█▏        | Permuting : 121/1023 [00:17&lt;01:33,    9.65it/s]
+ 12%|█▏        | Permuting : 122/1023 [00:17&lt;01:34,    9.53it/s]
+ 12%|█▏        | Permuting : 123/1023 [00:17&lt;01:33,    9.67it/s]
+ 12%|█▏        | Permuting : 124/1023 [00:17&lt;01:30,    9.95it/s]
+ 12%|█▏        | Permuting : 125/1023 [00:17&lt;01:31,    9.81it/s]
+ 12%|█▏        | Permuting : 126/1023 [00:18&lt;01:33,    9.54it/s]
+ 12%|█▏        | Permuting : 127/1023 [00:18&lt;01:31,    9.83it/s]
+ 13%|█▎        | Permuting : 128/1023 [00:18&lt;01:31,    9.83it/s]
+ 13%|█▎        | Permuting : 129/1023 [00:18&lt;01:29,    9.98it/s]
+ 13%|█▎        | Permuting : 130/1023 [00:18&lt;01:33,    9.56it/s]
+ 13%|█▎        | Permuting : 132/1023 [00:18&lt;01:29,   10.00it/s]
+ 13%|█▎        | Permuting : 133/1023 [00:18&lt;01:30,    9.85it/s]
+ 13%|█▎        | Permuting : 134/1023 [00:18&lt;01:34,    9.44it/s]
+ 13%|█▎        | Permuting : 135/1023 [00:18&lt;01:31,    9.73it/s]
+ 13%|█▎        | Permuting : 136/1023 [00:19&lt;01:32,    9.60it/s]
+ 13%|█▎        | Permuting : 137/1023 [00:19&lt;01:29,    9.89it/s]
+ 13%|█▎        | Permuting : 138/1023 [00:19&lt;01:30,    9.75it/s]
+ 14%|█▎        | Permuting : 139/1023 [00:19&lt;01:29,    9.90it/s]
+ 14%|█▎        | Permuting : 140/1023 [00:19&lt;01:31,    9.61it/s]
+ 14%|█▍        | Permuting : 141/1023 [00:19&lt;01:28,    9.91it/s]
+ 14%|█▍        | Permuting : 142/1023 [00:19&lt;01:31,    9.62it/s]
+ 14%|█▍        | Permuting : 143/1023 [00:19&lt;01:28,    9.92it/s]
+ 14%|█▍        | Permuting : 144/1023 [00:19&lt;01:29,    9.77it/s]
+ 14%|█▍        | Permuting : 145/1023 [00:20&lt;01:35,    9.22it/s]
+ 14%|█▍        | Permuting : 146/1023 [00:20&lt;01:33,    9.38it/s]
+ 14%|█▍        | Permuting : 148/1023 [00:20&lt;01:30,    9.70it/s]
+ 15%|█▍        | Permuting : 149/1023 [00:20&lt;01:31,    9.57it/s]
+ 15%|█▍        | Permuting : 151/1023 [00:20&lt;01:32,    9.46it/s]
+ 15%|█▍        | Permuting : 152/1023 [00:20&lt;01:29,    9.75it/s]
+ 15%|█▍        | Permuting : 153/1023 [00:20&lt;01:31,    9.48it/s]
+ 15%|█▌        | Permuting : 154/1023 [00:20&lt;01:34,    9.24it/s]
+ 15%|█▌        | Permuting : 155/1023 [00:21&lt;01:31,    9.53it/s]
+ 15%|█▌        | Permuting : 156/1023 [00:21&lt;01:30,    9.54it/s]
+ 15%|█▌        | Permuting : 157/1023 [00:21&lt;01:28,    9.83it/s]
+ 15%|█▌        | Permuting : 158/1023 [00:21&lt;01:31,    9.42it/s]
+ 16%|█▌        | Permuting : 159/1023 [00:21&lt;01:28,    9.72it/s]
+ 16%|█▌        | Permuting : 160/1023 [00:21&lt;01:30,    9.58it/s]
+ 16%|█▌        | Permuting : 161/1023 [00:21&lt;01:27,    9.88it/s]
+ 16%|█▌        | Permuting : 162/1023 [00:21&lt;01:29,    9.59it/s]
+ 16%|█▌        | Permuting : 163/1023 [00:21&lt;01:26,    9.90it/s]
+ 16%|█▌        | Permuting : 164/1023 [00:21&lt;01:30,    9.45it/s]
+ 16%|█▌        | Permuting : 165/1023 [00:22&lt;01:27,    9.76it/s]
+ 16%|█▌        | Permuting : 166/1023 [00:22&lt;01:27,    9.77it/s]
+ 16%|█▋        | Permuting : 167/1023 [00:22&lt;01:26,    9.93it/s]
+ 16%|█▋        | Permuting : 168/1023 [00:22&lt;01:28,    9.63it/s]
+ 17%|█▋        | Permuting : 169/1023 [00:22&lt;01:27,    9.79it/s]
+ 17%|█▋        | Permuting : 170/1023 [00:22&lt;01:28,    9.64it/s]
+ 17%|█▋        | Permuting : 171/1023 [00:22&lt;01:29,    9.51it/s]
+ 17%|█▋        | Permuting : 172/1023 [00:22&lt;01:26,    9.82it/s]
+ 17%|█▋        | Permuting : 173/1023 [00:22&lt;01:27,    9.66it/s]
+ 17%|█▋        | Permuting : 174/1023 [00:22&lt;01:27,    9.68it/s]
+ 17%|█▋        | Permuting : 176/1023 [00:23&lt;01:27,    9.70it/s]
+ 17%|█▋        | Permuting : 177/1023 [00:23&lt;01:25,    9.84it/s]
+ 17%|█▋        | Permuting : 178/1023 [00:23&lt;01:25,    9.85it/s]
+ 17%|█▋        | Permuting : 179/1023 [00:23&lt;01:28,    9.56it/s]
+ 18%|█▊        | Permuting : 180/1023 [00:23&lt;01:33,    9.04it/s]
+ 18%|█▊        | Permuting : 181/1023 [00:23&lt;01:30,    9.34it/s]
+ 18%|█▊        | Permuting : 182/1023 [00:23&lt;01:28,    9.50it/s]
+ 18%|█▊        | Permuting : 183/1023 [00:23&lt;01:25,    9.81it/s]
+ 18%|█▊        | Permuting : 185/1023 [00:24&lt;01:26,    9.68it/s]
+ 18%|█▊        | Permuting : 187/1023 [00:24&lt;01:23,    9.98it/s]
+ 18%|█▊        | Permuting : 188/1023 [00:24&lt;01:28,    9.42it/s]
+ 18%|█▊        | Permuting : 189/1023 [00:24&lt;01:25,    9.71it/s]
+ 19%|█▊        | Permuting : 190/1023 [00:24&lt;01:25,    9.72it/s]
+ 19%|█▊        | Permuting : 191/1023 [00:24&lt;01:25,    9.73it/s]
+ 19%|█▉        | Permuting : 192/1023 [00:24&lt;01:29,    9.32it/s]
+ 19%|█▉        | Permuting : 193/1023 [00:24&lt;01:26,    9.62it/s]
+ 19%|█▉        | Permuting : 194/1023 [00:24&lt;01:23,    9.91it/s]
+ 19%|█▉        | Permuting : 195/1023 [00:25&lt;01:26,    9.62it/s]
+ 19%|█▉        | Permuting : 196/1023 [00:25&lt;01:25,    9.64it/s]
+ 19%|█▉        | Permuting : 197/1023 [00:25&lt;01:23,    9.94it/s]
+ 19%|█▉        | Permuting : 198/1023 [00:25&lt;01:25,    9.64it/s]
+ 19%|█▉        | Permuting : 199/1023 [00:25&lt;01:26,    9.51it/s]
+ 20%|█▉        | Permuting : 200/1023 [00:25&lt;01:23,    9.82it/s]
+ 20%|█▉        | Permuting : 201/1023 [00:25&lt;01:21,   10.13it/s]
+ 20%|█▉        | Permuting : 202/1023 [00:25&lt;01:24,    9.66it/s]
+ 20%|█▉        | Permuting : 203/1023 [00:25&lt;01:23,    9.81it/s]
+ 20%|█▉        | Permuting : 204/1023 [00:26&lt;01:23,    9.82it/s]
+ 20%|██        | Permuting : 205/1023 [00:26&lt;01:20,   10.14it/s]
+ 20%|██        | Permuting : 206/1023 [00:26&lt;01:23,    9.81it/s]
+ 20%|██        | Permuting : 207/1023 [00:26&lt;01:23,    9.81it/s]
+ 20%|██        | Permuting : 208/1023 [00:26&lt;01:24,    9.66it/s]
+ 20%|██        | Permuting : 209/1023 [00:26&lt;01:21,    9.97it/s]
+ 21%|██        | Permuting : 210/1023 [00:26&lt;01:22,    9.82it/s]
+ 21%|██        | Permuting : 211/1023 [00:26&lt;01:21,    9.98it/s]
+ 21%|██        | Permuting : 212/1023 [00:26&lt;01:22,    9.82it/s]
+ 21%|██        | Permuting : 213/1023 [00:26&lt;01:21,    9.97it/s]
+ 21%|██        | Permuting : 214/1023 [00:27&lt;01:23,    9.66it/s]
+ 21%|██        | Permuting : 215/1023 [00:27&lt;01:20,    9.98it/s]
+ 21%|██        | Permuting : 217/1023 [00:27&lt;01:19,   10.13it/s]
+ 21%|██▏       | Permuting : 219/1023 [00:27&lt;01:18,   10.25it/s]
+ 22%|██▏       | Permuting : 221/1023 [00:27&lt;01:20,    9.94it/s]
+ 22%|██▏       | Permuting : 222/1023 [00:27&lt;01:19,   10.08it/s]
+ 22%|██▏       | Permuting : 223/1023 [00:27&lt;01:18,   10.22it/s]
+ 22%|██▏       | Permuting : 224/1023 [00:28&lt;01:22,    9.63it/s]
+ 22%|██▏       | Permuting : 225/1023 [00:28&lt;01:21,    9.78it/s]
+ 22%|██▏       | Permuting : 226/1023 [00:28&lt;01:19,   10.08it/s]
+ 22%|██▏       | Permuting : 227/1023 [00:28&lt;01:16,   10.37it/s]
+ 22%|██▏       | Permuting : 228/1023 [00:28&lt;01:22,    9.61it/s]
+ 22%|██▏       | Permuting : 229/1023 [00:28&lt;01:21,    9.76it/s]
+ 23%|██▎       | Permuting : 231/1023 [00:28&lt;01:15,   10.52it/s]
+ 23%|██▎       | Permuting : 233/1023 [00:28&lt;01:19,    9.89it/s]
+ 23%|██▎       | Permuting : 234/1023 [00:28&lt;01:17,   10.16it/s]
+ 23%|██▎       | Permuting : 235/1023 [00:28&lt;01:15,   10.45it/s]
+ 23%|██▎       | Permuting : 237/1023 [00:29&lt;01:19,    9.85it/s]
+ 23%|██▎       | Permuting : 238/1023 [00:29&lt;01:17,   10.12it/s]
+ 23%|██▎       | Permuting : 239/1023 [00:29&lt;01:15,   10.41it/s]
+ 23%|██▎       | Permuting : 240/1023 [00:29&lt;01:23,    9.42it/s]
+ 24%|██▎       | Permuting : 242/1023 [00:29&lt;01:17,   10.11it/s]
+ 24%|██▍       | Permuting : 243/1023 [00:29&lt;01:15,   10.39it/s]
+ 24%|██▍       | Permuting : 244/1023 [00:30&lt;01:21,    9.54it/s]
+ 24%|██▍       | Permuting : 245/1023 [00:30&lt;01:19,    9.82it/s]
+ 24%|██▍       | Permuting : 246/1023 [00:30&lt;01:18,    9.96it/s]
+ 24%|██▍       | Permuting : 247/1023 [00:30&lt;01:18,    9.95it/s]
+ 24%|██▍       | Permuting : 248/1023 [00:30&lt;01:21,    9.54it/s]
+ 24%|██▍       | Permuting : 249/1023 [00:30&lt;01:18,    9.83it/s]
+ 24%|██▍       | Permuting : 250/1023 [00:30&lt;01:16,   10.12it/s]
+ 25%|██▍       | Permuting : 251/1023 [00:30&lt;01:16,   10.11it/s]
+ 25%|██▍       | Permuting : 252/1023 [00:30&lt;01:22,    9.39it/s]
+ 25%|██▍       | Permuting : 253/1023 [00:30&lt;01:19,    9.69it/s]
+ 25%|██▍       | Permuting : 254/1023 [00:31&lt;01:17,    9.98it/s]
+ 25%|██▍       | Permuting : 255/1023 [00:31&lt;01:15,   10.13it/s]
+ 25%|██▌       | Permuting : 256/1023 [00:31&lt;01:21,    9.40it/s]
+ 25%|██▌       | Permuting : 257/1023 [00:31&lt;01:18,    9.70it/s]
+ 25%|██▌       | Permuting : 258/1023 [00:31&lt;01:17,    9.85it/s]
+ 25%|██▌       | Permuting : 259/1023 [00:31&lt;01:18,    9.71it/s]
+ 25%|██▌       | Permuting : 260/1023 [00:31&lt;01:20,    9.42it/s]
+ 26%|██▌       | Permuting : 261/1023 [00:31&lt;01:19,    9.59it/s]
+ 26%|██▌       | Permuting : 262/1023 [00:31&lt;01:16,    9.89it/s]
+ 26%|██▌       | Permuting : 263/1023 [00:32&lt;01:19,    9.60it/s]
+ 26%|██▌       | Permuting : 264/1023 [00:32&lt;01:20,    9.47it/s]
+ 26%|██▌       | Permuting : 265/1023 [00:32&lt;01:18,    9.62it/s]
+ 26%|██▌       | Permuting : 266/1023 [00:32&lt;01:17,    9.78it/s]
+ 26%|██▌       | Permuting : 267/1023 [00:32&lt;01:17,    9.79it/s]
+ 26%|██▌       | Permuting : 268/1023 [00:32&lt;01:19,    9.50it/s]
+ 26%|██▋       | Permuting : 269/1023 [00:32&lt;01:16,    9.82it/s]
+ 26%|██▋       | Permuting : 270/1023 [00:32&lt;01:17,    9.67it/s]
+ 26%|██▋       | Permuting : 271/1023 [00:32&lt;01:16,    9.82it/s]
+ 27%|██▋       | Permuting : 272/1023 [00:32&lt;01:17,    9.68it/s]
+ 27%|██▋       | Permuting : 273/1023 [00:32&lt;01:15,   10.00it/s]
+ 27%|██▋       | Permuting : 274/1023 [00:33&lt;01:14,    9.99it/s]
+ 27%|██▋       | Permuting : 275/1023 [00:33&lt;01:14,    9.99it/s]
+ 27%|██▋       | Permuting : 276/1023 [00:33&lt;01:18,    9.52it/s]
+ 27%|██▋       | Permuting : 277/1023 [00:33&lt;01:16,    9.69it/s]
+ 27%|██▋       | Permuting : 278/1023 [00:33&lt;01:15,    9.85it/s]
+ 27%|██▋       | Permuting : 279/1023 [00:33&lt;01:15,    9.85it/s]
+ 27%|██▋       | Permuting : 280/1023 [00:33&lt;01:17,    9.54it/s]
+ 27%|██▋       | Permuting : 281/1023 [00:33&lt;01:16,    9.71it/s]
+ 28%|██▊       | Permuting : 283/1023 [00:34&lt;01:14,    9.88it/s]
+ 28%|██▊       | Permuting : 285/1023 [00:34&lt;01:14,    9.88it/s]
+ 28%|██▊       | Permuting : 286/1023 [00:34&lt;01:16,    9.59it/s]
+ 28%|██▊       | Permuting : 287/1023 [00:34&lt;01:14,    9.89it/s]
+ 28%|██▊       | Permuting : 288/1023 [00:34&lt;01:15,    9.75it/s]
+ 28%|██▊       | Permuting : 289/1023 [00:34&lt;01:17,    9.47it/s]
+ 28%|██▊       | Permuting : 290/1023 [00:34&lt;01:16,    9.62it/s]
+ 28%|██▊       | Permuting : 291/1023 [00:34&lt;01:15,    9.64it/s]
+ 29%|██▊       | Permuting : 293/1023 [00:35&lt;01:19,    9.14it/s]
+ 29%|██▊       | Permuting : 294/1023 [00:35&lt;01:17,    9.42it/s]
+ 29%|██▉       | Permuting : 295/1023 [00:35&lt;01:14,    9.72it/s]
+ 29%|██▉       | Permuting : 297/1023 [00:35&lt;01:17,    9.34it/s]
+ 29%|██▉       | Permuting : 299/1023 [00:35&lt;01:15,    9.64it/s]
+ 29%|██▉       | Permuting : 301/1023 [00:35&lt;01:15,    9.54it/s]
+ 30%|██▉       | Permuting : 302/1023 [00:36&lt;01:16,    9.42it/s]
+ 30%|██▉       | Permuting : 303/1023 [00:36&lt;01:14,    9.69it/s]
+ 30%|██▉       | Permuting : 304/1023 [00:36&lt;01:19,    9.09it/s]
+ 30%|██▉       | Permuting : 305/1023 [00:36&lt;01:16,    9.36it/s]
+ 30%|██▉       | Permuting : 306/1023 [00:36&lt;01:14,    9.64it/s]
+ 30%|███       | Permuting : 307/1023 [00:36&lt;01:13,    9.78it/s]
+ 30%|███       | Permuting : 309/1023 [00:36&lt;01:14,    9.52it/s]
+ 30%|███       | Permuting : 310/1023 [00:36&lt;01:13,    9.67it/s]
+ 30%|███       | Permuting : 311/1023 [00:36&lt;01:12,    9.81it/s]
+ 30%|███       | Permuting : 312/1023 [00:37&lt;01:16,    9.30it/s]
+ 31%|███       | Permuting : 313/1023 [00:37&lt;01:15,    9.45it/s]
+ 31%|███       | Permuting : 314/1023 [00:37&lt;01:12,    9.72it/s]
+ 31%|███       | Permuting : 315/1023 [00:37&lt;01:14,    9.47it/s]
+ 31%|███       | Permuting : 317/1023 [00:37&lt;01:13,    9.63it/s]
+ 31%|███       | Permuting : 318/1023 [00:37&lt;01:12,    9.78it/s]
+ 31%|███       | Permuting : 319/1023 [00:37&lt;01:15,    9.38it/s]
+ 31%|███▏      | Permuting : 320/1023 [00:38&lt;01:15,    9.28it/s]
+ 31%|███▏      | Permuting : 322/1023 [00:38&lt;01:10,    9.97it/s]
+ 32%|███▏      | Permuting : 323/1023 [00:38&lt;01:14,    9.45it/s]
+ 32%|███▏      | Permuting : 324/1023 [00:38&lt;01:13,    9.46it/s]
+ 32%|███▏      | Permuting : 326/1023 [00:38&lt;01:09,   10.01it/s]
+ 32%|███▏      | Permuting : 327/1023 [00:38&lt;01:14,    9.36it/s]
+ 32%|███▏      | Permuting : 328/1023 [00:38&lt;01:13,    9.50it/s]
+ 32%|███▏      | Permuting : 330/1023 [00:38&lt;01:10,    9.79it/s]
+ 32%|███▏      | Permuting : 331/1023 [00:39&lt;01:14,    9.29it/s]
+ 32%|███▏      | Permuting : 332/1023 [00:39&lt;01:12,    9.56it/s]
+ 33%|███▎      | Permuting : 333/1023 [00:39&lt;01:12,    9.58it/s]
+ 33%|███▎      | Permuting : 334/1023 [00:39&lt;01:10,    9.72it/s]
+ 33%|███▎      | Permuting : 335/1023 [00:39&lt;01:15,    9.10it/s]
+ 33%|███▎      | Permuting : 336/1023 [00:39&lt;01:14,    9.25it/s]
+ 33%|███▎      | Permuting : 338/1023 [00:39&lt;01:09,    9.80it/s]
+ 33%|███▎      | Permuting : 339/1023 [00:40&lt;01:14,    9.18it/s]
+ 33%|███▎      | Permuting : 340/1023 [00:40&lt;01:15,    9.09it/s]
+ 33%|███▎      | Permuting : 341/1023 [00:40&lt;01:14,    9.12it/s]
+ 33%|███▎      | Permuting : 342/1023 [00:40&lt;01:14,    9.15it/s]
+ 34%|███▎      | Permuting : 343/1023 [00:40&lt;01:13,    9.30it/s]
+ 34%|███▎      | Permuting : 344/1023 [00:40&lt;01:13,    9.19it/s]
+ 34%|███▎      | Permuting : 345/1023 [00:40&lt;01:15,    8.98it/s]
+ 34%|███▍      | Permuting : 346/1023 [00:40&lt;01:17,    8.79it/s]
+ 34%|███▍      | Permuting : 347/1023 [00:40&lt;01:14,    9.07it/s]
+ 34%|███▍      | Permuting : 348/1023 [00:41&lt;01:15,    8.98it/s]
+ 34%|███▍      | Permuting : 349/1023 [00:41&lt;01:12,    9.26it/s]
+ 34%|███▍      | Permuting : 350/1023 [00:41&lt;01:15,    8.92it/s]
+ 34%|███▍      | Permuting : 351/1023 [00:41&lt;01:13,    9.08it/s]
+ 34%|███▍      | Permuting : 352/1023 [00:41&lt;01:12,    9.24it/s]
+ 35%|███▍      | Permuting : 353/1023 [00:41&lt;01:11,    9.40it/s]
+ 35%|███▍      | Permuting : 354/1023 [00:41&lt;01:13,    9.16it/s]
+ 35%|███▍      | Permuting : 355/1023 [00:41&lt;01:12,    9.18it/s]
+ 35%|███▍      | Permuting : 356/1023 [00:41&lt;01:11,    9.34it/s]
+ 35%|███▍      | Permuting : 357/1023 [00:42&lt;01:13,    9.11it/s]
+ 35%|███▍      | Permuting : 358/1023 [00:42&lt;01:11,    9.27it/s]
+ 35%|███▌      | Permuting : 359/1023 [00:42&lt;01:12,    9.16it/s]
+ 35%|███▌      | Permuting : 360/1023 [00:42&lt;01:10,    9.46it/s]
+ 35%|███▌      | Permuting : 361/1023 [00:42&lt;01:12,    9.08it/s]
+ 35%|███▌      | Permuting : 362/1023 [00:42&lt;01:11,    9.25it/s]
+ 35%|███▌      | Permuting : 363/1023 [00:42&lt;01:10,    9.41it/s]
+ 36%|███▌      | Permuting : 364/1023 [00:42&lt;01:09,    9.43it/s]
+ 36%|███▌      | Permuting : 365/1023 [00:42&lt;01:11,    9.17it/s]
+ 36%|███▌      | Permuting : 367/1023 [00:42&lt;01:08,    9.64it/s]
+ 36%|███▌      | Permuting : 368/1023 [00:43&lt;01:08,    9.52it/s]
+ 36%|███▌      | Permuting : 369/1023 [00:43&lt;01:10,    9.25it/s]
+ 36%|███▋      | Permuting : 371/1023 [00:43&lt;01:07,    9.71it/s]
+ 36%|███▋      | Permuting : 372/1023 [00:43&lt;01:06,    9.72it/s]
+ 36%|███▋      | Permuting : 373/1023 [00:43&lt;01:11,    9.06it/s]
+ 37%|███▋      | Permuting : 374/1023 [00:43&lt;01:09,    9.35it/s]
+ 37%|███▋      | Permuting : 376/1023 [00:43&lt;01:04,   10.08it/s]
+ 37%|███▋      | Permuting : 377/1023 [00:44&lt;01:10,    9.14it/s]
+ 37%|███▋      | Permuting : 379/1023 [00:44&lt;01:07,    9.56it/s]
+ 37%|███▋      | Permuting : 380/1023 [00:44&lt;01:06,    9.71it/s]
+ 37%|███▋      | Permuting : 381/1023 [00:44&lt;01:09,    9.21it/s]
+ 37%|███▋      | Permuting : 382/1023 [00:44&lt;01:08,    9.36it/s]
+ 37%|███▋      | Permuting : 383/1023 [00:44&lt;01:07,    9.50it/s]
+ 38%|███▊      | Permuting : 384/1023 [00:44&lt;01:05,    9.79it/s]
+ 38%|███▊      | Permuting : 385/1023 [00:44&lt;01:08,    9.26it/s]
+ 38%|███▊      | Permuting : 386/1023 [00:45&lt;01:06,    9.55it/s]
+ 38%|███▊      | Permuting : 387/1023 [00:45&lt;01:04,    9.85it/s]
+ 38%|███▊      | Permuting : 388/1023 [00:45&lt;01:08,    9.30it/s]
+ 38%|███▊      | Permuting : 389/1023 [00:45&lt;01:07,    9.33it/s]
+ 38%|███▊      | Permuting : 390/1023 [00:45&lt;01:06,    9.48it/s]
+ 38%|███▊      | Permuting : 391/1023 [00:45&lt;01:06,    9.50it/s]
+ 38%|███▊      | Permuting : 392/1023 [00:45&lt;01:06,    9.51it/s]
+ 38%|███▊      | Permuting : 393/1023 [00:45&lt;01:06,    9.53it/s]
+ 39%|███▊      | Permuting : 394/1023 [00:45&lt;01:04,    9.69it/s]
+ 39%|███▊      | Permuting : 395/1023 [00:45&lt;01:06,    9.42it/s]
+ 39%|███▊      | Permuting : 396/1023 [00:46&lt;01:06,    9.43it/s]
+ 39%|███▉      | Permuting : 397/1023 [00:46&lt;01:05,    9.59it/s]
+ 39%|███▉      | Permuting : 398/1023 [00:46&lt;01:06,    9.46it/s]
+ 39%|███▉      | Permuting : 399/1023 [00:46&lt;01:05,    9.48it/s]
+ 39%|███▉      | Permuting : 401/1023 [00:46&lt;01:03,    9.80it/s]
+ 39%|███▉      | Permuting : 402/1023 [00:46&lt;01:05,    9.52it/s]
+ 39%|███▉      | Permuting : 403/1023 [00:46&lt;01:04,    9.68it/s]
+ 39%|███▉      | Permuting : 404/1023 [00:46&lt;01:04,    9.54it/s]
+ 40%|███▉      | Permuting : 405/1023 [00:46&lt;01:02,    9.84it/s]
+ 40%|███▉      | Permuting : 407/1023 [00:47&lt;01:02,    9.85it/s]
+ 40%|███▉      | Permuting : 408/1023 [00:47&lt;01:03,    9.70it/s]
+ 40%|███▉      | Permuting : 409/1023 [00:47&lt;01:01,   10.00it/s]
+ 40%|████      | Permuting : 410/1023 [00:47&lt;01:04,    9.57it/s]
+ 40%|████      | Permuting : 411/1023 [00:47&lt;01:02,    9.87it/s]
+ 40%|████      | Permuting : 412/1023 [00:47&lt;01:02,    9.72it/s]
+ 40%|████      | Permuting : 413/1023 [00:47&lt;01:01,    9.87it/s]
+ 41%|████      | Permuting : 415/1023 [00:47&lt;01:00,   10.02it/s]
+ 41%|████      | Permuting : 416/1023 [00:48&lt;01:02,    9.73it/s]
+ 41%|████      | Permuting : 417/1023 [00:48&lt;01:00,   10.02it/s]
+ 41%|████      | Permuting : 418/1023 [00:48&lt;01:02,    9.73it/s]
+ 41%|████      | Permuting : 419/1023 [00:48&lt;01:00,   10.02it/s]
+ 41%|████      | Permuting : 420/1023 [00:48&lt;01:02,    9.58it/s]
+ 41%|████      | Permuting : 421/1023 [00:48&lt;01:00,    9.88it/s]
+ 41%|████▏     | Permuting : 422/1023 [00:48&lt;01:01,    9.74it/s]
+ 41%|████▏     | Permuting : 423/1023 [00:48&lt;01:03,    9.46it/s]
+ 41%|████▏     | Permuting : 424/1023 [00:48&lt;01:01,    9.76it/s]
+ 42%|████▏     | Permuting : 425/1023 [00:48&lt;01:00,    9.92it/s]
+ 42%|████▏     | Permuting : 426/1023 [00:49&lt;01:00,    9.92it/s]
+ 42%|████▏     | Permuting : 427/1023 [00:49&lt;01:02,    9.48it/s]
+ 42%|████▏     | Permuting : 429/1023 [00:49&lt;00:58,   10.07it/s]
+ 42%|████▏     | Permuting : 430/1023 [00:49&lt;00:59,    9.92it/s]
+ 42%|████▏     | Permuting : 432/1023 [00:49&lt;01:00,    9.78it/s]
+ 42%|████▏     | Permuting : 433/1023 [00:49&lt;00:58,   10.07it/s]
+ 42%|████▏     | Permuting : 434/1023 [00:49&lt;01:00,    9.77it/s]
+ 43%|████▎     | Permuting : 435/1023 [00:50&lt;01:02,    9.37it/s]
+ 43%|████▎     | Permuting : 436/1023 [00:50&lt;01:00,    9.66it/s]
+ 43%|████▎     | Permuting : 437/1023 [00:50&lt;00:59,    9.81it/s]
+ 43%|████▎     | Permuting : 439/1023 [00:50&lt;01:01,    9.55it/s]
+ 43%|████▎     | Permuting : 440/1023 [00:50&lt;00:59,    9.84it/s]
+ 43%|████▎     | Permuting : 441/1023 [00:50&lt;00:58,    9.98it/s]
+ 43%|████▎     | Permuting : 442/1023 [00:50&lt;01:02,    9.29it/s]
+ 43%|████▎     | Permuting : 443/1023 [00:50&lt;01:00,    9.58it/s]
+ 43%|████▎     | Permuting : 444/1023 [00:50&lt;00:59,    9.73it/s]
+ 43%|████▎     | Permuting : 445/1023 [00:51&lt;00:58,    9.89it/s]
+ 44%|████▎     | Permuting : 446/1023 [00:51&lt;01:00,    9.46it/s]
+ 44%|████▎     | Permuting : 447/1023 [00:51&lt;00:59,    9.76it/s]
+ 44%|████▍     | Permuting : 448/1023 [00:51&lt;00:58,    9.77it/s]
+ 44%|████▍     | Permuting : 449/1023 [00:51&lt;00:57,   10.06it/s]
+ 44%|████▍     | Permuting : 450/1023 [00:51&lt;01:02,    9.21it/s]
+ 44%|████▍     | Permuting : 451/1023 [00:51&lt;01:00,    9.50it/s]
+ 44%|████▍     | Permuting : 453/1023 [00:51&lt;00:55,   10.26it/s]
+ 44%|████▍     | Permuting : 454/1023 [00:52&lt;01:00,    9.39it/s]
+ 44%|████▍     | Permuting : 455/1023 [00:52&lt;01:00,    9.41it/s]
+ 45%|████▍     | Permuting : 457/1023 [00:52&lt;00:55,   10.14it/s]
+ 45%|████▍     | Permuting : 458/1023 [00:52&lt;00:59,    9.57it/s]
+ 45%|████▍     | Permuting : 460/1023 [00:52&lt;00:57,    9.86it/s]
+ 45%|████▌     | Permuting : 461/1023 [00:52&lt;01:00,    9.34it/s]
+ 45%|████▌     | Permuting : 462/1023 [00:52&lt;00:58,    9.62it/s]
+ 45%|████▌     | Permuting : 463/1023 [00:52&lt;00:58,    9.62it/s]
+ 45%|████▌     | Permuting : 464/1023 [00:53&lt;00:57,    9.77it/s]
+ 45%|████▌     | Permuting : 465/1023 [00:53&lt;01:00,    9.25it/s]
+ 46%|████▌     | Permuting : 466/1023 [00:53&lt;00:58,    9.53it/s]
+ 46%|████▌     | Permuting : 467/1023 [00:53&lt;00:57,    9.68it/s]
+ 46%|████▌     | Permuting : 468/1023 [00:53&lt;00:56,    9.84it/s]
+ 46%|████▌     | Permuting : 469/1023 [00:53&lt;00:59,    9.28it/s]
+ 46%|████▌     | Permuting : 470/1023 [00:53&lt;00:59,    9.31it/s]
+ 46%|████▌     | Permuting : 471/1023 [00:53&lt;00:57,    9.61it/s]
+ 46%|████▌     | Permuting : 472/1023 [00:53&lt;00:57,    9.62it/s]
+ 46%|████▌     | Permuting : 473/1023 [00:54&lt;00:57,    9.50it/s]
+ 46%|████▋     | Permuting : 474/1023 [00:54&lt;00:57,    9.51it/s]
+ 46%|████▋     | Permuting : 475/1023 [00:54&lt;00:55,    9.81it/s]
+ 47%|████▋     | Permuting : 476/1023 [00:54&lt;00:56,    9.67it/s]
+ 47%|████▋     | Permuting : 477/1023 [00:54&lt;00:58,    9.26it/s]
+ 47%|████▋     | Permuting : 479/1023 [00:54&lt;00:55,    9.72it/s]
+ 47%|████▋     | Permuting : 480/1023 [00:54&lt;00:55,    9.87it/s]
+ 47%|████▋     | Permuting : 481/1023 [00:54&lt;00:59,    9.18it/s]
+ 47%|████▋     | Permuting : 482/1023 [00:54&lt;00:57,    9.48it/s]
+ 47%|████▋     | Permuting : 484/1023 [00:55&lt;00:53,   10.07it/s]
+ 47%|████▋     | Permuting : 485/1023 [00:55&lt;00:59,    9.11it/s]
+ 48%|████▊     | Permuting : 486/1023 [00:55&lt;00:57,    9.40it/s]
+ 48%|████▊     | Permuting : 488/1023 [00:55&lt;00:52,   10.12it/s]
+ 48%|████▊     | Permuting : 490/1023 [00:55&lt;00:55,    9.58it/s]
+ 48%|████▊     | Permuting : 492/1023 [00:55&lt;00:51,   10.26it/s]
+ 48%|████▊     | Permuting : 493/1023 [00:56&lt;00:56,    9.34it/s]
+ 48%|████▊     | Permuting : 494/1023 [00:56&lt;00:55,    9.60it/s]
+ 48%|████▊     | Permuting : 495/1023 [00:56&lt;00:53,    9.87it/s]
+ 48%|████▊     | Permuting : 496/1023 [00:56&lt;00:51,   10.15it/s]
+ 49%|████▊     | Permuting : 497/1023 [00:56&lt;00:55,    9.47it/s]
+ 49%|████▊     | Permuting : 498/1023 [00:56&lt;00:54,    9.61it/s]
+ 49%|████▉     | Permuting : 499/1023 [00:56&lt;00:52,    9.89it/s]
+ 49%|████▉     | Permuting : 500/1023 [00:56&lt;00:51,   10.18it/s]
+ 49%|████▉     | Permuting : 501/1023 [00:56&lt;00:55,    9.48it/s]
+ 49%|████▉     | Permuting : 503/1023 [00:56&lt;00:51,   10.03it/s]
+ 49%|████▉     | Permuting : 504/1023 [00:57&lt;00:51,   10.17it/s]
+ 49%|████▉     | Permuting : 505/1023 [00:57&lt;00:54,    9.48it/s]
+ 50%|████▉     | Permuting : 507/1023 [00:57&lt;00:51,   10.03it/s]
+ 50%|████▉     | Permuting : 508/1023 [00:57&lt;00:51,   10.03it/s]
+ 50%|████▉     | Permuting : 509/1023 [00:57&lt;00:53,    9.61it/s]
+ 50%|████▉     | Permuting : 510/1023 [00:57&lt;00:53,    9.63it/s]
+ 50%|████▉     | Permuting : 511/1023 [00:57&lt;00:51,    9.91it/s]
+ 50%|█████     | Permuting : 512/1023 [00:57&lt;00:50,   10.18it/s]
+ 50%|█████     | Permuting : 513/1023 [00:58&lt;00:52,    9.75it/s]
+ 50%|█████     | Permuting : 514/1023 [00:58&lt;00:52,    9.62it/s]
+ 50%|█████     | Permuting : 516/1023 [00:58&lt;00:51,    9.91it/s]
+ 51%|█████     | Permuting : 517/1023 [00:58&lt;00:51,    9.77it/s]
+ 51%|█████     | Permuting : 518/1023 [00:58&lt;00:52,    9.64it/s]
+ 51%|█████     | Permuting : 520/1023 [00:58&lt;00:51,    9.79it/s]
+ 51%|█████     | Permuting : 521/1023 [00:58&lt;00:51,    9.66it/s]
+ 51%|█████     | Permuting : 522/1023 [00:59&lt;00:51,    9.67it/s]
+ 51%|█████     | Permuting : 523/1023 [00:59&lt;00:51,    9.68it/s]
+ 51%|█████     | Permuting : 524/1023 [00:59&lt;00:52,    9.43it/s]
+ 51%|█████▏    | Permuting : 525/1023 [00:59&lt;00:51,    9.70it/s]
+ 51%|█████▏    | Permuting : 526/1023 [00:59&lt;00:51,    9.58it/s]
+ 52%|█████▏    | Permuting : 527/1023 [00:59&lt;00:50,    9.73it/s]
+ 52%|█████▏    | Permuting : 528/1023 [00:59&lt;00:53,    9.34it/s]
+ 52%|█████▏    | Permuting : 529/1023 [00:59&lt;00:53,    9.23it/s]
+ 52%|█████▏    | Permuting : 530/1023 [00:59&lt;00:51,    9.52it/s]
+ 52%|█████▏    | Permuting : 531/1023 [00:59&lt;00:50,    9.82it/s]
+ 52%|█████▏    | Permuting : 532/1023 [01:00&lt;00:51,    9.54it/s]
+ 52%|█████▏    | Permuting : 533/1023 [01:00&lt;00:52,    9.28it/s]
+ 52%|█████▏    | Permuting : 535/1023 [01:00&lt;00:49,    9.86it/s]
+ 52%|█████▏    | Permuting : 536/1023 [01:00&lt;00:50,    9.59it/s]
+ 53%|█████▎    | Permuting : 538/1023 [01:00&lt;00:49,    9.75it/s]
+ 53%|█████▎    | Permuting : 539/1023 [01:00&lt;00:48,   10.03it/s]
+ 53%|█████▎    | Permuting : 540/1023 [01:00&lt;00:49,    9.74it/s]
+ 53%|█████▎    | Permuting : 541/1023 [01:01&lt;00:52,    9.11it/s]
+ 53%|█████▎    | Permuting : 543/1023 [01:01&lt;00:49,    9.79it/s]
+ 53%|█████▎    | Permuting : 544/1023 [01:01&lt;00:49,    9.66it/s]
+ 53%|█████▎    | Permuting : 545/1023 [01:01&lt;00:52,    9.17it/s]
+ 53%|█████▎    | Permuting : 547/1023 [01:01&lt;00:48,    9.72it/s]
+ 54%|█████▎    | Permuting : 548/1023 [01:01&lt;00:49,    9.60it/s]
+ 54%|█████▎    | Permuting : 549/1023 [01:02&lt;00:52,    9.00it/s]
+ 54%|█████▍    | Permuting : 552/1023 [01:02&lt;00:47,    9.92it/s]
+ 54%|█████▍    | Permuting : 553/1023 [01:02&lt;00:51,    9.09it/s]
+ 54%|█████▍    | Permuting : 555/1023 [01:02&lt;00:48,    9.59it/s]
+ 54%|█████▍    | Permuting : 556/1023 [01:02&lt;00:47,    9.85it/s]
+ 54%|█████▍    | Permuting : 557/1023 [01:02&lt;00:50,    9.14it/s]
+ 55%|█████▍    | Permuting : 559/1023 [01:02&lt;00:47,    9.77it/s]
+ 55%|█████▍    | Permuting : 560/1023 [01:02&lt;00:46,    9.90it/s]
+ 55%|█████▍    | Permuting : 561/1023 [01:03&lt;00:50,    9.18it/s]
+ 55%|█████▍    | Permuting : 562/1023 [01:03&lt;00:48,    9.44it/s]
+ 55%|█████▌    | Permuting : 563/1023 [01:03&lt;00:47,    9.70it/s]
+ 55%|█████▌    | Permuting : 564/1023 [01:03&lt;00:46,    9.84it/s]
+ 55%|█████▌    | Permuting : 565/1023 [01:03&lt;00:49,    9.22it/s]
+ 55%|█████▌    | Permuting : 567/1023 [01:03&lt;00:46,    9.75it/s]
+ 56%|█████▌    | Permuting : 568/1023 [01:03&lt;00:47,    9.63it/s]
+ 56%|█████▌    | Permuting : 569/1023 [01:04&lt;00:49,    9.16it/s]
+ 56%|█████▌    | Permuting : 570/1023 [01:04&lt;00:48,    9.30it/s]
+ 56%|█████▌    | Permuting : 571/1023 [01:04&lt;00:49,    9.21it/s]
+ 56%|█████▌    | Permuting : 572/1023 [01:04&lt;00:47,    9.47it/s]
+ 56%|█████▌    | Permuting : 573/1023 [01:04&lt;00:48,    9.24it/s]
+ 56%|█████▌    | Permuting : 574/1023 [01:04&lt;00:47,    9.39it/s]
+ 56%|█████▌    | Permuting : 575/1023 [01:04&lt;00:48,    9.29it/s]
+ 56%|█████▋    | Permuting : 576/1023 [01:04&lt;00:47,    9.44it/s]
+ 57%|█████▋    | Permuting : 578/1023 [01:04&lt;00:46,    9.59it/s]
+ 57%|█████▋    | Permuting : 579/1023 [01:05&lt;00:47,    9.36it/s]
+ 57%|█████▋    | Permuting : 580/1023 [01:05&lt;00:46,    9.51it/s]
+ 57%|█████▋    | Permuting : 581/1023 [01:05&lt;00:47,    9.40it/s]
+ 57%|█████▋    | Permuting : 582/1023 [01:05&lt;00:46,    9.41it/s]
+ 57%|█████▋    | Permuting : 583/1023 [01:05&lt;00:45,    9.70it/s]
+ 57%|█████▋    | Permuting : 584/1023 [01:05&lt;00:47,    9.18it/s]
+ 57%|█████▋    | Permuting : 585/1023 [01:05&lt;00:46,    9.47it/s]
+ 57%|█████▋    | Permuting : 586/1023 [01:05&lt;00:45,    9.62it/s]
+ 57%|█████▋    | Permuting : 587/1023 [01:05&lt;00:44,    9.77it/s]
+ 57%|█████▋    | Permuting : 588/1023 [01:06&lt;00:47,    9.23it/s]
+ 58%|█████▊    | Permuting : 589/1023 [01:06&lt;00:46,    9.39it/s]
+ 58%|█████▊    | Permuting : 590/1023 [01:06&lt;00:45,    9.55it/s]
+ 58%|█████▊    | Permuting : 591/1023 [01:06&lt;00:45,    9.43it/s]
+ 58%|█████▊    | Permuting : 593/1023 [01:06&lt;00:44,    9.60it/s]
+ 58%|█████▊    | Permuting : 594/1023 [01:06&lt;00:44,    9.74it/s]
+ 58%|█████▊    | Permuting : 595/1023 [01:06&lt;00:45,    9.48it/s]
+ 58%|█████▊    | Permuting : 596/1023 [01:06&lt;00:45,    9.36it/s]
+ 58%|█████▊    | Permuting : 598/1023 [01:06&lt;00:42,    9.94it/s]
+ 59%|█████▊    | Permuting : 599/1023 [01:07&lt;00:43,    9.66it/s]
+ 59%|█████▊    | Permuting : 600/1023 [01:07&lt;00:45,    9.28it/s]
+ 59%|█████▉    | Permuting : 602/1023 [01:07&lt;00:42,    9.97it/s]
+ 59%|█████▉    | Permuting : 603/1023 [01:07&lt;00:42,    9.83it/s]
+ 59%|█████▉    | Permuting : 605/1023 [01:07&lt;00:42,    9.84it/s]
+ 59%|█████▉    | Permuting : 606/1023 [01:07&lt;00:41,   10.12it/s]
+ 59%|█████▉    | Permuting : 607/1023 [01:07&lt;00:42,    9.70it/s]
+ 60%|█████▉    | Permuting : 609/1023 [01:08&lt;00:42,    9.84it/s]
+ 60%|█████▉    | Permuting : 610/1023 [01:08&lt;00:40,   10.11it/s]
+ 60%|█████▉    | Permuting : 611/1023 [01:08&lt;00:42,    9.70it/s]
+ 60%|█████▉    | Permuting : 612/1023 [01:08&lt;00:42,    9.58it/s]
+ 60%|██████    | Permuting : 614/1023 [01:08&lt;00:39,   10.27it/s]
+ 60%|██████    | Permuting : 615/1023 [01:08&lt;00:42,    9.71it/s]
+ 60%|██████    | Permuting : 616/1023 [01:08&lt;00:41,    9.72it/s]
+ 60%|██████    | Permuting : 617/1023 [01:08&lt;00:40,    9.99it/s]
+ 60%|██████    | Permuting : 618/1023 [01:08&lt;00:39,   10.26it/s]
+ 61%|██████    | Permuting : 620/1023 [01:09&lt;00:40,    9.83it/s]
+ 61%|██████    | Permuting : 621/1023 [01:09&lt;00:41,    9.58it/s]
+ 61%|██████    | Permuting : 622/1023 [01:09&lt;00:40,    9.85it/s]
+ 61%|██████    | Permuting : 623/1023 [01:09&lt;00:41,    9.59it/s]
+ 61%|██████    | Permuting : 624/1023 [01:09&lt;00:41,    9.73it/s]
+ 61%|██████    | Permuting : 625/1023 [01:09&lt;00:41,    9.61it/s]
+ 61%|██████    | Permuting : 626/1023 [01:09&lt;00:40,    9.88it/s]
+ 61%|██████▏   | Permuting : 627/1023 [01:10&lt;00:41,    9.48it/s]
+ 61%|██████▏   | Permuting : 628/1023 [01:10&lt;00:41,    9.62it/s]
+ 61%|██████▏   | Permuting : 629/1023 [01:10&lt;00:41,    9.50it/s]
+ 62%|██████▏   | Permuting : 630/1023 [01:10&lt;00:40,    9.65it/s]
+ 62%|██████▏   | Permuting : 631/1023 [01:10&lt;00:40,    9.67it/s]
+ 62%|██████▏   | Permuting : 632/1023 [01:10&lt;00:39,    9.82it/s]
+ 62%|██████▏   | Permuting : 633/1023 [01:10&lt;00:42,    9.28it/s]
+ 62%|██████▏   | Permuting : 635/1023 [01:10&lt;00:39,    9.86it/s]
+ 62%|██████▏   | Permuting : 636/1023 [01:11&lt;00:42,    9.19it/s]
+ 62%|██████▏   | Permuting : 637/1023 [01:11&lt;00:40,    9.48it/s]
+ 62%|██████▏   | Permuting : 638/1023 [01:11&lt;00:40,    9.49it/s]
+ 62%|██████▏   | Permuting : 639/1023 [01:11&lt;00:39,    9.79it/s]
+ 63%|██████▎   | Permuting : 640/1023 [01:11&lt;00:41,    9.25it/s]
+ 63%|██████▎   | Permuting : 641/1023 [01:11&lt;00:40,    9.54it/s]
+ 63%|██████▎   | Permuting : 642/1023 [01:11&lt;00:39,    9.69it/s]
+ 63%|██████▎   | Permuting : 643/1023 [01:11&lt;00:39,    9.56it/s]
+ 63%|██████▎   | Permuting : 644/1023 [01:11&lt;00:40,    9.30it/s]
+ 63%|██████▎   | Permuting : 645/1023 [01:11&lt;00:39,    9.60it/s]
+ 63%|██████▎   | Permuting : 646/1023 [01:12&lt;00:39,    9.48it/s]
+ 63%|██████▎   | Permuting : 647/1023 [01:12&lt;00:39,    9.49it/s]
+ 63%|██████▎   | Permuting : 648/1023 [01:12&lt;00:40,    9.24it/s]
+ 63%|██████▎   | Permuting : 649/1023 [01:12&lt;00:39,    9.39it/s]
+ 64%|██████▎   | Permuting : 650/1023 [01:12&lt;00:38,    9.70it/s]
+ 64%|██████▎   | Permuting : 651/1023 [01:12&lt;00:38,    9.57it/s]
+ 64%|██████▎   | Permuting : 652/1023 [01:12&lt;00:39,    9.44it/s]
+ 64%|██████▍   | Permuting : 653/1023 [01:12&lt;00:38,    9.60it/s]
+ 64%|██████▍   | Permuting : 654/1023 [01:12&lt;00:37,    9.76it/s]
+ 64%|██████▍   | Permuting : 655/1023 [01:12&lt;00:38,    9.47it/s]
+ 64%|██████▍   | Permuting : 656/1023 [01:13&lt;00:39,    9.35it/s]
+ 64%|██████▍   | Permuting : 657/1023 [01:13&lt;00:37,    9.67it/s]
+ 64%|██████▍   | Permuting : 658/1023 [01:13&lt;00:37,    9.82it/s]
+ 64%|██████▍   | Permuting : 659/1023 [01:13&lt;00:38,    9.53it/s]
+ 65%|██████▍   | Permuting : 660/1023 [01:13&lt;00:38,    9.54it/s]
+ 65%|██████▍   | Permuting : 661/1023 [01:13&lt;00:36,    9.85it/s]
+ 65%|██████▍   | Permuting : 662/1023 [01:13&lt;00:36,    9.85it/s]
+ 65%|██████▍   | Permuting : 663/1023 [01:13&lt;00:37,    9.55it/s]
+ 65%|██████▍   | Permuting : 664/1023 [01:13&lt;00:37,    9.57it/s]
+ 65%|██████▌   | Permuting : 665/1023 [01:13&lt;00:36,    9.89it/s]
+ 65%|██████▌   | Permuting : 666/1023 [01:13&lt;00:35,   10.06it/s]
+ 65%|██████▌   | Permuting : 668/1023 [01:14&lt;00:36,    9.73it/s]
+ 65%|██████▌   | Permuting : 669/1023 [01:14&lt;00:35,    9.89it/s]
+ 65%|██████▌   | Permuting : 670/1023 [01:14&lt;00:34,   10.21it/s]
+ 66%|██████▌   | Permuting : 671/1023 [01:14&lt;00:37,    9.44it/s]
+ 66%|██████▌   | Permuting : 672/1023 [01:14&lt;00:36,    9.75it/s]
+ 66%|██████▌   | Permuting : 673/1023 [01:14&lt;00:34,   10.06it/s]
+ 66%|██████▌   | Permuting : 674/1023 [01:14&lt;00:35,    9.73it/s]
+ 66%|██████▌   | Permuting : 675/1023 [01:15&lt;00:36,    9.45it/s]
+ 66%|██████▌   | Permuting : 676/1023 [01:15&lt;00:36,    9.62it/s]
+ 66%|██████▌   | Permuting : 677/1023 [01:15&lt;00:34,    9.94it/s]
+ 66%|██████▋   | Permuting : 678/1023 [01:15&lt;00:35,    9.78it/s]
+ 66%|██████▋   | Permuting : 679/1023 [01:15&lt;00:35,    9.63it/s]
+ 66%|██████▋   | Permuting : 680/1023 [01:15&lt;00:35,    9.79it/s]
+ 67%|██████▋   | Permuting : 681/1023 [01:15&lt;00:34,    9.95it/s]
+ 67%|██████▋   | Permuting : 682/1023 [01:15&lt;00:34,    9.80it/s]
+ 67%|██████▋   | Permuting : 683/1023 [01:15&lt;00:35,    9.65it/s]
+ 67%|██████▋   | Permuting : 684/1023 [01:15&lt;00:35,    9.65it/s]
+ 67%|██████▋   | Permuting : 685/1023 [01:15&lt;00:34,    9.82it/s]
+ 67%|██████▋   | Permuting : 686/1023 [01:16&lt;00:33,   10.14it/s]
+ 67%|██████▋   | Permuting : 687/1023 [01:16&lt;00:36,    9.22it/s]
+ 67%|██████▋   | Permuting : 688/1023 [01:16&lt;00:35,    9.54it/s]
+ 67%|██████▋   | Permuting : 690/1023 [01:16&lt;00:32,   10.33it/s]
+ 68%|██████▊   | Permuting : 691/1023 [01:16&lt;00:35,    9.27it/s]
+ 68%|██████▊   | Permuting : 693/1023 [01:16&lt;00:32,   10.02it/s]
+ 68%|██████▊   | Permuting : 694/1023 [01:16&lt;00:31,   10.33it/s]
+ 68%|██████▊   | Permuting : 695/1023 [01:17&lt;00:34,    9.42it/s]
+ 68%|██████▊   | Permuting : 697/1023 [01:17&lt;00:32,   10.02it/s]
+ 68%|██████▊   | Permuting : 698/1023 [01:17&lt;00:32,   10.16it/s]
+ 68%|██████▊   | Permuting : 699/1023 [01:17&lt;00:34,    9.31it/s]
+ 69%|██████▊   | Permuting : 701/1023 [01:17&lt;00:32,   10.02it/s]
+ 69%|██████▊   | Permuting : 702/1023 [01:17&lt;00:31,   10.16it/s]
+ 69%|██████▉   | Permuting : 704/1023 [01:17&lt;00:32,    9.73it/s]
+ 69%|██████▉   | Permuting : 705/1023 [01:17&lt;00:31,   10.00it/s]
+ 69%|██████▉   | Permuting : 706/1023 [01:17&lt;00:30,   10.29it/s]
+ 69%|██████▉   | Permuting : 707/1023 [01:18&lt;00:33,    9.32it/s]
+ 69%|██████▉   | Permuting : 709/1023 [01:18&lt;00:31,   10.01it/s]
+ 69%|██████▉   | Permuting : 710/1023 [01:18&lt;00:30,   10.29it/s]
+ 70%|██████▉   | Permuting : 711/1023 [01:18&lt;00:33,    9.45it/s]
+ 70%|██████▉   | Permuting : 712/1023 [01:18&lt;00:31,    9.73it/s]
+ 70%|██████▉   | Permuting : 713/1023 [01:18&lt;00:32,    9.48it/s]
+ 70%|██████▉   | Permuting : 715/1023 [01:19&lt;00:32,    9.51it/s]
+ 70%|██████▉   | Permuting : 716/1023 [01:19&lt;00:32,    9.52it/s]
+ 70%|███████   | Permuting : 717/1023 [01:19&lt;00:31,    9.66it/s]
+ 70%|███████   | Permuting : 718/1023 [01:19&lt;00:32,    9.30it/s]
+ 70%|███████   | Permuting : 720/1023 [01:19&lt;00:31,    9.59it/s]
+ 70%|███████   | Permuting : 721/1023 [01:19&lt;00:31,    9.59it/s]
+ 71%|███████   | Permuting : 722/1023 [01:19&lt;00:32,    9.36it/s]
+ 71%|███████   | Permuting : 723/1023 [01:19&lt;00:31,    9.38it/s]
+ 71%|███████   | Permuting : 724/1023 [01:20&lt;00:31,    9.53it/s]
+ 71%|███████   | Permuting : 725/1023 [01:20&lt;00:31,    9.54it/s]
+ 71%|███████   | Permuting : 726/1023 [01:20&lt;00:31,    9.42it/s]
+ 71%|███████   | Permuting : 727/1023 [01:20&lt;00:31,    9.44it/s]
+ 71%|███████   | Permuting : 728/1023 [01:20&lt;00:31,    9.46it/s]
+ 71%|███████▏  | Permuting : 729/1023 [01:20&lt;00:30,    9.75it/s]
+ 71%|███████▏  | Permuting : 730/1023 [01:20&lt;00:30,    9.62it/s]
+ 71%|███████▏  | Permuting : 731/1023 [01:20&lt;00:31,    9.22it/s]
+ 72%|███████▏  | Permuting : 732/1023 [01:20&lt;00:30,    9.52it/s]
+ 72%|███████▏  | Permuting : 733/1023 [01:20&lt;00:30,    9.53it/s]
+ 72%|███████▏  | Permuting : 734/1023 [01:21&lt;00:29,    9.83it/s]
+ 72%|███████▏  | Permuting : 735/1023 [01:21&lt;00:31,    9.16it/s]
+ 72%|███████▏  | Permuting : 736/1023 [01:21&lt;00:30,    9.31it/s]
+ 72%|███████▏  | Permuting : 738/1023 [01:21&lt;00:29,    9.76it/s]
+ 72%|███████▏  | Permuting : 739/1023 [01:21&lt;00:31,    8.99it/s]
+ 72%|███████▏  | Permuting : 740/1023 [01:21&lt;00:30,    9.28it/s]
+ 72%|███████▏  | Permuting : 741/1023 [01:21&lt;00:29,    9.57it/s]
+ 73%|███████▎  | Permuting : 742/1023 [01:21&lt;00:28,    9.86it/s]
+ 73%|███████▎  | Permuting : 743/1023 [01:22&lt;00:30,    9.18it/s]
+ 73%|███████▎  | Permuting : 745/1023 [01:22&lt;00:28,    9.76it/s]
+ 73%|███████▎  | Permuting : 746/1023 [01:22&lt;00:27,   10.05it/s]
+ 73%|███████▎  | Permuting : 747/1023 [01:22&lt;00:29,    9.35it/s]
+ 73%|███████▎  | Permuting : 748/1023 [01:22&lt;00:28,    9.50it/s]
+ 73%|███████▎  | Permuting : 749/1023 [01:22&lt;00:27,    9.80it/s]
+ 73%|███████▎  | Permuting : 750/1023 [01:22&lt;00:27,   10.10it/s]
+ 73%|███████▎  | Permuting : 751/1023 [01:22&lt;00:29,    9.38it/s]
+ 74%|███████▎  | Permuting : 753/1023 [01:22&lt;00:26,   10.11it/s]
+ 74%|███████▎  | Permuting : 754/1023 [01:23&lt;00:27,    9.67it/s]
+ 74%|███████▍  | Permuting : 755/1023 [01:23&lt;00:27,    9.68it/s]
+ 74%|███████▍  | Permuting : 757/1023 [01:23&lt;00:26,   10.12it/s]
+ 74%|███████▍  | Permuting : 758/1023 [01:23&lt;00:27,    9.69it/s]
+ 74%|███████▍  | Permuting : 759/1023 [01:23&lt;00:27,    9.43it/s]
+ 74%|███████▍  | Permuting : 760/1023 [01:23&lt;00:27,    9.72it/s]
+ 74%|███████▍  | Permuting : 761/1023 [01:23&lt;00:26,   10.01it/s]
+ 74%|███████▍  | Permuting : 762/1023 [01:23&lt;00:26,    9.71it/s]
+ 75%|███████▍  | Permuting : 763/1023 [01:24&lt;00:27,    9.32it/s]
+ 75%|███████▍  | Permuting : 764/1023 [01:24&lt;00:27,    9.34it/s]
+ 75%|███████▍  | Permuting : 765/1023 [01:24&lt;00:27,    9.50it/s]
+ 75%|███████▍  | Permuting : 766/1023 [01:24&lt;00:27,    9.51it/s]
+ 75%|███████▍  | Permuting : 767/1023 [01:24&lt;00:27,    9.39it/s]
+ 75%|███████▌  | Permuting : 768/1023 [01:24&lt;00:26,    9.55it/s]
+ 75%|███████▌  | Permuting : 769/1023 [01:24&lt;00:26,    9.71it/s]
+ 75%|███████▌  | Permuting : 770/1023 [01:24&lt;00:25,    9.86it/s]
+ 75%|███████▌  | Permuting : 771/1023 [01:24&lt;00:26,    9.57it/s]
+ 75%|███████▌  | Permuting : 772/1023 [01:25&lt;00:26,    9.59it/s]
+ 76%|███████▌  | Permuting : 773/1023 [01:25&lt;00:26,    9.60it/s]
+ 76%|███████▌  | Permuting : 774/1023 [01:25&lt;00:25,    9.91it/s]
+ 76%|███████▌  | Permuting : 775/1023 [01:25&lt;00:25,    9.60it/s]
+ 76%|███████▌  | Permuting : 776/1023 [01:25&lt;00:25,    9.76it/s]
+ 76%|███████▌  | Permuting : 777/1023 [01:25&lt;00:25,    9.48it/s]
+ 76%|███████▌  | Permuting : 778/1023 [01:25&lt;00:25,    9.78it/s]
+ 76%|███████▌  | Permuting : 780/1023 [01:25&lt;00:25,    9.65it/s]
+ 76%|███████▋  | Permuting : 781/1023 [01:25&lt;00:25,    9.52it/s]
+ 76%|███████▋  | Permuting : 782/1023 [01:26&lt;00:24,    9.68it/s]
+ 77%|███████▋  | Permuting : 784/1023 [01:26&lt;00:24,    9.70it/s]
+ 77%|███████▋  | Permuting : 785/1023 [01:26&lt;00:25,    9.43it/s]
+ 77%|███████▋  | Permuting : 786/1023 [01:26&lt;00:25,    9.45it/s]
+ 77%|███████▋  | Permuting : 787/1023 [01:26&lt;00:24,    9.61it/s]
+ 77%|███████▋  | Permuting : 788/1023 [01:26&lt;00:24,    9.49it/s]
+ 77%|███████▋  | Permuting : 789/1023 [01:26&lt;00:24,    9.64it/s]
+ 77%|███████▋  | Permuting : 790/1023 [01:27&lt;00:25,    8.99it/s]
+ 77%|███████▋  | Permuting : 792/1023 [01:27&lt;00:23,    9.70it/s]
+ 78%|███████▊  | Permuting : 793/1023 [01:27&lt;00:24,    9.44it/s]
+ 78%|███████▊  | Permuting : 794/1023 [01:27&lt;00:24,    9.33it/s]
+ 78%|███████▊  | Permuting : 795/1023 [01:27&lt;00:24,    9.49it/s]
+ 78%|███████▊  | Permuting : 796/1023 [01:27&lt;00:23,    9.64it/s]
+ 78%|███████▊  | Permuting : 797/1023 [01:27&lt;00:23,    9.51it/s]
+ 78%|███████▊  | Permuting : 798/1023 [01:27&lt;00:23,    9.52it/s]
+ 78%|███████▊  | Permuting : 799/1023 [01:27&lt;00:23,    9.68it/s]
+ 78%|███████▊  | Permuting : 800/1023 [01:27&lt;00:23,    9.55it/s]
+ 78%|███████▊  | Permuting : 801/1023 [01:28&lt;00:22,    9.70it/s]
+ 78%|███████▊  | Permuting : 803/1023 [01:28&lt;00:22,    9.86it/s]
+ 79%|███████▊  | Permuting : 804/1023 [01:28&lt;00:22,    9.58it/s]
+ 79%|███████▊  | Permuting : 805/1023 [01:28&lt;00:22,    9.59it/s]
+ 79%|███████▉  | Permuting : 806/1023 [01:28&lt;00:22,    9.60it/s]
+ 79%|███████▉  | Permuting : 807/1023 [01:28&lt;00:21,    9.90it/s]
+ 79%|███████▉  | Permuting : 808/1023 [01:28&lt;00:23,    8.96it/s]
+ 79%|███████▉  | Permuting : 809/1023 [01:29&lt;00:23,    9.13it/s]
+ 79%|███████▉  | Permuting : 810/1023 [01:29&lt;00:23,    9.16it/s]
+ 79%|███████▉  | Permuting : 811/1023 [01:29&lt;00:22,    9.46it/s]
+ 79%|███████▉  | Permuting : 813/1023 [01:29&lt;00:22,    9.36it/s]
+ 80%|███████▉  | Permuting : 814/1023 [01:29&lt;00:22,    9.25it/s]
+ 80%|███████▉  | Permuting : 815/1023 [01:29&lt;00:22,    9.41it/s]
+ 80%|███████▉  | Permuting : 816/1023 [01:29&lt;00:22,    9.04it/s]
+ 80%|███████▉  | Permuting : 817/1023 [01:29&lt;00:22,    9.33it/s]
+ 80%|███████▉  | Permuting : 818/1023 [01:29&lt;00:21,    9.36it/s]
+ 80%|████████  | Permuting : 819/1023 [01:29&lt;00:21,    9.66it/s]
+ 80%|████████  | Permuting : 820/1023 [01:30&lt;00:21,    9.26it/s]
+ 80%|████████  | Permuting : 821/1023 [01:30&lt;00:22,    9.15it/s]
+ 80%|████████  | Permuting : 822/1023 [01:30&lt;00:21,    9.32it/s]
+ 80%|████████  | Permuting : 823/1023 [01:30&lt;00:21,    9.47it/s]
+ 81%|████████  | Permuting : 824/1023 [01:30&lt;00:21,    9.09it/s]
+ 81%|████████  | Permuting : 825/1023 [01:30&lt;00:21,    9.26it/s]
+ 81%|████████  | Permuting : 826/1023 [01:30&lt;00:20,    9.56it/s]
+ 81%|████████  | Permuting : 827/1023 [01:30&lt;00:20,    9.57it/s]
+ 81%|████████  | Permuting : 828/1023 [01:31&lt;00:20,    9.30it/s]
+ 81%|████████  | Permuting : 830/1023 [01:31&lt;00:20,    9.49it/s]
+ 81%|████████  | Permuting : 831/1023 [01:31&lt;00:19,    9.79it/s]
+ 81%|████████▏ | Permuting : 832/1023 [01:31&lt;00:20,    9.24it/s]
+ 81%|████████▏ | Permuting : 833/1023 [01:31&lt;00:20,    9.27it/s]
+ 82%|████████▏ | Permuting : 834/1023 [01:31&lt;00:19,    9.57it/s]
+ 82%|████████▏ | Permuting : 835/1023 [01:31&lt;00:19,    9.87it/s]
+ 82%|████████▏ | Permuting : 836/1023 [01:31&lt;00:19,    9.58it/s]
+ 82%|████████▏ | Permuting : 837/1023 [01:31&lt;00:19,    9.32it/s]
+ 82%|████████▏ | Permuting : 838/1023 [01:31&lt;00:19,    9.62it/s]
+ 82%|████████▏ | Permuting : 839/1023 [01:32&lt;00:19,    9.48it/s]
+ 82%|████████▏ | Permuting : 840/1023 [01:32&lt;00:18,    9.64it/s]
+ 82%|████████▏ | Permuting : 842/1023 [01:32&lt;00:18,    9.81it/s]
+ 82%|████████▏ | Permuting : 843/1023 [01:32&lt;00:18,    9.53it/s]
+ 83%|████████▎ | Permuting : 844/1023 [01:32&lt;00:18,    9.69it/s]
+ 83%|████████▎ | Permuting : 846/1023 [01:32&lt;00:18,    9.71it/s]
+ 83%|████████▎ | Permuting : 847/1023 [01:32&lt;00:18,    9.58it/s]
+ 83%|████████▎ | Permuting : 848/1023 [01:32&lt;00:17,    9.87it/s]
+ 83%|████████▎ | Permuting : 849/1023 [01:33&lt;00:18,    9.32it/s]
+ 83%|████████▎ | Permuting : 850/1023 [01:33&lt;00:18,    9.34it/s]
+ 83%|████████▎ | Permuting : 851/1023 [01:33&lt;00:18,    9.50it/s]
+ 83%|████████▎ | Permuting : 852/1023 [01:33&lt;00:17,    9.80it/s]
+ 83%|████████▎ | Permuting : 853/1023 [01:33&lt;00:19,    8.88it/s]
+ 84%|████████▎ | Permuting : 855/1023 [01:33&lt;00:17,    9.58it/s]
+ 84%|████████▎ | Permuting : 856/1023 [01:33&lt;00:16,    9.88it/s]
+ 84%|████████▍ | Permuting : 857/1023 [01:34&lt;00:18,    8.96it/s]
+ 84%|████████▍ | Permuting : 859/1023 [01:34&lt;00:16,    9.65it/s]
+ 84%|████████▍ | Permuting : 860/1023 [01:34&lt;00:16,    9.80it/s]
+ 84%|████████▍ | Permuting : 861/1023 [01:34&lt;00:17,    9.15it/s]
+ 84%|████████▍ | Permuting : 863/1023 [01:34&lt;00:16,    9.84it/s]
+ 84%|████████▍ | Permuting : 864/1023 [01:34&lt;00:15,    9.99it/s]
+ 85%|████████▍ | Permuting : 867/1023 [01:34&lt;00:15,    9.84it/s]
+ 85%|████████▍ | Permuting : 868/1023 [01:35&lt;00:15,    9.98it/s]
+ 85%|████████▍ | Permuting : 869/1023 [01:35&lt;00:16,    9.24it/s]
+ 85%|████████▌ | Permuting : 870/1023 [01:35&lt;00:16,    9.50it/s]
+ 85%|████████▌ | Permuting : 872/1023 [01:35&lt;00:14,   10.15it/s]
+ 86%|████████▌ | Permuting : 876/1023 [01:35&lt;00:14,   10.25it/s]
+ 86%|████████▌ | Permuting : 877/1023 [01:36&lt;00:15,    9.32it/s]
+ 86%|████████▌ | Permuting : 878/1023 [01:36&lt;00:15,    9.55it/s]
+ 86%|████████▌ | Permuting : 879/1023 [01:36&lt;00:14,    9.79it/s]
+ 86%|████████▌ | Permuting : 880/1023 [01:36&lt;00:14,   10.04it/s]
+ 86%|████████▋ | Permuting : 884/1023 [01:36&lt;00:13,   10.15it/s]
+ 87%|████████▋ | Permuting : 885/1023 [01:36&lt;00:14,    9.37it/s]
+ 87%|████████▋ | Permuting : 887/1023 [01:36&lt;00:13,    9.93it/s]
+ 87%|████████▋ | Permuting : 888/1023 [01:37&lt;00:13,   10.16it/s]
+ 87%|████████▋ | Permuting : 889/1023 [01:37&lt;00:14,    9.37it/s]
+ 87%|████████▋ | Permuting : 890/1023 [01:37&lt;00:13,    9.60it/s]
+ 87%|████████▋ | Permuting : 892/1023 [01:37&lt;00:12,   10.20it/s]
+ 87%|████████▋ | Permuting : 893/1023 [01:37&lt;00:13,    9.39it/s]
+ 88%|████████▊ | Permuting : 896/1023 [01:37&lt;00:12,   10.32it/s]
+ 88%|████████▊ | Permuting : 897/1023 [01:38&lt;00:13,    9.52it/s]
+ 88%|████████▊ | Permuting : 898/1023 [01:38&lt;00:12,    9.74it/s]
+ 88%|████████▊ | Permuting : 899/1023 [01:38&lt;00:12,    9.97it/s]
+ 88%|████████▊ | Permuting : 900/1023 [01:38&lt;00:12,    9.97it/s]
+ 88%|████████▊ | Permuting : 901/1023 [01:38&lt;00:13,    9.30it/s]
+ 88%|████████▊ | Permuting : 903/1023 [01:38&lt;00:12,    9.89it/s]
+ 88%|████████▊ | Permuting : 904/1023 [01:38&lt;00:11,   10.13it/s]
+ 89%|████████▊ | Permuting : 906/1023 [01:39&lt;00:12,    9.54it/s]
+ 89%|████████▉ | Permuting : 908/1023 [01:39&lt;00:11,   10.01it/s]
+ 89%|████████▉ | Permuting : 909/1023 [01:39&lt;00:12,    9.24it/s]
+ 89%|████████▉ | Permuting : 911/1023 [01:39&lt;00:11,    9.80it/s]
+ 89%|████████▉ | Permuting : 912/1023 [01:39&lt;00:11,    9.92it/s]
+ 89%|████████▉ | Permuting : 913/1023 [01:39&lt;00:11,    9.27it/s]
+ 89%|████████▉ | Permuting : 915/1023 [01:39&lt;00:10,    9.84it/s]
+ 90%|████████▉ | Permuting : 916/1023 [01:39&lt;00:10,    9.96it/s]
+ 90%|████████▉ | Permuting : 917/1023 [01:40&lt;00:11,    9.29it/s]
+ 90%|████████▉ | Permuting : 919/1023 [01:40&lt;00:10,    9.87it/s]
+ 90%|████████▉ | Permuting : 920/1023 [01:40&lt;00:10,   10.10it/s]
+ 90%|█████████ | Permuting : 923/1023 [01:40&lt;00:10,    9.86it/s]
+ 90%|█████████ | Permuting : 924/1023 [01:40&lt;00:09,    9.98it/s]
+ 91%|█████████ | Permuting : 927/1023 [01:41&lt;00:09,    9.86it/s]
+ 91%|█████████ | Permuting : 928/1023 [01:41&lt;00:09,   10.08it/s]
+ 91%|█████████ | Permuting : 929/1023 [01:41&lt;00:10,    9.33it/s]
+ 91%|█████████ | Permuting : 930/1023 [01:41&lt;00:09,    9.55it/s]
+ 91%|█████████ | Permuting : 932/1023 [01:41&lt;00:09,   10.01it/s]
+ 91%|█████████ | Permuting : 933/1023 [01:41&lt;00:09,    9.47it/s]
+ 91%|█████████▏| Permuting : 934/1023 [01:41&lt;00:09,    9.58it/s]
+ 91%|█████████▏| Permuting : 936/1023 [01:42&lt;00:08,    9.82it/s]
+ 92%|█████████▏| Permuting : 937/1023 [01:42&lt;00:09,    9.50it/s]
+ 92%|█████████▏| Permuting : 938/1023 [01:42&lt;00:08,    9.62it/s]
+ 92%|█████████▏| Permuting : 940/1023 [01:42&lt;00:08,    9.97it/s]
+ 92%|█████████▏| Permuting : 941/1023 [01:42&lt;00:08,    9.63it/s]
+ 92%|█████████▏| Permuting : 942/1023 [01:42&lt;00:08,    9.63it/s]
+ 92%|█████████▏| Permuting : 943/1023 [01:42&lt;00:08,    9.75it/s]
+ 92%|█████████▏| Permuting : 944/1023 [01:42&lt;00:08,    9.76it/s]
+ 92%|█████████▏| Permuting : 945/1023 [01:43&lt;00:08,    9.42it/s]
+ 92%|█████████▏| Permuting : 946/1023 [01:43&lt;00:08,    9.55it/s]
+ 93%|█████████▎| Permuting : 947/1023 [01:43&lt;00:07,    9.56it/s]
+ 93%|█████████▎| Permuting : 948/1023 [01:43&lt;00:07,    9.81it/s]
+ 93%|█████████▎| Permuting : 949/1023 [01:43&lt;00:07,    9.57it/s]
+ 93%|█████████▎| Permuting : 950/1023 [01:43&lt;00:07,    9.71it/s]
+ 93%|█████████▎| Permuting : 951/1023 [01:43&lt;00:07,    9.47it/s]
+ 93%|█████████▎| Permuting : 952/1023 [01:43&lt;00:07,    9.49it/s]
+ 93%|█████████▎| Permuting : 953/1023 [01:43&lt;00:07,    9.74it/s]
+ 93%|█████████▎| Permuting : 954/1023 [01:43&lt;00:07,    9.75it/s]
+ 93%|█████████▎| Permuting : 955/1023 [01:44&lt;00:07,    9.50it/s]
+ 93%|█████████▎| Permuting : 956/1023 [01:44&lt;00:07,    9.52it/s]
+ 94%|█████████▎| Permuting : 957/1023 [01:44&lt;00:06,    9.80it/s]
+ 94%|█████████▎| Permuting : 958/1023 [01:44&lt;00:06,    9.79it/s]
+ 94%|█████████▎| Permuting : 959/1023 [01:44&lt;00:06,    9.53it/s]
+ 94%|█████████▍| Permuting : 960/1023 [01:44&lt;00:06,    9.68it/s]
+ 94%|█████████▍| Permuting : 961/1023 [01:44&lt;00:06,    9.97it/s]
+ 94%|█████████▍| Permuting : 962/1023 [01:44&lt;00:06,    9.69it/s]
+ 94%|█████████▍| Permuting : 964/1023 [01:44&lt;00:06,    9.83it/s]
+ 94%|█████████▍| Permuting : 965/1023 [01:44&lt;00:05,   10.12it/s]
+ 94%|█████████▍| Permuting : 966/1023 [01:45&lt;00:05,    9.56it/s]
+ 95%|█████████▍| Permuting : 967/1023 [01:45&lt;00:05,    9.57it/s]
+ 95%|█████████▍| Permuting : 968/1023 [01:45&lt;00:05,    9.86it/s]
+ 95%|█████████▍| Permuting : 969/1023 [01:45&lt;00:05,    9.72it/s]
+ 95%|█████████▍| Permuting : 970/1023 [01:45&lt;00:05,    9.32it/s]
+ 95%|█████████▍| Permuting : 971/1023 [01:45&lt;00:05,    9.61it/s]
+ 95%|█████████▌| Permuting : 972/1023 [01:45&lt;00:05,    9.90it/s]
+ 95%|█████████▌| Permuting : 973/1023 [01:45&lt;00:05,    9.62it/s]
+ 95%|█████████▌| Permuting : 974/1023 [01:46&lt;00:05,    9.50it/s]
+ 95%|█████████▌| Permuting : 976/1023 [01:46&lt;00:04,    9.65it/s]
+ 96%|█████████▌| Permuting : 977/1023 [01:46&lt;00:04,    9.80it/s]
+ 96%|█████████▌| Permuting : 978/1023 [01:46&lt;00:04,    9.27it/s]
+ 96%|█████████▌| Permuting : 979/1023 [01:46&lt;00:04,    9.43it/s]
+ 96%|█████████▌| Permuting : 980/1023 [01:46&lt;00:04,    9.59it/s]
+ 96%|█████████▌| Permuting : 981/1023 [01:46&lt;00:04,    9.88it/s]
+ 96%|█████████▌| Permuting : 982/1023 [01:46&lt;00:04,    9.33it/s]
+ 96%|█████████▌| Permuting : 983/1023 [01:47&lt;00:04,    9.48it/s]
+ 96%|█████████▌| Permuting : 984/1023 [01:47&lt;00:04,    9.64it/s]
+ 96%|█████████▋| Permuting : 985/1023 [01:47&lt;00:03,    9.65it/s]
+ 96%|█████████▋| Permuting : 986/1023 [01:47&lt;00:03,    9.51it/s]
+ 96%|█████████▋| Permuting : 987/1023 [01:47&lt;00:03,    9.26it/s]
+ 97%|█████████▋| Permuting : 988/1023 [01:47&lt;00:03,    9.42it/s]
+ 97%|█████████▋| Permuting : 989/1023 [01:47&lt;00:03,    9.31it/s]
+ 97%|█████████▋| Permuting : 990/1023 [01:47&lt;00:03,    9.19it/s]
+ 97%|█████████▋| Permuting : 991/1023 [01:47&lt;00:03,    9.36it/s]
+ 97%|█████████▋| Permuting : 992/1023 [01:47&lt;00:03,    9.52it/s]
+ 97%|█████████▋| Permuting : 993/1023 [01:48&lt;00:03,    9.54it/s]
+ 97%|█████████▋| Permuting : 994/1023 [01:48&lt;00:03,    9.55it/s]
+ 97%|█████████▋| Permuting : 996/1023 [01:48&lt;00:02,    9.87it/s]
+ 97%|█████████▋| Permuting : 997/1023 [01:48&lt;00:02,   10.17it/s]
+ 98%|█████████▊| Permuting : 998/1023 [01:48&lt;00:02,   10.01it/s]
+ 98%|█████████▊| Permuting : 999/1023 [01:48&lt;00:02,    9.70it/s]
+ 98%|█████████▊| Permuting : 1000/1023 [01:48&lt;00:02,    9.57it/s]
+ 98%|█████████▊| Permuting : 1002/1023 [01:48&lt;00:02,   10.18it/s]
+ 98%|█████████▊| Permuting : 1003/1023 [01:49&lt;00:02,    9.59it/s]
+ 98%|█████████▊| Permuting : 1004/1023 [01:49&lt;00:01,    9.73it/s]
+ 98%|█████████▊| Permuting : 1005/1023 [01:49&lt;00:01,    9.88it/s]
+ 98%|█████████▊| Permuting : 1006/1023 [01:49&lt;00:01,    9.88it/s]
+ 98%|█████████▊| Permuting : 1007/1023 [01:49&lt;00:01,   10.04it/s]
+ 99%|█████████▊| Permuting : 1008/1023 [01:49&lt;00:01,    9.88it/s]
+ 99%|█████████▊| Permuting : 1009/1023 [01:49&lt;00:01,    9.73it/s]
+ 99%|█████████▊| Permuting : 1010/1023 [01:49&lt;00:01,    9.88it/s]
+ 99%|█████████▉| Permuting : 1011/1023 [01:49&lt;00:01,   10.20it/s]
+ 99%|█████████▉| Permuting : 1012/1023 [01:49&lt;00:01,   10.03it/s]
+ 99%|█████████▉| Permuting : 1013/1023 [01:49&lt;00:00,   10.34it/s]
+ 99%|█████████▉| Permuting : 1014/1023 [01:50&lt;00:00,   10.16it/s]
+ 99%|█████████▉| Permuting : 1015/1023 [01:50&lt;00:00,   10.48it/s]
+ 99%|█████████▉| Permuting : 1016/1023 [01:50&lt;00:00,   10.12it/s]
+ 99%|█████████▉| Permuting : 1017/1023 [01:50&lt;00:00,    9.80it/s]
+100%|█████████▉| Permuting : 1018/1023 [01:50&lt;00:00,    9.37it/s]
+100%|█████████▉| Permuting : 1019/1023 [01:50&lt;00:00,    9.00it/s]
+100%|█████████▉| Permuting : 1020/1023 [01:50&lt;00:00,    8.78it/s]
+100%|█████████▉| Permuting : 1021/1023 [01:51&lt;00:00,    8.47it/s]
+100%|█████████▉| Permuting : 1022/1023 [01:51&lt;00:00,    8.31it/s]
+100%|██████████| Permuting : 1023/1023 [01:51&lt;00:00,    8.12it/s]
+100%|██████████| Permuting : 1023/1023 [01:51&lt;00:00,    9.17it/s]
+Smallest p-value: 0.0009765625
+It was significant! 🎉
+</pre></div>
+</div>
+<p>MNE-Python comes with a function called <a class="reference external" href="https://mne.tools/stable/generated/mne.stats.summarize_clusters_stc.html#mne.stats.summarize_clusters_stc" title="(in MNE v1.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mne.stats.summarize_clusters_stc()</span></code></a> that
+shows the spatial extent of the clusters:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mne.stats</span><span class="w"> </span><span class="kn">import</span> <a href="https://mne.tools/stable/generated/mne.stats.summarize_clusters_stc.html#mne.stats.summarize_clusters_stc" title="mne.stats.summarize_clusters_stc" class="sphx-glr-backref-module-mne-stats sphx-glr-backref-type-py-function"><span class="n">summarize_clusters_stc</span></a>
+
+<a href="https://mne.tools/stable/generated/mne.SourceEstimate.html#mne.SourceEstimate" title="mne.SourceEstimate" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">stc_all_cluster_vis</span></a> <span class="o">=</span> <a href="https://mne.tools/stable/generated/mne.stats.summarize_clusters_stc.html#mne.stats.summarize_clusters_stc" title="mne.stats.summarize_clusters_stc" class="sphx-glr-backref-module-mne-stats sphx-glr-backref-type-py-function"><span class="n">summarize_clusters_stc</span></a><span class="p">(</span>
+    <span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">t_obs</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">clusters</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pvals</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">H0</span></a><span class="p">),</span>  <span class="c1"># output of spatio_temporal_cluster_1samp_test</span>
+    <span class="n">tstep</span><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">stc_pixels</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tstep</span><span class="p">,</span>  <span class="c1"># difference in time between two time samples</span>
+    <span class="n">vertices</span><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">stc_pixels</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">vertices</span><span class="p">,</span>  <span class="c1"># vertex numbers</span>
+    <span class="n">subject</span><span class="o">=</span><span class="s2">&quot;fsaverage&quot;</span><span class="p">,</span>  <span class="c1"># FreeSurfer subject whose brain to draw</span>
+    <span class="n">p_thresh</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>  <span class="c1"># Only show clusters with an associated p-value below this threshold</span>
+<span class="p">)</span>
+
+<span class="c1"># Plot the summary created by summarize_clusters_stc</span>
+<a href="https://mne.tools/stable/generated/mne.SourceEstimate.html#mne.SourceEstimate.plot" title="mne.SourceEstimate.plot" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-method"><span class="n">stc_all_cluster_vis</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span>
+    <span class="n">hemi</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span>
+    <span class="n">views</span><span class="o">=</span><span class="s2">&quot;ventral&quot;</span><span class="p">,</span>
+    <span class="n">subjects_dir</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a><span class="si">}</span><span class="s2">/freesurfer&quot;</span><span class="p">,</span>
+    <span class="n">time_label</span><span class="o">=</span><span class="s2">&quot;temporal extent (ms)&quot;</span><span class="p">,</span>
+    <span class="n">clim</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="n">pos_lims</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.11</span><span class="p">]),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_03_statistics_tutorial_006.png" srcset="../../_images/sphx_glr_03_statistics_tutorial_006.png" alt="03 statistics tutorial" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;mne.viz._brain._brain.Brain object at 0x7f17ee32c1a0&gt;
+</pre></div>
+</div>
+<p>In the figure above, the first time point shows all the clusters and the
+subsequent timepoints show each cluster individually. The colors
+indicate the extent of the cluster in time (=number of samples).</p>
+<p>🎉 CONGRATULATIONS 🎉 You’ve reached the end of this tutorial series and
+mastered the spatio-temporal cluster-based permutation test!</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (1 minutes 58.777 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-tutorials-03-statistics-tutorial-py">
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/46af2165a32ebb69cdf936cfdfab974e/03_statistics_tutorial.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">03_statistics_tutorial.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/2782ebad4ad874ca6cb270c09cf9d052/03_statistics_tutorial.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">03_statistics_tutorial.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-zip docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/9041a80b0a0cfe1bcc46897d2e842619/03_statistics_tutorial.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">03_statistics_tutorial.zip</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="02_source_level_tutorial.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Tutorial part 2: RSA on source-level MEG data</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Examples</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Tutorial part 3: statistical analysis of group-level RSA results</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#the-purpose-of-cluster-based-permutation-testing">The purpose of cluster-based permutation testing</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster-permutation-testing-on-a-single-channel">Cluster permutation testing on a single channel</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#the-cluster-part-of-cluster-permutation-tests">The “cluster” part of cluster permutation tests</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-permutation-part-of-the-cluster-permutation-test">The “permutation” part of the cluster permutation test</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#computing-the-p-value">Computing the p-value</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpreting-the-p-value">Interpreting the p-value</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#clusters-across-space-and-time">Clusters across space and time</a></li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Marijn van Vliet, Aalto University.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
