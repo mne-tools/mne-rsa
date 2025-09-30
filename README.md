@@ -3,6 +3,7 @@
 [![Unit tests](https://github.com/mne-tools/mne-rsa/workflows/unit%20tests/badge.svg)](https://github.com/mne-tools/mne-rsa/actions?query=workflow%3A%22unit+tests%22)
 [![docs](https://github.com/mne-tools/mne-rsa/workflows/build-docs/badge.svg)](https://github.com/mne-tools/mne-rsa/actions?query=workflow%3Abuild-docs)
 [![doi](https://zenodo.org/badge/194268560.svg)](https://zenodo.org/doi/10.5281/zenodo.11242874)
+[![joss](https://joss.theoj.org/papers/224328eb22eab91aaae44579fb00fdaa/status.svg)](https://joss.theoj.org/papers/224328eb22eab91aaae44579fb00fdaa)
 
 This is a Python package for performing representational similarity analysis (RSA) using [MNE-Python](https://martinos.org/mne/stable/index.html>) data structures.
 The main use-case is to perform RSA using a “searchlight” approach through time and/or a
@@ -16,13 +17,8 @@ Frontiers in Systems Neuroscience, 2(4).
 [https://doi.org/10.3389/neuro.06.004.2008](https://doi.org/10.3389/neuro.06.004.2008)
 
 <picture>
-<<<<<<< HEAD
   <source media="(prefers-color-scheme: light)" srcset="doc/rsa.png">
   <source media="(prefers-color-scheme: dark)" srcset="doc/rsa_dark.png">
-=======
-  <source media="(prefers-color-scheme: dark)" srcset="doc/rsa_dark.png">
-  <source media="(prefers-color-scheme: light)" srcset="doc/rsa.png">
->>>>>>> main
   <img src="doc/rsa.png" width="600">
 </picture>
 
@@ -82,11 +78,11 @@ mne.viz.plot_compare_evokeds({column: result for column, result in zip(columns, 
 </picture>
 
 ## Documentation
-For a detailed guide on RSA analyis from start to finish on an example dataset, see the [tutorials](auto_examples/tutorials/index.html).
+For a detailed guide on RSA analyis from start to finish on an example dataset, see the [tutorials](https://mne.tools/mne-rsa/stable/auto_examples/tutorials/index.html).
 
-For quick guides on how to do specific things, see the [examples](auto_examples/index.html).
+For quick guides on how to do specific things, see the [examples](https://mne.tools/mne-rsa/stable/auto_examples/index.html).
 
-Finally, there is the [API reference](api.html) documentation.
+Finally, there is the [API reference](https://mne.tools/mne-rsa/stable/api.html) documentation.
 
 ## Integration with other packages
 
