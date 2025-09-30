@@ -191,7 +191,7 @@ epochs
 ########################################################################################
 # Each epoch corresponds to the presentation of an image, and the signal across the
 # sensors over time can be used as the neural representation of that image. Hence, one
-# could make a neural RDM of, for exsample the gradiometers in the time window 100 to
+# could make a neural RDM of, for example the gradiometers in the time window 100 to
 # 200 ms after stimulus onset, like this:
 
 neural_rdm = compute_rdm(epochs.get_data("grad", tmin=0.1, tmax=0.2))
