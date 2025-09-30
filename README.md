@@ -99,8 +99,9 @@ For questions and help with your analysis, you are welcome to post on the [MNE f
 
 ## Contributing
 
-Development of the package happens on [Github](https://github.com/mne-tools/mne-rsa).
-Everyone is welcome to raise [issues](https://github.com/mne-tools/mne-rsa/issues) or contribute [pull requests](https://github.com/mne-tools/mne-rsa/pulls).
+Development of the package happens on [Github](https://github.com/mne-tools/mne-rsa) under the umbrella of MNE-tools.
+Everyone is welcome to raise [issues](https://github.com/mne-tools/mne-rsa/issues) or contribute [pull requests](https://github.com/mne-tools/mne-rsa/pulls) as long as they abide by our [Code of Conduct](https://github.com/mne-tools/.github/blob/main/CODE_OF_CONDUCT.md).
+For more information about the ways in which one can contribute, see the [Contributing guide of MNE-Python](https://mne.tools/stable/development/contributing.html), which by and large applies to this project as well.
 
 Here is how to install the additional required packages for developing MNE-RSA and set up the package in development mode:
 
