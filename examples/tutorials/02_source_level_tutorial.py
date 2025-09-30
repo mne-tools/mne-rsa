@@ -111,10 +111,9 @@ else:
 # ----------------
 #
 # In order to perform RSA in source space, we must create source estimates for the
-# epochs. There’s many different ways to do this, for example you’ll learn about
-# beamformers during this workshop, but here we’re going to use the one that is fastest.
-# If we use MNE, we can use a pre-computed inverse operator and apply it to the epochs
-# to quickly get source estimates.
+# epochs. There’s many different ways to do this, and here we’ll use MNE, because we can
+# use the pre-computed inverse operator that is in the data packet and apply it to the
+# epochs to quickly get source estimates.
 
 from mne.minimum_norm import apply_inverse_epochs, read_inverse_operator
 
@@ -189,7 +188,7 @@ rois = [r for r in rois if r.name in roi_sel]
 # row/column of the ``pixel_rdm`` and ``facenet_rdm``. We will use the filenames for
 # this.
 #
-# Searchlight patches swill have a spatial radius of 2cm (=0.02 meters) and a
+# Out searchlight patches will have a spatial radius of 2cm (=0.02 meters) and a
 # temporal radius of 50 ms (=0.05 seconds). We will restrict the analysis to 0.0 to 0.5
 # seconds after stimulus onset and to the cortical regions (``rois``) we’ve selected
 # above. We can optionally set ``n_jobs=-1`` to use all CPU cores and ``verbose=True``
@@ -241,6 +240,6 @@ brain_facenet = stc_rsa[1].plot(
 )
 
 ########################################################################################
-# If you’ve made it this far, you have successfully completed your first sensor-level
+# If you’ve made it this far, you have successfully completed your first source-level
 # RSA! 🎉 This is the end of this tutorial. In the next tutorial, we will discuss
 # group-level analysis and statistics: :ref:`tut-statistics`.

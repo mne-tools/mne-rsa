@@ -12,9 +12,9 @@ statistical analysis. Along the way, we will encounter many of the functions and
 offered by MNE-RSA, which will always be presented in the form of links to the
 :ref:`api_documentation` which you are encouraged to explore.
 
-The dataset we will be working with today is the MEG data of the `Wakeman & Nelson
-(2015) “faces” dataset <https://www.nature.com/articles/sdata20151>`__. During this
-experiment, participants were presented with a series of images, containing:
+The dataset we will be working with today is the `Wakeman & Nelson (2015) “faces”
+dataset <https://www.nature.com/articles/sdata20151>`__. During this experiment,
+participants were presented with a series of images, containing:
 
 - Faces of famous people that the participants likely knew
 - Faces of people that the participants likely did not know
@@ -130,6 +130,7 @@ from mne_rsa import compute_rdm, plot_rdms
 
 pixel_rdm = compute_rdm(pixels)
 plot_rdms(pixel_rdm, names="pixels")
+
 ########################################################################################
 # Staring deeply into this RDM will reveal to you which images belonged to the
 # “scrambled faces” class, as those pixels are quite different from the actual faces and
@@ -173,6 +174,7 @@ facenet_rdm = compute_rdm(embeddings)
 ########################################################################################
 # Lets plot both RDMs side-by-side:
 plot_rdms([pixel_rdm, facenet_rdm], names=["pixels", "facenet"])
+
 ########################################################################################
 # A look at the brain data
 # ------------------------
@@ -189,11 +191,12 @@ epochs
 ########################################################################################
 # Each epoch corresponds to the presentation of an image, and the signal across the
 # sensors over time can be used as the neural representation of that image. Hence, one
-# could make a neural RDM, of for example the gradiometers in the time window 100 to 200
+# could make a neural RDM of, for exsample the gradiometers in the time window 100 to 200
 # ms after stimulus onset, like this:
 
-neural_rdm = compute_rdm(epochs.copy().pick("grad").crop(0.1, 0.2).get_data())
+neural_rdm = compute_rdm(epochs.get_data("grad", tmin=0.1, tmax=0.2))
 plot_rdms(neural_rdm)
+
 ########################################################################################
 # To compute RSA scores, we want to compare the resulting neural RDM with the RDMs we’ve
 # created earlier. However, if we inspect the neural RDM closely, we see that its rows
@@ -328,7 +331,7 @@ plot_rdms(neural_rdms_list[::10], names=[f"t={t:.2f}" for t in times[::10]])
 # Putting it altogether for sensor-level RSA
 # ------------------------------------------
 #
-# Now all that is left to do is compute RSA scored between the neural RDMs you’ve just
+# Now all that is left to do is compute RSA scores between the neural RDMs you’ve just
 # created and the pixel and FaceNet RDMs. We could do this using the
 # :func:`mne_rsa.rsa_gen` function, but I’d rather directly show you the
 # :func:`mne_rsa.rsa_epochs` function that combines computing the neural RDMs with

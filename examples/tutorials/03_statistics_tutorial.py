@@ -10,7 +10,7 @@ statistical analysis.
 The statistical test is described in `Maris & Oostenveld, 2007
 <https://doi.org/10.1016/j.jneumeth.2007.03.024>`__. This functionality is not part of
 the MNE-RSA package, but rather MNE-Python, but it is a large part of a proper RSA
-analysis so I figures any decent RSA tutorial should cover this.
+analysis so I figured any decent RSA tutorial should cover this.
 
 Cluster-based permutation testing is becoming the standard “go-to” method for testing
 for significant differences between experimental conditions in MEG and EEG studies.
@@ -43,7 +43,7 @@ Now that I’ve scared you enough, let’s do this!
 
 In the cell below, update the ``data_path`` variable to point to where you have
 extracted the
-```rsa-data.zip`` <https://github.com/wmvanvliet/neuroscience_tutorials/releases/download/2/rsa-data.zip>`__
+`rsa-data.zip <https://github.com/wmvanvliet/neuroscience_tutorials/releases/download/2/rsa-data.zip>`__
 file to.
 """
 # ruff: noqa: E402
@@ -164,11 +164,14 @@ print(f"{tval=}, {pval=}   Looking great! 😊")
 #    The initial t-test (or whatever stat function you chose) is just to form clusters,
 #    it is not used to determine significance!
 #
-# Let’s do this step manually first, so you get an understanding what is going on: -
-# First, we do the t-test for every timepoint - This is a t-test against 0. To perform a
-# paired t-test, we test ``data_pixels - data_facenet`` - Then, we set a threshold -
-# Everything above the threshold becomes a cluster - We compute the sum of all the
-# t-values inside the cluster
+# Let’s do this step manually first, so you get an understanding what is going on:
+#
+# - First, we do the t-test for every timepoint.
+# - This is a t-test against 0. To perform a paired t-test, we test ``data_pixels -
+#   data_facenet``.
+# - Then, we set a threshold.
+# - Everything above the threshold becomes a cluster.
+# - We compute the sum of all the t-values inside the cluster.
 
 import matplotlib.pyplot as plt
 from mne.stats import ttest_1samp_no_p
@@ -184,7 +187,7 @@ def plot_cluster(tvals, threshold, data_cond1, data_cond2):
     # Make the cluster
     cluster = np.where(tvals > threshold)[0]
 
-    # This is an important statistec: the sum of all t-values in the cluster
+    # This is an important statistic: the sum of all t-values in the cluster
     cluster_tvals_sum = tvals[cluster].sum()
 
     # Show the t-values and how the cluster is determined
@@ -309,8 +312,9 @@ for i, cluster in enumerate(clusters):
 # ~~~~~~~~~~~~~~~~~~~~~
 #
 # Depending on the value of ``tail`` you used in your call to
-# :func:`mne.stats.permutation_cluster_1samp_test` you have either 1, 2, or 3 clusters.
-# The clusters that your test found each have an associated p-value.
+# :func:`mne.stats.permutation_cluster_1samp_test` you have either 1, 2, or 3 clusters
+# for this particular dataset. The clusters that your test found each have an associated
+# p-value.
 #
 # - If the sum-of-t-values for the cluster was **positive**, then the p-value is the
 #   fraction of random permutations that produced a cluster which a sum-of-t-values that
@@ -362,7 +366,7 @@ print(f"Our manually computed cluster p-values are:\t{our_pvals}")
 # ------------------------------
 #
 # The formation of clusters becomes a bit more tricky in the case of
-# :class:`mne.SourceEstimate` objects, where data is defines across vertices in space as
+# :class:`mne.SourceEstimate` objects, where data is defined across vertices in space as
 # well as samples in time.
 #
 # In this case, the first order of business is to morph everything to a template brain,
@@ -405,10 +409,7 @@ stc_pixels[:5]
 # be computed as ``stc_diff = stc_pixels[0] - stc_facenet[0]``. In the
 # cell below, we compute the difference between the two conditions in a
 # pairwise manner for each subject, then compute the mean across the
-# pairwise differences. If you want a nice elegant way to write this,
-# remember that the
-# ```zip()`` <https://docs.python.org/3/library/functions.html#zip>`__
-# function exists.
+# pairwise differences.
 
 stc_pairwise_diff = np.mean(
     [stc1 - stc2 for stc1, stc2 in zip(stc_pixels, stc_facenet)]
@@ -511,7 +512,7 @@ assert adj.shape == (20484, 20484), "You've `adj` seems to have the wrong shape.
 print("All good! 😊")
 
 ########################################################################################
-# Now it’s time to run the big spatio-temporal cluster-based permutation test! `Read its
+# Now it’s time to run the big spatio-temporal cluster-based permutation test! Read its
 # documentation first (:func:`mne.stats.spatio_temporal_cluster_1samp_test`) and then go
 # for it!
 
