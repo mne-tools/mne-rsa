@@ -40,6 +40,7 @@ rdms = mne_rsa.rdm_epochs(
     temporal_radius=None,  # Perform only spatial searchlight
     tmin=0.15,
     tmax=0.25,  # To save time, only analyze this time interval
+    n_jobs=1,  # Use this to specify the number of CPU cores to use
 )
 
 # Unpack the generator into a NumPy array so we can plot it

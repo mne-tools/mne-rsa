@@ -80,6 +80,7 @@ rdms = mne_rsa.rdm_epochs(
     temporal_radius=0.05,  # Temporal radius of the searchlight path in seconds.
     tmin=0.15,
     tmax=0.25,
+    n_jobs=1,  # Use this to specify the number of CPU cores to use.
 )  # To save time, only analyze this time interval
 
 

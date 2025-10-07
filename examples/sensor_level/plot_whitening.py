@@ -83,5 +83,6 @@ rsa_scores = mne_rsa.rsa_epochs(
     noise_cov=noise_cov,
     temporal_radius=0.02,
     y=np.arange(len(epochs)),
+    n_jobs=1,  # Use this to specify the number of CPU cores to use.
 )
 rsa_scores.plot(units=dict(misc="Spearman correlation"))

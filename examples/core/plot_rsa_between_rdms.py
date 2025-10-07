@@ -105,7 +105,7 @@ rsa_results = mne_rsa.rsa(
     metric="spearman",
     verbose=True,
     n_data_rdms=n_times,
-    n_jobs=1,
+    n_jobs=1,  # Use this to specify the number of CPU cores to use.
 )
 
 # Plot the RSA values over time using standard matplotlib commands
