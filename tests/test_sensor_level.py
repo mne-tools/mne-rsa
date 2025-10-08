@@ -103,7 +103,7 @@ class TestEpochRDMs:
             next(rdm_epochs(epochs, temporal_radius=0.02, tmax=0.1, tmin=0.2))
 
         # Paralellization across 2 CPUs
-        rdms = list(rdm_epochs(epochs, temporal_radius=0.02, n_jobs=2))
+        list(rdm_epochs(epochs, temporal_radius=0.02, n_jobs=2))
 
     def test_rdm_spatial(self):
         """Test making RDMs with a searchlight across sensors."""
@@ -132,7 +132,7 @@ class TestEpochRDMs:
             next(rdm_epochs(epochs, spatial_radius=0.05, picks=["EEG 020", "EEG 020"]))
 
         # Paralellization across 2 CPUs
-        rdms = list(rdm_epochs(epochs, spatial_radius=0.05, n_jobs=2))
+        list(rdm_epochs(epochs, spatial_radius=0.05, n_jobs=2))
 
     def test_rdm_spatio_temporal(self):
         """Test making RDMs with a searchlight across both sensors and time."""
@@ -151,9 +151,7 @@ class TestEpochRDMs:
         assert not np.allclose(rdms, rdms_whitened)
 
         # Paralellization across 2 CPUs
-        rdms = list(
-            rdm_epochs(epochs, spatial_radius=0.05, temporal_radius=0.02, n_jobs=2)
-        )
+        list(rdm_epochs(epochs, spatial_radius=0.05, temporal_radius=0.02, n_jobs=2))
 
 
 class TestEvokedRDMs:
@@ -207,6 +205,9 @@ class TestEvokedRDMs:
         with pytest.raises(ValueError, match="`tmax=0.1` is smaller than `tmin=0.2`"):
             next(rdm_evokeds(evokeds, temporal_radius=0.02, tmax=0.1, tmin=0.2))
 
+        # Paralellization across 2 CPUs
+        list(rdm_evokeds(evokeds, temporal_radius=0.02, n_jobs=2))
+
     def test_rdm_spatial(self):
         """Test making RDMs with a searchlight across sensors."""
         evokeds = load_evokeds()
@@ -238,6 +239,9 @@ class TestEvokedRDMs:
                 rdm_evokeds(evokeds, spatial_radius=0.05, picks=["EEG 020", "EEG 020"])
             )
 
+        # Paralellization across 2 CPUs
+        list(rdm_evokeds(evokeds, spatial_radius=0.05, n_jobs=2))
+
     def test_rdm_spatio_temporal(self):
         """Test making RDMs with a searchlight across both sensors and time."""
         evokeds = load_evokeds()
@@ -256,6 +260,9 @@ class TestEvokedRDMs:
             )
         )
         assert not np.allclose(rdms, rdms_whitened)
+
+        # Paralellization across 2 CPUs
+        list(rdm_evokeds(evokeds, spatial_radius=0.05, temporal_radius=0.02, n_jobs=2))
 
 
 class TestEpochRSA:
