@@ -52,7 +52,7 @@ Supported metrics for comparing RDMs:
 The package can be installed either through PIP: `pip install mne-rsa`  
 or through conda using the conda-forge channel: `conda install -c conda-forge mne-rsa`
 
-Installing through either channel will pull in [MNE-Python](https://mne.tools) as a dependency, along with [PyVista](https://pyvista.org) and [Scikit-Learn](https://scikit-learn.org). See [`requirements.txt`](requirements.txt) for the full list of packages.
+Installing through either channel will pull in [MNE-Python](https://mne.tools) as a dependency, along with [Qt 6](https://www.qt.io), [PyVista](https://pyvista.org) and [Scikit-Learn](https://scikit-learn.org). See [`requirements.txt`](requirements.txt) for the full list of packages.
 
 
 ## Example usage
