@@ -46,8 +46,9 @@ bibliography: paper.bib
 
 # Summary
 
-MNE-RSA is a software package for performing representational similarity analysis (RSA) on non-invasive measurements of brain activity, namely electroencephalography (EEG), magnetoencephalography (MEG) and functional magnetic resonance imaging (fMRI).
-It serves as an extension to MNE-Python [@Gramfort2013] to provide a straightforward way to incorporate RSA in a bigger analysis pipeline that otherwise encompasses the many preprocessing steps required for this type of analysis.
+MNE-RSA is a Python package for performing representational similarity analysis (RSA) on non-invasive measurements of brain activity, namely electroencephalography (EEG), magnetoencephalography (MEG) and functional magnetic resonance imaging (fMRI).
+It serves as an extension to MNE-Python [@Gramfort2013], which is a comprehensive package for preprocessing EEG/MEG data and performing source estimation and implements the many preprocessing steps required for RSA analysis.
+After preprocessing is done, MNE-RSA provides a straightforward way to perform the actual RSA on data that is loaded as MNE-Python datastructures.
 
 ## About RSA
 RSA is a technique to compare information flows within complex systems [@Kriegeskorte2008].
@@ -86,7 +87,6 @@ MNE-RSA currently spports the following metrics for comparing RDMs:
 -  Partial correlation (when comparing multiple RDMs at once)
 
 ## Performance
-
 Performing RSA in a searchlight pattern will produce tens of thousands of RDMs that can take up multiple gigabytes of space.
 For memory efficiency, RDMs are never kept in memory longer than they need to be, hence the useage of python generators.
 It is almost always easier to re-compute RDMs than it is to write them to disk and later read them back in.
@@ -94,6 +94,7 @@ The computation of RDMs is parallelized across CPU cores.
 
 
 # Statement of need
+
 While the core computations behind RSA ae simple, getting the details right is hard.
 Creating a "searchlight" patches across the cortex means using geodesic rather than Euclidean distance (\autoref{fig:distances}), combining MEG gradiometers and magnetometers requires signal whitening, creating proper evoked responses requires averaging across stimulus repetitions, and creating reliable brain RDMs requires cross-validated distance metrics [@Guggenmos2018].
 MNE-RSA provides turn-key solutions for all of these details by interfacing with the metadata available in MNE-Python objects.
@@ -102,14 +103,17 @@ MNE-RSA provides turn-key solutions for all of these details by interfacing with
 
 At the time of writing, MNE-RSA has been used in five studies, two of which involve the authors [@Hulten2021; @Xu2024; @Messi2025; @Ghazaryan2023; @Klimovich-Gray2021].
 
-## Software ecosystem
 
-The original RSA-toolbox was implemented in MATLAB (https://github.com/rsagroup/rsatoolbox_matlab), with the third iteration now implemented in python [@Bosch2025].
+## Software ecosystem
+The scope of MNE-RSA is to to add RSA capabilities to MNE-Python and as such is geared towards users who are analyzing EEG/MEG data in Python.
+It provides a streamlined user experience for the most common use cases in this domain.
+
+For users of MATLAB toolboxes such as FieldTrip (https://www.fieldtriptoolbox.org), Brainstorm (https://neuroimage.usc.edu/brainstorm) or EEGLab (https://sccn.ucsd.edu/eeglab), the original RSA-toolbox (https://github.com/rsagroup/rsatoolbox_matlab) may be a good choice.
+The original RSA-toolbox was implemented in MATLAB, although the third iteration now implemented in python [@Bosch2025].
 While its focus is mostly on fMRI analysis, the RSA-toolbox aims for a broad implementation of everything related to RSA and its documentation includes an MEG demo.
-Another python package worth mentioning is PyMVPA [@Hanke2009], which implements a wide array of machine learning methods, including an RSA variant where RDMs are created using decoding performance as distance metric.
+
+A python package worth mentioning is PyMVPA [@Hanke2009], which implements a wide array of machine learning methods, including an RSA variant where RDMs are created using decoding performance as distance metric.
 While it is possible to use it for EEG and MEG analysis, it mostly focuses on fMRI.
-In contrast to these packages, the scope of MNE-RSA is more narrow, aiming to be an extention of MNE-Python.
-Hence its focus is mostly on MEG and EEG analysis, providing a streamlined user experience for the most common use cases in this domain.
 
 
 # Acknowledgements
