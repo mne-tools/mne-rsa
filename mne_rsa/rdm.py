@@ -230,6 +230,9 @@ class rdm_array:
         Scikit-Learn cross validator object (e.g. ``sklearn.model_selection.KFold``) to
         assert fine-grained control over how folds are created.
         Defaults to 1 (no cross-validation).
+    n_jobs : int
+        The number of processes (=number of CPU cores) to use. Specify -1 to use all
+        available cores. Defaults to 1.
 
     Yields
     ------

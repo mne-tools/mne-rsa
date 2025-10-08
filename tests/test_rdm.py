@@ -131,7 +131,7 @@ class TestSelectItemsFromRDM:
             pick_rdm(np.array([[[1, 2, 3]]]), 1)
 
 
-class TestDsmsSearchlight:
+class TestRDMsSearchlight:
     """Test computing RDMs with searchlight patches."""
 
     def test_temporal(self):

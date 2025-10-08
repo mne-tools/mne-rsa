@@ -569,6 +569,7 @@ def rdm_evokeds(
     picks=None,
     tmin=None,
     tmax=None,
+    n_jobs=1,
 ):
     """Generate RDMs in a searchlight pattern on evokeds.
 
@@ -636,6 +637,11 @@ def rdm_evokeds(
         When set, searchlight patches will only be generated up to and including this
         time point. This value is given in seconds. Defaults to ``None``, in which case
         patches are generated up to and including the last time point.
+    n_jobs : int
+        The number of processes (=number of CPU cores) to use. Specify -1 to use all
+        available cores. Defaults to 1.
+
+        .. versionadded:: 1.0
 
     Yields
     ------
@@ -687,6 +693,7 @@ def rdm_evokeds(
         y=y,
         labels=labels,
         n_folds=n_folds,
+        n_jobs=n_jobs,
     )
 
 
@@ -704,6 +711,7 @@ def rdm_epochs(
     tmin=None,
     tmax=None,
     dropped_as_nan=False,
+    n_jobs=1,
 ):
     """Generate RDMs in a searchlight pattern on epochs.
 
@@ -776,6 +784,11 @@ def rdm_epochs(
         NaNs in them during subsequent RSA computations. Defaults to ``False``.
 
         .. versionadded:: 0.8
+    n_jobs : int
+        The number of processes (=number of CPU cores) to use. Specify -1 to use all
+        available cores. Defaults to 1.
+
+        .. versionadded:: 1.0
 
     Yields
     ------
@@ -859,6 +872,7 @@ def rdm_epochs(
         y=y,
         labels=labels,
         n_folds=n_folds,
+        n_jobs=n_jobs,
     )
     if not dropped_as_nan or len(nan_rdm_indices) == 0:
         yield from rdm_gen
