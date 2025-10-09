@@ -64,21 +64,11 @@ When one does this in a "searchlight" pattern across the brain, the result is a 
 
 
 ## Features
-MNE-RSA current supports the following use cases:
+The core functionality of MNE-RSA consists of an efficient pipeline that operates on NumPy arrays, starting from "searchlight" (i.e. multi-dimensional sliding window) indexing, to cross-validated computation of RDMs, to the comparison with "model" RDMs to produce RSA values.
+On top of the general purpose pipeline, MNE-RSA exposes functions that operate on MNE-Python (EEG, MEG) and Nibabel (fMRI) objects and also return the resulting RSA values as such objects.
+Those functions leverage the available metadata, such as the sensor layout, edges of cortical 3D meshes, and voxel sizes, to present a more intuitive API.
 
-- Compute RDMs on arbitrary data
-- Compute RDMs in a searchlight across:
-
-   - vertices/voxels and samples (source level)
-   - sensors and samples (sensor level)
-   - vertices/voxels only (source level)
-   - sensors only (sensor level)
-   - samples only (source and sensor level)
-
-- Use cross-validated distance metrics when computing RDMs
-- And of course: compute RSA between RDMs
-
-MNE-RSA currently spports the following metrics for comparing RDMs:
+MNE-RSA supports all the distance metrics in `scipy.spatial.distance` for computing RDMs and the following metrics for comparing RDMs:
 
 -  Spearman correlation (the default)
 -  Pearson correlation
