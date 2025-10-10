@@ -8,7 +8,7 @@ tags:
   - MEG
   - fMRI
 authors:
-  - given name: Marijn
+  - name: Marijn van Vliet
     dropping-particle: van
     surname: Vliet
     orcid: 0000-0002-6537-6899
@@ -39,7 +39,7 @@ affiliations:
    index: 3
  - name: Inria, CEA, Université Paris-Saclay, Palaiseau, France
    index: 4
-date: 14 June 2025
+date: 10 October 2025
 bibliography: paper.bib
 
 ---
@@ -63,7 +63,7 @@ When one does this in a "searchlight" pattern across the brain, the result is a 
 ![Schematic overview of representational similarity analysis (RSA).\label{fig:rsa}](rsa.pdf){width="10cm"}
 
 
-## Features
+## Functionality
 The core functionality of MNE-RSA consists of an efficient pipeline that operates on NumPy arrays, starting from "searchlight" (i.e. multi-dimensional sliding window) indexing, to cross-validated computation of RDMs, to the comparison with "model" RDMs to produce RSA values.
 On top of the general purpose pipeline, MNE-RSA exposes functions that operate on MNE-Python (EEG, MEG) and Nibabel (fMRI) objects and also return the resulting RSA values as such objects.
 Those functions leverage the available metadata, such as the sensor layout, edges of cortical 3D meshes, and voxel sizes, to present a more intuitive API.
@@ -75,6 +75,29 @@ MNE-RSA supports all the distance metrics in `scipy.spatial.distance` for comput
 -  Kendall’s Tau-A
 -  Linear regression (when comparing multiple RDMs at once)
 -  Partial correlation (when comparing multiple RDMs at once)
+
+Here is an example showcasing how to use MNE-RSA to perform an RSA analysis on sensor-level data with a sliding window across time:
+
+```python
+import mne
+import mne_rsa
+# Load EEG data during which many different word stimuli were presented.
+data_path = mne.datasets.kiloword.data_path(verbose=True)
+epochs = mne.read_epochs(data_path / "kword_metadata-epo.fif")
+# Use MNE-RSA to create model RDMs based on each stimulus property.
+columns = epochs.metadata.columns[1:]  # Skip the first column: WORD
+model_rdms = [mne_rsa.compute_rdm(epochs.metadata[col], metric="euclidean")
+              for col in columns]
+# Use MNE-RSA to perform RSA in a sliding window across time.
+rsa_results = mne_rsa.rsa_epochs(epochs, model_rdms, temporal_radius=0.01)
+# Use MNE-Python to plot the result.
+mne.viz.plot_compare_evokeds(
+    {column: result for column, result in zip(columns, rsa_results)},
+    picks="rsa", legend="lower center", title="RSA result"
+)
+```
+![Result of a sensor-level RSA performed in a sliding window across time](../doc/rsa_result.png){width="10cm"}
+
 
 ## Performance
 Performing RSA in a searchlight pattern will produce tens of thousands of RDMs that can take up multiple gigabytes of space.
