@@ -76,26 +76,61 @@ MNE-RSA supports all the distance metrics in `scipy.spatial.distance` for comput
 -  Linear regression (when comparing multiple RDMs at once)
 -  Partial correlation (when comparing multiple RDMs at once)
 
-Here is an example showcasing how to use MNE-RSA to perform an RSA analysis on sensor-level data with a sliding window across time (the result is shown in \autoref{fig:rsa-result}):
+Here is an example showcasing how to use MNE-RSA to perform an RSA analysis between the Wakeman & Nelson "faces" dataset [@Wakeman2015] and FaceNet embedding vectors.
+The RSA is performed using a searchlight across the cortical surface and a sliding window across time.
+The result is shown in \autoref{fig:rsa-result}.
 
 ```python
-import mne
+import os
+
 import mne_rsa
-# Load EEG data during which many different word stimuli were presented.
-data_path = mne.datasets.kiloword.data_path(verbose=True)
-epochs = mne.read_epochs(data_path / "kword_metadata-epo.fif")
-# Use MNE-RSA to create model RDMs based on each stimulus property.
-columns = epochs.metadata.columns[1:]  # Skip the first column: WORD
-model_rdms = [mne_rsa.compute_rdm(epochs.metadata[col], metric="euclidean")
-              for col in columns]
-# Use MNE-RSA to perform RSA in a sliding window across time.
-rsa_results = mne_rsa.rsa_epochs(epochs, model_rdms, temporal_radius=0.01)
-# Use MNE-Python to plot the result.
-mne.viz.plot_compare_evokeds(
-    {column: result for column, result in zip(columns, rsa_results)},
-    picks="rsa", legend="lower center", title="RSA result")
+import numpy as np
+import pooch
+from mne import read_epochs
+from mne.minimum_norm import apply_inverse_epochs, read_inverse_operator
+
+# Download the Wakeman & Nelson (2015) “faces” dataset.
+pooch.retrieve(
+    "https://github.com/wmvanvliet/neuroscience_tutorials/releases/download/2/rsa-data.zip",
+    known_hash="7c2c1f220b7519798534769e10cabd43690a46dca280729b0fea0599b78d142b",
+    processor=pooch.Unzip(extract_dir=os.getcwd()),
+)
+
+# Use FaceNet embeddings to compute the model RDM.
+facenet = np.load("./data/stimuli/facenet_embeddings.npz")
+model_rdm = mne_rsa.compute_rdm(facenet["embeddings"])
+
+# Load MEG epochs and perform source estimation.
+epochs = read_epochs("./data/sub-02/sub-02-epo.fif")
+inv = read_inverse_operator("./data/sub-02/sub-02-inv.fif")
+stcs = apply_inverse_epochs(epochs, inv, lambda2=1 / 9, pick_ori="normal")
+
+# Use MNE-RSA to perform RSA analysis using a seachlight.
+stc_rsa = mne_rsa.rsa_stcs(
+    stcs,
+    model_rdm,
+    src=inv["src"],
+    labels_stcs=epochs.metadata.file,
+    labels_rdm_model=facenet["filenames"],
+    tmin=0,
+    tmax=0.5,
+    spatial_radius=0.02,
+    temporal_radius=0.05,
+    verbose=True,
+    n_jobs=-1,
+)
+
+# Plot the result using MNE-Python.
+stc_rsa.plot(
+    "sub-02",
+    subjects_dir="./data/freesurfer",
+    initial_time=0.193,
+    hemi="both",
+    views="caudal",
+    background="white",
+)
 ```
-![Result of a sensor-level RSA performed with a sliding window across time.\label{fig:rsa-result}](../doc/rsa_result.png){width=\textwidth}
+![Result of a RSA performed with a sliding window across time.\label{fig:rsa-result}](rsa_wakeman.jpg){width=\textwidth}
 
 
 ## Performance
