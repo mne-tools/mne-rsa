@@ -76,7 +76,7 @@ MNE-RSA supports all the distance metrics in `scipy.spatial.distance` for comput
 -  Linear regression (when comparing multiple RDMs at once)
 -  Partial correlation (when comparing multiple RDMs at once)
 
-Here is an example showcasing how to use MNE-RSA to perform an RSA analysis between the Wakeman & Nelson "faces" dataset [@Wakeman2015] and FaceNet embedding vectors.
+Here is an example showcasing how to use MNE-RSA to perform an RSA analysis between the Wakeman & Nelson "faces" dataset[@Wakeman2015] and FaceNet[@Schroff2015] embedding vectors.
 The RSA is performed using a searchlight across the cortical surface and a sliding window across time.
 The result is shown in \autoref{fig:rsa-result}.
 
@@ -91,7 +91,7 @@ from mne.minimum_norm import apply_inverse_epochs, read_inverse_operator
 
 # Download the Wakeman & Nelson (2015) “faces” dataset.
 pooch.retrieve(
-    "https://github.com/wmvanvliet/neuroscience_tutorials/releases/download/2/rsa-data.zip",
+    "https://tinyurl.com/3rr3vb6u",
     known_hash="7c2c1f220b7519798534769e10cabd43690a46dca280729b0fea0599b78d142b",
     processor=pooch.Unzip(extract_dir=os.getcwd()),
 )
@@ -130,7 +130,7 @@ stc_rsa.plot(
     background="white",
 )
 ```
-![Result of a RSA performed with a sliding window across time.\label{fig:rsa-result}](rsa_wakeman.jpg){width="12cm"}
+![Result of a RSA performed with a sliding window across time.\label{fig:rsa-result}](rsa_wakeman.jpg){width="8cm"}
 
 
 ## Performance
