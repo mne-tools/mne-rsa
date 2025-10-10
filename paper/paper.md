@@ -93,8 +93,7 @@ rsa_results = mne_rsa.rsa_epochs(epochs, model_rdms, temporal_radius=0.01)
 # Use MNE-Python to plot the result.
 mne.viz.plot_compare_evokeds(
     {column: result for column, result in zip(columns, rsa_results)},
-    picks="rsa", legend="lower center", title="RSA result"
-)
+    picks="rsa", legend="lower center", title="RSA result")
 ```
 ![Result of a sensor-level RSA performed with a sliding window across time.\label{fig:rsa-result}](../doc/rsa_result.png){width=\textwidth}
 
