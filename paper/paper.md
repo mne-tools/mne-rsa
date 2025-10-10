@@ -107,17 +107,17 @@ stcs = apply_inverse_epochs(epochs, inv, lambda2=1 / 9, pick_ori="normal")
 
 # Use MNE-RSA to perform RSA analysis using a seachlight.
 stc_rsa = mne_rsa.rsa_stcs(
-    stcs,
-    model_rdm,
-    src=inv["src"],
-    labels_stcs=epochs.metadata.file,
+    stcs,  # data to perform RSA on
+    model_rdm,  # model RDM
+    labels_stcs=epochs.metadata.file,  # align epochs and embedding vectors
     labels_rdm_model=facenet["filenames"],
-    tmin=0,
+    tmin=0,  # restrict the analysis to a time window
     tmax=0.5,
-    spatial_radius=0.02,
-    temporal_radius=0.05,
-    verbose=True,
-    n_jobs=-1,
+    spatial_radius=0.02,  # use a searchlight across the cortex
+    src=inv["src"],  # to compute geodesic distance
+    temporal_radius=0.05,  # use a sliding window across time
+    verbose=True,  # display a progress bar
+    n_jobs=-1,  # use all available CPU cores
 )
 
 # Plot the result using MNE-Python.
@@ -130,7 +130,7 @@ stc_rsa.plot(
     background="white",
 )
 ```
-![Result of a RSA performed with a sliding window across time.\label{fig:rsa-result}](rsa_wakeman.jpg){width=\textwidth}
+![Result of a RSA performed with a sliding window across time.\label{fig:rsa-result}](rsa_wakeman.jpg){width="12cm"}
 
 
 ## Performance
