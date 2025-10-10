@@ -76,7 +76,7 @@ MNE-RSA supports all the distance metrics in `scipy.spatial.distance` for comput
 -  Linear regression (when comparing multiple RDMs at once)
 -  Partial correlation (when comparing multiple RDMs at once)
 
-Here is an example showcasing how to use MNE-RSA to perform an RSA analysis on sensor-level data with a sliding window across time:
+Here is an example showcasing how to use MNE-RSA to perform an RSA analysis on sensor-level data with a sliding window across time (the result is shown in \autoref{fig:rsa-result}):
 
 ```python
 import mne
@@ -96,7 +96,7 @@ mne.viz.plot_compare_evokeds(
     picks="rsa", legend="lower center", title="RSA result"
 )
 ```
-![Result of a sensor-level RSA performed in a sliding window across time](../doc/rsa_result.png){width="10cm"}
+![Result of a sensor-level RSA performed with a sliding window across time.\label{fig:rsa-result}](../doc/rsa_result.png){width=\textwidth}
 
 
 ## Performance
