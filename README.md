@@ -62,16 +62,20 @@ Basic example on the EEG “kiloword” data:
 ```python
 import mne
 import mne_rsa
+# Load EEG data during which many different word stimuli were presented.
 data_path = mne.datasets.kiloword.data_path(verbose=True)
 epochs = mne.read_epochs(data_path / "kword_metadata-epo.fif")
-# Create model RDMs based on each stimulus property
+# Use MNE-RSA to create model RDMs based on each stimulus property.
 columns = epochs.metadata.columns[1:]  # Skip the first column: WORD
-model_rdms = [mne_rsa.compute_rdm(epochs.metadata[col], metric="euclidean") for col in columns]
-# Perform RSA in a sliding window across time
+model_rdms = [mne_rsa.compute_rdm(epochs.metadata[col], metric="euclidean")
+              for col in columns]
+# Use MNE-RSA to perform RSA in a sliding window across time.
 rsa_results = mne_rsa.rsa_epochs(epochs, model_rdms, temporal_radius=0.01)
-# Plot the result
-mne.viz.plot_compare_evokeds({column: result for column, result in zip(columns, rsa_results)},
-                            picks="rsa", legend="lower center", title="RSA result")
+# Use MNE-Python to plot the result.
+mne.viz.plot_compare_evokeds(
+    {column: result for column, result in zip(columns, rsa_results)},
+    picks="rsa", legend="lower center", title="RSA result"
+)
 ```
 <picture>
   <source media="(prefers-color-scheme: light)" srcset="doc/rsa_result.png">
