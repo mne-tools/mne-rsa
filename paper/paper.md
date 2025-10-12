@@ -8,7 +8,7 @@ tags:
   - MEG
   - fMRI
 authors:
-  - given name: Marijn
+  - name: Marijn van Vliet
     dropping-particle: van
     surname: Vliet
     orcid: 0000-0002-6537-6899
@@ -39,7 +39,7 @@ affiliations:
    index: 3
  - name: Inria, CEA, Université Paris-Saclay, Palaiseau, France
    index: 4
-date: 14 June 2025
+date: 10 October 2025
 bibliography: paper.bib
 
 ---
@@ -63,28 +63,75 @@ When one does this in a "searchlight" pattern across the brain, the result is a 
 ![Schematic overview of representational similarity analysis (RSA).\label{fig:rsa}](rsa.pdf){width="10cm"}
 
 
-## Features
-MNE-RSA current supports the following use cases:
+## Functionality
+The core functionality of MNE-RSA consists of an efficient pipeline that operates on NumPy arrays, starting from "searchlight" (i.e. multi-dimensional sliding window) indexing, to cross-validated computation of RDMs, to the comparison with "model" RDMs to produce RSA values.
+On top of the general purpose pipeline, MNE-RSA exposes functions that operate on MNE-Python (EEG, MEG) and Nibabel (fMRI) objects and also return the resulting RSA values as such objects.
+Those functions leverage the available metadata, such as the sensor layout, edges of cortical 3D meshes, and voxel sizes, to present a more intuitive API.
 
-- Compute RDMs on arbitrary data
-- Compute RDMs in a searchlight across:
-
-   - vertices/voxels and samples (source level)
-   - sensors and samples (sensor level)
-   - vertices/voxels only (source level)
-   - sensors only (sensor level)
-   - samples only (source and sensor level)
-
-- Use cross-validated distance metrics when computing RDMs
-- And of course: compute RSA between RDMs
-
-MNE-RSA currently spports the following metrics for comparing RDMs:
+MNE-RSA supports all the distance metrics in `scipy.spatial.distance` for computing RDMs and the following metrics for comparing RDMs:
 
 -  Spearman correlation (the default)
 -  Pearson correlation
 -  Kendall’s Tau-A
 -  Linear regression (when comparing multiple RDMs at once)
 -  Partial correlation (when comparing multiple RDMs at once)
+
+Here is an example showcasing how to use MNE-RSA to perform an RSA analysis between the Wakeman & Nelson "faces" dataset[@Wakeman2015] and FaceNet[@Schroff2015] embedding vectors.
+The RSA is performed using a searchlight across the cortical surface and a sliding window across time.
+The result is shown in \autoref{fig:rsa-result}.
+
+```python
+import os
+
+import mne_rsa
+import numpy as np
+import pooch
+from mne import read_epochs
+from mne.minimum_norm import apply_inverse_epochs, read_inverse_operator
+
+# Download the Wakeman & Nelson (2015) “faces” dataset.
+pooch.retrieve(
+    "https://tinyurl.com/3rr3vb6u",
+    known_hash="7c2c1f220b7519798534769e10cabd43690a46dca280729b0fea0599b78d142b",
+    processor=pooch.Unzip(extract_dir=os.getcwd()),
+)
+
+# Use FaceNet embeddings to compute the model RDM.
+facenet = np.load("./data/stimuli/facenet_embeddings.npz")
+model_rdm = mne_rsa.compute_rdm(facenet["embeddings"])
+
+# Load MEG epochs and perform source estimation.
+epochs = read_epochs("./data/sub-02/sub-02-epo.fif")
+inv = read_inverse_operator("./data/sub-02/sub-02-inv.fif")
+stcs = apply_inverse_epochs(epochs, inv, lambda2=1 / 9, pick_ori="normal")
+
+# Use MNE-RSA to perform RSA analysis using a seachlight.
+stc_rsa = mne_rsa.rsa_stcs(
+    stcs,  # data to perform RSA on
+    model_rdm,  # model RDM
+    labels_stcs=epochs.metadata.file,  # align epochs and embedding vectors
+    labels_rdm_model=facenet["filenames"],
+    tmin=0,  # restrict the analysis to a time window
+    tmax=0.5,
+    spatial_radius=0.02,  # use a searchlight across the cortex
+    src=inv["src"],  # to compute geodesic distance
+    temporal_radius=0.05,  # use a sliding window across time
+    verbose=True,  # display a progress bar
+    n_jobs=-1,  # use all available CPU cores
+)
+
+# Plot the result using MNE-Python.
+stc_rsa.plot(
+    "sub-02",
+    subjects_dir="./data/freesurfer",
+    initial_time=0.193,
+    hemi="both",
+    views="caudal",
+    background="white",
+)
+```
+![Result of a RSA performed with a sliding window across time.\label{fig:rsa-result}](rsa_wakeman.jpg){width="8cm"}
+
 
 ## Performance
 Performing RSA in a searchlight pattern will produce tens of thousands of RDMs that can take up multiple gigabytes of space.
@@ -95,7 +142,7 @@ The computation of RDMs is parallelized across CPU cores.
 
 # Statement of need
 
-While the core computations behind RSA ae simple, getting the details right is hard.
+While the core computations behind RSA are simple, getting the details right is hard.
 Creating a "searchlight" patches across the cortex means using geodesic rather than Euclidean distance (\autoref{fig:distances}), combining MEG gradiometers and magnetometers requires signal whitening, creating proper evoked responses requires averaging across stimulus repetitions, and creating reliable brain RDMs requires cross-validated distance metrics [@Guggenmos2018].
 MNE-RSA provides turn-key solutions for all of these details by interfacing with the metadata available in MNE-Python objects.
 
