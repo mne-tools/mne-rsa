@@ -142,7 +142,7 @@ The computation of RDMs is parallelized across CPU cores.
 
 # Statement of need
 
-While the core computations behind RSA ae simple, getting the details right is hard.
+While the core computations behind RSA are simple, getting the details right is hard.
 Creating a "searchlight" patches across the cortex means using geodesic rather than Euclidean distance (\autoref{fig:distances}), combining MEG gradiometers and magnetometers requires signal whitening, creating proper evoked responses requires averaging across stimulus repetitions, and creating reliable brain RDMs requires cross-validated distance metrics [@Guggenmos2018].
 MNE-RSA provides turn-key solutions for all of these details by interfacing with the metadata available in MNE-Python objects.
 
