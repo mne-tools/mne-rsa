@@ -1,0 +1,1834 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" data-theme="auto">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Tutorial part 2: RSA on source-level MEG data &#8212; mne-rsa 1.0-dev documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "auto";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "auto";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=a2628a1b"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/tutorials/02_source_level_tutorial';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '_static/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'dev';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <link rel="canonical" href="https://mne.tools/mne-rsa/auto_examples/tutorials/02_source_level_tutorial.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Tutorial part 3: statistical analysis of group-level RSA results" href="03_statistics_tutorial.html" />
+    <link rel="prev" title="Tutorial part 1: RSA on sensor-level MEG data" href="01_sensor_level_tutorial.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.0-dev" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="auto">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">mne-rsa 1.0-dev documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/mne-tools/mne-rsa" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/mne-tools/mne-rsa" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_sensor_level_tutorial.html">Tutorial part 1: RSA on sensor-level MEG data</a></li>
+
+
+
+
+
+
+
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Tutorial part 2: RSA on source-level MEG data</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="03_statistics_tutorial.html">Tutorial part 3: statistical analysis of group-level RSA results</a></li>
+
+
+
+
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none"></div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-auto-examples-tutorials-02-source-level-tutorial-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code.</p>
+</div>
+<section class="sphx-glr-example-title" id="tutorial-part-2-rsa-on-source-level-meg-data">
+<span id="tut-source-level"></span><span id="sphx-glr-auto-examples-tutorials-02-source-level-tutorial-py"></span><h1>Tutorial part 2: RSA on source-level MEG data<a class="headerlink" href="#tutorial-part-2-rsa-on-source-level-meg-data" title="Link to this heading">#</a></h1>
+<p>In this tutorial, we will perform source-level RSA analysis on MEG data.</p>
+<p>If you haven’t done so, I recommend first completing <a class="reference internal" href="01_sensor_level_tutorial.html#tut-sensor-level"><span class="std std-ref">Tutorial part 1: RSA on sensor-level MEG data</span></a>.</p>
+<p>While sensor-level RSA is useful to get a first impression of how neural representations
+unfold over time, it is not really suited to study differences between brain regions.
+For this, you want to so RSA in a searchlight pattern across the cortex.</p>
+<p>The knowledge you have gained from your sensor-level analysis will serve you well for
+this part, as the API of MNE-RSA is mostly the same across sensor- and source-level
+analysis. However, performing a searchlight analysis is a heavy computation that can
+take a lot of time. Hence, we will also learn about the API regarding restricting the
+analysis to parts of the data in several ways.</p>
+<p>In the cell below, update the <code class="docutils literal notranslate"><span class="pre">data_path</span></code> variable to point to where you have
+extracted the <a class="reference external" href="https://github.com/wmvanvliet/neuroscience_tutorials/releases/download/2/rsa-data.zip">rsa-data.zip</a>
+file to.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># ruff: noqa: E402</span>
+<span class="c1"># sphinx_gallery_thumbnail_number=3</span>
+
+<span class="c1"># Set this to where you&#39;ve extracted `data.zip` to</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a> <span class="o">=</span> <span class="s2">&quot;data&quot;</span>
+</pre></div>
+</div>
+<p>We’ll start by loading the <code class="docutils literal notranslate"><span class="pre">epochs</span></code> again, but this time, we will restrict them to
+only two experimental conditions: the first presentations of famous faces versus
+scrambled faces. This will reduce the number of rows/columns in our RDMs and hence
+speed up computing and comparing them.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">mne</span>
+
+<span class="n">epochs</span> <span class="o">=</span> <a href="https://mne.tools/stable/generated/mne.read_epochs.html#mne.read_epochs" title="mne.read_epochs" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-function"><span class="n">mne</span><span class="o">.</span><span class="n">read_epochs</span></a><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a><span class="si">}</span><span class="s2">/sub-02/sub-02-epo.fif&quot;</span><span class="p">)</span>
+<span class="n">epochs</span> <span class="o">=</span> <span class="n">epochs</span><span class="p">[[</span><span class="s2">&quot;face/famous/first&quot;</span><span class="p">,</span> <span class="s2">&quot;scrambled/first&quot;</span><span class="p">]]</span>
+<span class="n">epochs</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<script type="text/javascript">
+    // must be `var` (not `const`) because this can get embedded multiple times on a page
+var toggleVisibility = (className) => {
+
+    const elements = document.querySelectorAll(`.${className}`);
+
+    elements.forEach(element => {
+        if (element.classList.contains("mne-repr-section-header")) {
+            return  // Don't collapse the section header row
+        }
+        element.classList.toggle("mne-repr-collapsed");
+    });
+
+    // trigger caret to rotate
+    var sel = `.mne-repr-section-header.${className} > th.mne-repr-section-toggle > button`;
+    const button = document.querySelector(sel);
+    button.classList.toggle("collapsed");
+
+    // adjust tooltip
+    sel = `tr.mne-repr-section-header.${className}`;
+    const secHeadRow = document.querySelector(sel);
+    secHeadRow.classList.toggle("collapsed");
+    secHeadRow.title = secHeadRow.title === "Hide section" ? "Show section" : "Hide section";
+}
+</script>
+
+<style type="text/css">
+    /*
+Styles in this section apply both to the sphinx-built website docs and to notebooks
+rendered in an IDE or in Jupyter. In our web docs, styles here are complemented by
+doc/_static/styles.css and other CSS files (e.g. from the sphinx theme, sphinx-gallery,
+or bootstrap). In IDEs/Jupyter, those style files are unavailable, so only the rules in
+this file apply (plus whatever default styling the IDE applies).
+*/
+.mne-repr-table {
+    display: inline;  /* prevent using full container width */
+}
+.mne-repr-table tr.mne-repr-section-header > th {
+    padding-top: 1rem;
+    text-align: left;
+    vertical-align: middle;
+}
+.mne-repr-section-toggle > button {
+    all: unset;
+    display: block;
+    height: 1rem;
+    width: 1rem;
+}
+.mne-repr-section-toggle > button > svg {
+    height: 60%;
+}
+
+/* transition (rotation) effects on the collapser button */
+.mne-repr-section-toggle > button.collapsed > svg {
+    transition: 0.1s ease-out;
+    transform: rotate(-90deg);
+}
+.mne-repr-section-toggle > button:not(.collapsed) > svg {
+    transition: 0.1s ease-out;
+    transform: rotate(0deg);
+}
+
+/* hide collapsed table rows */
+.mne-repr-collapsed {
+    display: none;
+}
+
+
+@layer {
+    /*
+    Selectors in a `@layer` will always be lower-precedence than selectors outside the
+    layer. So even though e.g. `div.output_html` is present in the sphinx-rendered
+    website docs, the styles here won't take effect there as long as some other rule
+    somewhere in the page's CSS targets the same element.
+
+    In IDEs or Jupyter notebooks, though, the CSS files from the sphinx theme,
+    sphinx-gallery, and bootstrap are unavailable, so these styles will apply.
+
+    Notes:
+
+    - the selector `.accordion-body` is for MNE Reports
+    - the selector `.output_html` is for VSCode's notebook interface
+    - the selector `.jp-RenderedHTML` is for Jupyter notebook
+    - variables starting with `--theme-` are VSCode-specific.
+    - variables starting with `--jp-` are Jupyter styles, *some of which* are also
+      available in VSCode. Here we try the `--theme-` variable first, then fall back to
+      the `--jp-` ones.
+    */
+    .mne-repr-table {
+        --mne-toggle-color: var(--theme-foreground, var(--jp-ui-font-color1));
+        --mne-button-bg-color: var(--theme-button-background, var(--jp-info-color0, var(--jp-content-link-color)));
+        --mne-button-fg-color: var(--theme-button-foreground, var(--jp-ui-inverse-font-color0, var(--jp-editor-background)));
+        --mne-button-hover-bg-color: var(--theme-button-hover-background, var(--jp-info-color1));
+        --mne-button-radius: var(--jp-border-radius, 0.25rem);
+    }
+    /* chevron position/alignment; in VSCode it looks ok without adjusting */
+    .accordion-body .mne-repr-section-toggle > button,
+    .jp-RenderedHTML .mne-repr-section-toggle > button {
+        padding: 0 0 45% 25% !important;
+    }
+    /* chevron color; MNE Report doesn't have light/dark mode */
+    div.output_html .mne-repr-section-toggle > button > svg > path,
+    .jp-RenderedHTML .mne-repr-section-toggle > button > svg > path {
+        fill: var(--mne-toggle-color);
+    }
+    .accordion-body .mne-ch-names-btn,
+    div.output_html .mne-ch-names-btn,
+    .jp-RenderedHTML .mne-ch-names-btn {
+        -webkit-border-radius: var(--mne-button-radius);
+        -moz-border-radius: var(--mne-button-radius);
+        border-radius: var(--mne-button-radius);
+        border: none;
+        background-image: none;
+        background-color: var(--mne-button-bg-color);
+        color: var(--mne-button-fg-color);
+        font-size: inherit;
+        min-width: 1.5rem;
+        padding: 0.25rem;
+        text-align: center;
+        text-decoration: none;
+    }
+    .accordion-body .mne-ch-names-btn:hover,
+    div.output_html .mne.ch-names-btn:hover,
+    .jp-RenderedHTML .mne-ch-names-btn:hover {
+        background-color: var(--mne-button-hover-bg-color);
+        text-decoration: underline;
+    }
+    .accordion-body .mne-ch-names-btn:focus-visible,
+    div.output_html .mne-ch-names-btn:focus-visible,
+    .jp-RenderedHTML .mne-ch-names-btn:focus-visible {
+        outline: 0.1875rem solid var(--mne-button-bg-color) !important;
+        outline-offset: 0.1875rem !important;
+    }
+}
+</style>
+
+
+
+<table class="table mne-repr-table">
+
+
+
+
+
+
+
+
+<tr class="mne-repr-section-header general-24052f70-6d2c-426c-ba9f-abbb59d2ffc7"
+     title="Hide section"
+    onclick="toggleVisibility('general-24052f70-6d2c-426c-ba9f-abbb59d2ffc7')">
+    <th class="mne-repr-section-toggle">
+        <button >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
+        </button>
+    </th>
+    <th colspan="2">
+        <strong>General</strong>
+    </th>
+</tr>
+
+
+<tr class="repr-element general-24052f70-6d2c-426c-ba9f-abbb59d2ffc7 ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Filename(s)</td>
+    <td>
+
+        sub-02-epo.fif
+
+
+    </td>
+</tr>
+
+<tr class="repr-element general-24052f70-6d2c-426c-ba9f-abbb59d2ffc7 ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>MNE object type</td>
+    <td>EpochsFIF</td>
+</tr>
+<tr class="repr-element general-24052f70-6d2c-426c-ba9f-abbb59d2ffc7 ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Measurement date</td>
+
+    <td>2009-04-09 at 11:04:14 UTC</td>
+
+</tr>
+<tr class="repr-element general-24052f70-6d2c-426c-ba9f-abbb59d2ffc7 ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Participant</td>
+
+
+
+</tr>
+<tr class="repr-element general-24052f70-6d2c-426c-ba9f-abbb59d2ffc7 ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Experimenter</td>
+
+    <td>MEG</td>
+
+</tr>
+
+
+
+
+
+
+
+
+<tr class="mne-repr-section-header acquisition-61fb9f35-133b-422b-a7ab-ccff63e9aa37"
+     title="Hide section"
+    onclick="toggleVisibility('acquisition-61fb9f35-133b-422b-a7ab-ccff63e9aa37')">
+    <th class="mne-repr-section-toggle">
+        <button >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
+        </button>
+    </th>
+    <th colspan="2">
+        <strong>Acquisition</strong>
+    </th>
+</tr>
+
+
+
+
+
+<tr class="repr-element acquisition-61fb9f35-133b-422b-a7ab-ccff63e9aa37 ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Total number of events</td>
+    <td>297</td>
+</tr>
+
+
+<tr class="repr-element acquisition-61fb9f35-133b-422b-a7ab-ccff63e9aa37 ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Events counts</td>
+
+    <td>
+
+        face/famous/first: 147
+        <br />
+
+        scrambled/first: 150
+
+
+    </td>
+
+</tr>
+
+
+<tr class="repr-element acquisition-61fb9f35-133b-422b-a7ab-ccff63e9aa37 ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Time range</td>
+    <td>-0.200 – 2.900 s</td>
+</tr>
+
+
+<tr class="repr-element acquisition-61fb9f35-133b-422b-a7ab-ccff63e9aa37 ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Baseline</td>
+    <td>-0.200 – 0.000 s</td>
+</tr>
+
+
+<tr class="repr-element acquisition-61fb9f35-133b-422b-a7ab-ccff63e9aa37 ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Sampling frequency</td>
+    <td>220.00 Hz</td>
+</tr>
+
+
+<tr class="repr-element acquisition-61fb9f35-133b-422b-a7ab-ccff63e9aa37 ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Time points</td>
+    <td>683</td>
+</tr>
+
+
+<tr class="repr-element acquisition-61fb9f35-133b-422b-a7ab-ccff63e9aa37 ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Metadata</td>
+    <td>297 rows × 2 columns</td>
+</tr>
+
+
+
+
+
+
+
+
+
+<tr class="mne-repr-section-header channels-5dc82ce6-917a-42f0-9db4-79770faf4928"
+     title="Hide section"
+    onclick="toggleVisibility('channels-5dc82ce6-917a-42f0-9db4-79770faf4928')">
+    <th class="mne-repr-section-toggle">
+        <button >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
+        </button>
+    </th>
+    <th colspan="2">
+        <strong>Channels</strong>
+    </th>
+</tr>
+
+
+
+<tr class="repr-element channels-5dc82ce6-917a-42f0-9db4-79770faf4928 ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Magnetometers</td>
+    <td>
+        <button class="mne-ch-names-btn sd-sphinx-override sd-btn sd-btn-info sd-text-wrap sd-shadow-sm" onclick="alert('Good Magnetometers:\n\nMEG0111, MEG0121, MEG0131, MEG0141, MEG0211, MEG0221, MEG0231, MEG0241, MEG0311, MEG0321, MEG0331, MEG0341, MEG0411, MEG0421, MEG0431, MEG0441, MEG0511, MEG0521, MEG0531, MEG0541, MEG0611, MEG0621, MEG0631, MEG0641, MEG0711, MEG0721, MEG0731, MEG0741, MEG0811, MEG0821, MEG0911, MEG0921, MEG0931, MEG0941, MEG1011, MEG1021, MEG1031, MEG1041, MEG1111, MEG1121, MEG1131, MEG1141, MEG1211, MEG1221, MEG1231, MEG1241, MEG1311, MEG1321, MEG1331, MEG1341, MEG1411, MEG1421, MEG1431, MEG1441, MEG1511, MEG1521, MEG1531, MEG1541, MEG1611, MEG1621, MEG1631, MEG1641, MEG1711, MEG1721, MEG1731, MEG1741, MEG1811, MEG1821, MEG1831, MEG1841, MEG1911, MEG1921, MEG1931, MEG1941, MEG2011, MEG2021, MEG2031, MEG2041, MEG2111, MEG2121, MEG2131, MEG2141, MEG2211, MEG2221, MEG2231, MEG2241, MEG2311, MEG2321, MEG2331, MEG2341, MEG2411, MEG2421, MEG2431, MEG2441, MEG2511, MEG2521, MEG2531, MEG2541, MEG2611, MEG2621, MEG2631, MEG2641')" title="(Click to open in popup)&#13;&#13;MEG0111, MEG0121, MEG0131, MEG0141, MEG0211, MEG0221, MEG0231, MEG0241, MEG0311, MEG0321, MEG0331, MEG0341, MEG0411, MEG0421, MEG0431, MEG0441, MEG0511, MEG0521, MEG0531, MEG0541, MEG0611, MEG0621, MEG0631, MEG0641, MEG0711, MEG0721, MEG0731, MEG0741, MEG0811, MEG0821, MEG0911, MEG0921, MEG0931, MEG0941, MEG1011, MEG1021, MEG1031, MEG1041, MEG1111, MEG1121, MEG1131, MEG1141, MEG1211, MEG1221, MEG1231, MEG1241, MEG1311, MEG1321, MEG1331, MEG1341, MEG1411, MEG1421, MEG1431, MEG1441, MEG1511, MEG1521, MEG1531, MEG1541, MEG1611, MEG1621, MEG1631, MEG1641, MEG1711, MEG1721, MEG1731, MEG1741, MEG1811, MEG1821, MEG1831, MEG1841, MEG1911, MEG1921, MEG1931, MEG1941, MEG2011, MEG2021, MEG2031, MEG2041, MEG2111, MEG2121, MEG2131, MEG2141, MEG2211, MEG2221, MEG2231, MEG2241, MEG2311, MEG2321, MEG2331, MEG2341, MEG2411, MEG2421, MEG2431, MEG2441, MEG2511, MEG2521, MEG2531, MEG2541, MEG2611, MEG2621, MEG2631, MEG2641">
+            102
+        </button>
+
+
+    </td>
+</tr>
+
+
+<tr class="repr-element channels-5dc82ce6-917a-42f0-9db4-79770faf4928 ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Gradiometers</td>
+    <td>
+        <button class="mne-ch-names-btn sd-sphinx-override sd-btn sd-btn-info sd-text-wrap sd-shadow-sm" onclick="alert('Good Gradiometers:\n\nMEG0113, MEG0112, MEG0122, MEG0123, MEG0132, MEG0133, MEG0143, MEG0142, MEG0213, MEG0212, MEG0222, MEG0223, MEG0232, MEG0233, MEG0243, MEG0242, MEG0313, MEG0312, MEG0322, MEG0323, MEG0333, MEG0332, MEG0343, MEG0342, MEG0413, MEG0412, MEG0422, MEG0423, MEG0432, MEG0433, MEG0443, MEG0442, MEG0513, MEG0512, MEG0523, MEG0522, MEG0532, MEG0533, MEG0542, MEG0543, MEG0613, MEG0612, MEG0622, MEG0623, MEG0633, MEG0632, MEG0642, MEG0643, MEG0713, MEG0712, MEG0723, MEG0722, MEG0733, MEG0732, MEG0743, MEG0742, MEG0813, MEG0812, MEG0822, MEG0823, MEG0913, MEG0912, MEG0923, MEG0922, MEG0932, MEG0933, MEG0942, MEG0943, MEG1013, MEG1012, MEG1023, MEG1022, MEG1032, MEG1033, MEG1043, MEG1042, MEG1112, MEG1113, MEG1123, MEG1122, MEG1133, MEG1132, MEG1142, MEG1143, MEG1213, MEG1212, MEG1223, MEG1222, MEG1232, MEG1233, MEG1243, MEG1242, MEG1312, MEG1313, MEG1323, MEG1322, MEG1333, MEG1332, MEG1342, MEG1343, MEG1412, MEG1413, MEG1423, MEG1422, MEG1433, MEG1432, MEG1442, MEG1443, MEG1512, MEG1513, MEG1522, MEG1523, MEG1533, MEG1532, MEG1543, MEG1542, MEG1613, MEG1612, MEG1622, MEG1623, MEG1632, MEG1633, MEG1643, MEG1642, MEG1713, MEG1712, MEG1722, MEG1723, MEG1732, MEG1733, MEG1743, MEG1742, MEG1813, MEG1812, MEG1822, MEG1823, MEG1832, MEG1833, MEG1843, MEG1842, MEG1912, MEG1913, MEG1923, MEG1922, MEG1932, MEG1933, MEG1943, MEG1942, MEG2013, MEG2012, MEG2023, MEG2022, MEG2032, MEG2033, MEG2042, MEG2043, MEG2113, MEG2112, MEG2122, MEG2123, MEG2133, MEG2132, MEG2143, MEG2142, MEG2212, MEG2213, MEG2223, MEG2222, MEG2233, MEG2232, MEG2242, MEG2243, MEG2312, MEG2313, MEG2323, MEG2322, MEG2332, MEG2333, MEG2343, MEG2342, MEG2412, MEG2413, MEG2423, MEG2422, MEG2433, MEG2432, MEG2442, MEG2443, MEG2512, MEG2513, MEG2522, MEG2523, MEG2533, MEG2532, MEG2543, MEG2542, MEG2612, MEG2613, MEG2623, MEG2622, MEG2633, MEG2632, MEG2642, MEG2643')" title="(Click to open in popup)&#13;&#13;MEG0113, MEG0112, MEG0122, MEG0123, MEG0132, MEG0133, MEG0143, MEG0142, MEG0213, MEG0212, MEG0222, MEG0223, MEG0232, MEG0233, MEG0243, MEG0242, MEG0313, MEG0312, MEG0322, MEG0323, MEG0333, MEG0332, MEG0343, MEG0342, MEG0413, MEG0412, MEG0422, MEG0423, MEG0432, MEG0433, MEG0443, MEG0442, MEG0513, MEG0512, MEG0523, MEG0522, MEG0532, MEG0533, MEG0542, MEG0543, MEG0613, MEG0612, MEG0622, MEG0623, MEG0633, MEG0632, MEG0642, MEG0643, MEG0713, MEG0712, MEG0723, MEG0722, MEG0733, MEG0732, MEG0743, MEG0742, MEG0813, MEG0812, MEG0822, MEG0823, MEG0913, MEG0912, MEG0923, MEG0922, MEG0932, MEG0933, MEG0942, MEG0943, MEG1013, MEG1012, MEG1023, MEG1022, MEG1032, MEG1033, MEG1043, MEG1042, MEG1112, MEG1113, MEG1123, MEG1122, MEG1133, MEG1132, MEG1142, MEG1143, MEG1213, MEG1212, MEG1223, MEG1222, MEG1232, MEG1233, MEG1243, MEG1242, MEG1312, MEG1313, MEG1323, MEG1322, MEG1333, MEG1332, MEG1342, MEG1343, MEG1412, MEG1413, MEG1423, MEG1422, MEG1433, MEG1432, MEG1442, MEG1443, MEG1512, MEG1513, MEG1522, MEG1523, MEG1533, MEG1532, MEG1543, MEG1542, MEG1613, MEG1612, MEG1622, MEG1623, MEG1632, MEG1633, MEG1643, MEG1642, MEG1713, MEG1712, MEG1722, MEG1723, MEG1732, MEG1733, MEG1743, MEG1742, MEG1813, MEG1812, MEG1822, MEG1823, MEG1832, MEG1833, MEG1843, MEG1842, MEG1912, MEG1913, MEG1923, MEG1922, MEG1932, MEG1933, MEG1943, MEG1942, MEG2013, MEG2012, MEG2023, MEG2022, MEG2032, MEG2033, MEG2042, MEG2043, MEG2113, MEG2112, MEG2122, MEG2123, MEG2133, MEG2132, MEG2143, MEG2142, MEG2212, MEG2213, MEG2223, MEG2222, MEG2233, MEG2232, MEG2242, MEG2243, MEG2312, MEG2313, MEG2323, MEG2322, MEG2332, MEG2333, MEG2343, MEG2342, MEG2412, MEG2413, MEG2423, MEG2422, MEG2433, MEG2432, MEG2442, MEG2443, MEG2512, MEG2513, MEG2522, MEG2523, MEG2533, MEG2532, MEG2543, MEG2542, MEG2612, MEG2613, MEG2623, MEG2622, MEG2633, MEG2632, MEG2642, MEG2643">
+            204
+        </button>
+
+
+    </td>
+</tr>
+
+
+<tr class="repr-element channels-5dc82ce6-917a-42f0-9db4-79770faf4928 ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>EOG</td>
+    <td>
+        <button class="mne-ch-names-btn sd-sphinx-override sd-btn sd-btn-info sd-text-wrap sd-shadow-sm" onclick="alert('Good EOG:\n\nEOG061, EOG062')" title="(Click to open in popup)&#13;&#13;EOG061, EOG062">
+            2
+        </button>
+
+
+    </td>
+</tr>
+
+
+<tr class="repr-element channels-5dc82ce6-917a-42f0-9db4-79770faf4928 ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>ECG</td>
+    <td>
+        <button class="mne-ch-names-btn sd-sphinx-override sd-btn sd-btn-info sd-text-wrap sd-shadow-sm" onclick="alert('Good ECG:\n\nECG063')" title="(Click to open in popup)&#13;&#13;ECG063">
+            1
+        </button>
+
+
+    </td>
+</tr>
+
+
+<tr class="repr-element channels-5dc82ce6-917a-42f0-9db4-79770faf4928 ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Stimulus</td>
+    <td>
+        <button class="mne-ch-names-btn sd-sphinx-override sd-btn sd-btn-info sd-text-wrap sd-shadow-sm" onclick="alert('Good Stimulus:\n\nSTI101, STI201, STI301')" title="(Click to open in popup)&#13;&#13;STI101, STI201, STI301">
+            3
+        </button>
+
+
+    </td>
+</tr>
+
+
+<tr class="repr-element channels-5dc82ce6-917a-42f0-9db4-79770faf4928 ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Head & sensor digitization</td>
+
+    <td>137 points</td>
+
+</tr>
+
+
+
+
+
+
+
+
+<tr class="mne-repr-section-header filters-e48569ea-5272-4563-a5ee-9ab78e31d6a5"
+     title="Hide section"
+    onclick="toggleVisibility('filters-e48569ea-5272-4563-a5ee-9ab78e31d6a5')">
+    <th class="mne-repr-section-toggle">
+        <button >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
+        </button>
+    </th>
+    <th colspan="2">
+        <strong>Filters</strong>
+    </th>
+</tr>
+
+
+<tr class="repr-element filters-e48569ea-5272-4563-a5ee-9ab78e31d6a5 ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Highpass</td>
+    <td>1.00 Hz</td>
+</tr>
+
+
+<tr class="repr-element filters-e48569ea-5272-4563-a5ee-9ab78e31d6a5 ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Lowpass</td>
+    <td>40.00 Hz</td>
+</tr>
+
+
+</table>
+</div>
+<br />
+<br /><p>When we select a subset of epochs, the <code class="docutils literal notranslate"><span class="pre">epochs.metadata</span></code> field is likewise updated
+to match the new selection. This feature is one of the main reasons to use the
+<code class="docutils literal notranslate"><span class="pre">.metadata</span></code> field instead of keeping a separate <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> manually.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">epochs</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+Index: 297 entries, 4 to 884
+Data columns (total 2 columns):
+ #   Column   Non-Null Count  Dtype
+---  ------   --------------  -----
+ 0   trigger  297 non-null    int64
+ 1   file     297 non-null    object
+dtypes: int64(1), object(1)
+memory usage: 7.0+ KB
+</pre></div>
+</div>
+<p>This means we can use the <code class="docutils literal notranslate"><span class="pre">epochs.metadata[&quot;file&quot;]</span></code> column to restrict the pixel and
+FaceNet RDMs to just those images still present in the MEG data.</p>
+<p>In the cell below, we read the images and FaceNet embeddings and select the proper
+rows from the data matrices and use <code class="docutils literal notranslate"><span class="pre">compute_dsm</span></code> to compute the appropriate RDMs.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">glob</span><span class="w"> </span><span class="kn">import</span> <a href="https://docs.python.org/3/library/glob.html#glob.glob" title="glob.glob" class="sphx-glr-backref-module-glob sphx-glr-backref-type-py-function"><span class="n">glob</span></a>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PIL</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span>
+
+<a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">files</span></a> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><a href="https://docs.python.org/3/library/glob.html#glob.glob" title="glob.glob" class="sphx-glr-backref-module-glob sphx-glr-backref-type-py-function"><span class="n">glob</span></a><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a><span class="si">}</span><span class="s2">/stimuli/*.bmp&quot;</span><span class="p">))</span>
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pixels</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.array.html#numpy.array" title="numpy.array" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">array</span></a><span class="p">([</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.array.html#numpy.array" title="numpy.array" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">array</span></a><span class="p">(</span><span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">f</span><span class="p">))</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">files</span></a><span class="p">])</span>
+
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.lib.npyio.NpzFile.html#numpy.lib.npyio.NpzFile" title="numpy.lib.npyio.NpzFile" class="sphx-glr-backref-module-numpy-lib-npyio sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">store</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.load.html#numpy.load" title="numpy.load" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">load</span></a><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a><span class="si">}</span><span class="s2">/stimuli/facenet_embeddings.npz&quot;</span><span class="p">)</span>
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">filenames</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.lib.npyio.NpzFile.html#numpy.lib.npyio.NpzFile" title="numpy.lib.npyio.NpzFile" class="sphx-glr-backref-module-numpy-lib-npyio sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">store</span></a><span class="p">[</span><span class="s2">&quot;filenames&quot;</span><span class="p">]</span>
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">embeddings</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.lib.npyio.NpzFile.html#numpy.lib.npyio.NpzFile" title="numpy.lib.npyio.NpzFile" class="sphx-glr-backref-module-numpy-lib-npyio sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">store</span></a><span class="p">[</span><span class="s2">&quot;embeddings&quot;</span><span class="p">]</span>
+
+<span class="c1"># Select the proper filenames</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#set" title="builtins.set" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">epochs_filenames</span></a> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">epochs</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;file&quot;</span><span class="p">])</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">selection</span></a> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="ow">in</span> <a href="https://docs.python.org/3/library/stdtypes.html#set" title="builtins.set" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">epochs_filenames</span></a> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">filenames</span></a><span class="p">]</span>
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">filenames</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">filenames</span></a><span class="p">[</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">selection</span></a><span class="p">]</span>
+
+<span class="c1"># Select the proper rows from `pixels` and `embeddings` and compute the RDMs.</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mne_rsa</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_rdm</span>
+
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pixel_rdm</span></a> <span class="o">=</span> <span class="n">compute_rdm</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pixels</span></a><span class="p">[</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">selection</span></a><span class="p">])</span>
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">facenet_rdm</span></a> <span class="o">=</span> <span class="n">compute_rdm</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">embeddings</span></a><span class="p">[</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">selection</span></a><span class="p">])</span>
+</pre></div>
+</div>
+<p>Executing the cell below will test whether the RDMs have been properly constructed and
+plot them.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mne_rsa</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_rdms</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.spatial.distance</span><span class="w"> </span><span class="kn">import</span> <a href="https://scipy.github.io/devdocs/reference/generated/scipy.spatial.distance.squareform.html#scipy.spatial.distance.squareform" title="scipy.spatial.distance.squareform" class="sphx-glr-backref-module-scipy-spatial-distance sphx-glr-backref-type-py-function"><span class="n">squareform</span></a>
+
+<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pixel_rdm</span></a><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">facenet_rdm</span></a><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The pixel and FaceNet RDMs are of difference sizes, that can&#39;t be right. 🤔&quot;</span><span class="p">)</span>
+<span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pixel_rdm</span></a><span class="p">)</span> <span class="o">!=</span> <span class="mi">43956</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Looks like the RDMs do not have the correct rows. 🤔&quot;</span><span class="p">)</span>
+<span class="k">elif</span> <span class="p">(</span>
+    <a href="https://scipy.github.io/devdocs/reference/generated/scipy.spatial.distance.squareform.html#scipy.spatial.distance.squareform" title="scipy.spatial.distance.squareform" class="sphx-glr-backref-module-scipy-spatial-distance sphx-glr-backref-type-py-function"><span class="n">squareform</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pixel_rdm</span></a><span class="p">)[:</span><span class="mi">150</span><span class="p">,</span> <span class="p">:</span><span class="mi">150</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">&gt;=</span> <a href="https://scipy.github.io/devdocs/reference/generated/scipy.spatial.distance.squareform.html#scipy.spatial.distance.squareform" title="scipy.spatial.distance.squareform" class="sphx-glr-backref-module-scipy-spatial-distance sphx-glr-backref-type-py-function"><span class="n">squareform</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pixel_rdm</span></a><span class="p">)[</span><span class="mi">150</span><span class="p">:,</span> <span class="mi">150</span><span class="p">:]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="s2">&quot;The pixels RDM doesn&#39;t look quite right. Make sure the rows are in &quot;</span>
+        <span class="s2">&quot;alphabetical filename order. 🤔&quot;</span>
+    <span class="p">)</span>
+<span class="k">elif</span> <span class="p">(</span>
+    <a href="https://scipy.github.io/devdocs/reference/generated/scipy.spatial.distance.squareform.html#scipy.spatial.distance.squareform" title="scipy.spatial.distance.squareform" class="sphx-glr-backref-module-scipy-spatial-distance sphx-glr-backref-type-py-function"><span class="n">squareform</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">facenet_rdm</span></a><span class="p">)[:</span><span class="mi">150</span><span class="p">,</span> <span class="p">:</span><span class="mi">150</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="o">&lt;=</span> <a href="https://scipy.github.io/devdocs/reference/generated/scipy.spatial.distance.squareform.html#scipy.spatial.distance.squareform" title="scipy.spatial.distance.squareform" class="sphx-glr-backref-module-scipy-spatial-distance sphx-glr-backref-type-py-function"><span class="n">squareform</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">facenet_rdm</span></a><span class="p">)[</span><span class="mi">150</span><span class="p">:,</span> <span class="mi">150</span><span class="p">:]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="s2">&quot;The FaceNet RDM doesn&#39;t look quite right. Make sure the rows are in &quot;</span>
+        <span class="s2">&quot;alphabetical filename order. 🤔&quot;</span>
+    <span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The RDMs look just right! 😊&quot;</span><span class="p">)</span>
+    <span class="n">plot_rdms</span><span class="p">([</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pixel_rdm</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">facenet_rdm</span></a><span class="p">],</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;pixels&quot;</span><span class="p">,</span> <span class="s2">&quot;facenet&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_02_source_level_tutorial_001.png" srcset="../../_images/sphx_glr_02_source_level_tutorial_001.png" alt="pixels, facenet" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>The RDMs look just right! 😊
+</pre></div>
+</div>
+</section>
+<section id="to-source-space">
+<h1>To source space!<a class="headerlink" href="#to-source-space" title="Link to this heading">#</a></h1>
+<p>In order to perform RSA in source space, we must create source estimates for the
+epochs. There’s many different ways to do this, and here we’ll use MNE, because we can
+use the pre-computed inverse operator that is in the data packet and apply it to the
+epochs to quickly get source estimates.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mne.minimum_norm</span><span class="w"> </span><span class="kn">import</span> <a href="https://mne.tools/stable/generated/mne.minimum_norm.apply_inverse_epochs.html#mne.minimum_norm.apply_inverse_epochs" title="mne.minimum_norm.apply_inverse_epochs" class="sphx-glr-backref-module-mne-minimum_norm sphx-glr-backref-type-py-function"><span class="n">apply_inverse_epochs</span></a><span class="p">,</span> <a href="https://mne.tools/stable/generated/mne.minimum_norm.read_inverse_operator.html#mne.minimum_norm.read_inverse_operator" title="mne.minimum_norm.read_inverse_operator" class="sphx-glr-backref-module-mne-minimum_norm sphx-glr-backref-type-py-function"><span class="n">read_inverse_operator</span></a>
+
+<a href="https://mne.tools/stable/generated/mne.minimum_norm.InverseOperator.html#mne.minimum_norm.InverseOperator" title="mne.minimum_norm.InverseOperator" class="sphx-glr-backref-module-mne-minimum_norm sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">inv</span></a> <span class="o">=</span> <a href="https://mne.tools/stable/generated/mne.minimum_norm.read_inverse_operator.html#mne.minimum_norm.read_inverse_operator" title="mne.minimum_norm.read_inverse_operator" class="sphx-glr-backref-module-mne-minimum_norm sphx-glr-backref-type-py-function"><span class="n">read_inverse_operator</span></a><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a><span class="si">}</span><span class="s2">/sub-02/sub-02-inv.fif&quot;</span><span class="p">)</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">stcs</span></a> <span class="o">=</span> <a href="https://mne.tools/stable/generated/mne.minimum_norm.apply_inverse_epochs.html#mne.minimum_norm.apply_inverse_epochs" title="mne.minimum_norm.apply_inverse_epochs" class="sphx-glr-backref-module-mne-minimum_norm sphx-glr-backref-type-py-function"><span class="n">apply_inverse_epochs</span></a><span class="p">(</span><span class="n">epochs</span><span class="p">,</span> <a href="https://mne.tools/stable/generated/mne.minimum_norm.InverseOperator.html#mne.minimum_norm.InverseOperator" title="mne.minimum_norm.InverseOperator" class="sphx-glr-backref-module-mne-minimum_norm sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">inv</span></a><span class="p">,</span> <span class="n">lambda2</span><span class="o">=</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">9</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The result is a list of 297 <code class="docutils literal notranslate"><span class="pre">SourceEstimate</span></code> objects. Here are the
+first 5 of them:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">stcs</span></a><span class="p">[:</span><span class="mi">5</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[&lt;SourceEstimate | 2050 vertices, subject : sub-02, tmin : -200.0 (ms), tmax : 2899.9999999999995 (ms), tstep : 4.545454545454545 (ms), data shape : (2050, 683), ~10.7 MiB&gt;, &lt;SourceEstimate | 2050 vertices, subject : sub-02, tmin : -200.0 (ms), tmax : 2899.9999999999995 (ms), tstep : 4.545454545454545 (ms), data shape : (2050, 683), ~10.7 MiB&gt;, &lt;SourceEstimate | 2050 vertices, subject : sub-02, tmin : -200.0 (ms), tmax : 2899.9999999999995 (ms), tstep : 4.545454545454545 (ms), data shape : (2050, 683), ~10.7 MiB&gt;, &lt;SourceEstimate | 2050 vertices, subject : sub-02, tmin : -200.0 (ms), tmax : 2899.9999999999995 (ms), tstep : 4.545454545454545 (ms), data shape : (2050, 683), ~10.7 MiB&gt;, &lt;SourceEstimate | 2050 vertices, subject : sub-02, tmin : -200.0 (ms), tmax : 2899.9999999999995 (ms), tstep : 4.545454545454545 (ms), data shape : (2050, 683), ~10.7 MiB&gt;]
+</pre></div>
+</div>
+<p>The plan is to perform RSA in a searchlight pattern, not only as a sliding window
+through time, but also sliding across different locations across the cortex. To this
+end, we’ll define spatial patches with a certain radius, and only source points that
+fall within a patch are taken into account when computing the RDM for that patch. The
+cortex is heavily folded and ideally we define distances between source point as the
+shortest path along the cortex, what is known as the geodesic distance, rather than
+straight euclidean distance between the XYZ coordinates. MNE-Python is here to help us
+out in this regard, as it contains a function to compute such distances and store them
+within the <a class="reference external" href="https://mne.tools/stable/generated/mne.SourceSpaces.html#mne.SourceSpaces" title="(in MNE v1.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mne.SourceSpaces</span></code></a> object (through the
+<a class="reference external" href="https://mne.tools/stable/generated/mne.add_source_space_distances.html#mne.add_source_space_distances" title="(in MNE v1.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mne.add_source_space_distances()</span></code></a> function).</p>
+<p>Let’s load the file containing the proper source space with pre-computed geodesic
+distances between source points:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mne</span><span class="w"> </span><span class="kn">import</span> <a href="https://mne.tools/stable/generated/mne.read_source_spaces.html#mne.read_source_spaces" title="mne.read_source_spaces" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-function"><span class="n">read_source_spaces</span></a>
+
+<a href="https://mne.tools/stable/generated/mne.SourceSpaces.html#mne.SourceSpaces" title="mne.SourceSpaces" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">src</span></a> <span class="o">=</span> <a href="https://mne.tools/stable/generated/mne.read_source_spaces.html#mne.read_source_spaces" title="mne.read_source_spaces" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-function"><span class="n">read_source_spaces</span></a><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a><span class="si">}</span><span class="s2">/freesurfer/sub-02/bem/sub-02-oct5-src.fif&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To speed things up, let’s restrict the analysis to only the occipital, parietal and
+temporal areas on the left hemisphere. There are several ways to tell MNE-RSA which
+source points to use, and one of the most convenient ones is to use <a class="reference external" href="https://mne.tools/stable/generated/mne.Label.html#mne.Label" title="(in MNE v1.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mne.Label</span></code></a>
+objects. This allows us to define the desired areas using the “aparc” atlas that
+FreeSurfer has constructed for us:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">rois</span></a> <span class="o">=</span> <a href="https://mne.tools/stable/generated/mne.read_labels_from_annot.html#mne.read_labels_from_annot" title="mne.read_labels_from_annot" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-function"><span class="n">mne</span><span class="o">.</span><span class="n">read_labels_from_annot</span></a><span class="p">(</span>
+    <span class="s2">&quot;sub-02&quot;</span><span class="p">,</span> <span class="n">parc</span><span class="o">=</span><span class="s2">&quot;aparc&quot;</span><span class="p">,</span> <span class="n">subjects_dir</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a><span class="si">}</span><span class="s2">/freesurfer&quot;</span><span class="p">,</span> <span class="n">hemi</span><span class="o">=</span><span class="s2">&quot;lh&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># These are the regions we&#39;re interested in</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">roi_sel</span></a> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;inferiortemporal-lh&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;middletemporal-lh&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;fusiform-lh&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bankssts-lh&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;inferiorparietal-lh&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;lateraloccipital-lh&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;lingual-lh&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;pericalcarine-lh&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cuneus-lh&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;supramarginal-lh&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;superiorparietal-lh&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">rois</span></a> <span class="o">=</span> <span class="p">[</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">rois</span></a> <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">roi_sel</span></a><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="source-space-rsa">
+<h1>Source-space RSA<a class="headerlink" href="#source-space-rsa" title="Link to this heading">#</a></h1>
+<p>Time to actually perform the RSA in source space. The function you need is
+<a class="reference internal" href="../../functions/mne_rsa.rsa_stcs.html#mne_rsa.rsa_stcs" title="mne_rsa.rsa_stcs"><code class="xref py py-func docutils literal notranslate"><span class="pre">mne_rsa.rsa_stcs()</span></code></a> Take a look at the documentation of that function, which
+should look familiar is it is very similar to <a class="reference internal" href="../../functions/mne_rsa.rsa_epochs.html#mne_rsa.rsa_epochs" title="mne_rsa.rsa_epochs"><code class="xref py py-func docutils literal notranslate"><span class="pre">mne_rsa.rsa_epochs()</span></code></a> that you have
+used before.</p>
+<p>We will perform RSA on the source estimates, using the pixel and FaceNet RDMs as model
+RDMs. As was the case with the sensor-level RSA, we will need specify labels to
+indicate which image was shown during which epoch and which image corresponds to each
+row/column of the <code class="docutils literal notranslate"><span class="pre">pixel_rdm</span></code> and <code class="docutils literal notranslate"><span class="pre">facenet_rdm</span></code>. We will use the filenames for
+this.</p>
+<p>Out searchlight patches will have a spatial radius of 2cm (=0.02 meters) and a
+temporal radius of 50 ms (=0.05 seconds). We will restrict the analysis to 0.0 to 0.5
+seconds after stimulus onset and to the cortical regions (<code class="docutils literal notranslate"><span class="pre">rois</span></code>) we’ve selected
+above. We can optionally set <code class="docutils literal notranslate"><span class="pre">n_jobs=-1</span></code> to use all CPU cores and <code class="docutils literal notranslate"><span class="pre">verbose=True</span></code>
+to show a progress bar.</p>
+<p>Depending on the speed of your computer, this may take anywhere from a few seconds to
+a few minutes to complete.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mne_rsa</span><span class="w"> </span><span class="kn">import</span> <span class="n">rsa_stcs</span>
+
+<a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">stc_rsa</span></a> <span class="o">=</span> <span class="n">rsa_stcs</span><span class="p">(</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">stcs</span></a><span class="p">,</span>
+    <span class="p">[</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pixel_rdm</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">facenet_rdm</span></a><span class="p">],</span>
+    <a href="https://mne.tools/stable/generated/mne.SourceSpaces.html#mne.SourceSpaces" title="mne.SourceSpaces" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">src</span></a><span class="o">=</span><a href="https://mne.tools/stable/generated/mne.SourceSpaces.html#mne.SourceSpaces" title="mne.SourceSpaces" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">src</span></a><span class="p">,</span>
+    <span class="n">labels_stcs</span><span class="o">=</span><span class="n">epochs</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">file</span><span class="p">,</span>
+    <span class="n">labels_rdm_model</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">filenames</span></a><span class="p">,</span>
+    <span class="n">tmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">tmax</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">sel_vertices</span><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">rois</span></a><span class="p">,</span>
+    <span class="n">spatial_radius</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span>
+    <span class="n">temporal_radius</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Restricting source space to 2050 out of [1026 1026] vertices.
+Restricting source space to 2050 out of [1025 1025] vertices.
+Performing RSA between SourceEstimates and 2 model RDM(s)
+    Spatial radius: 0.02 meters
+    Using 373 vertices
+    Temporal radius: 11 samples
+    Time interval: 0-0.5 seconds
+    Number of searchlight patches: 41030
+
+  0%|          | 0/41030 [00:00&lt;?, ?patch/s]Creating spatio-temporal searchlight patches
+
+  0%|          | 8/41030 [00:02&lt;3:40:34,  3.10patch/s]
+  0%|          | 12/41030 [00:02&lt;2:16:02,  5.02patch/s]
+  0%|          | 44/41030 [00:02&lt;25:40, 26.60patch/s]
+  0%|          | 108/41030 [00:02&lt;08:38, 78.91patch/s]
+  0%|          | 204/41030 [00:03&lt;04:16, 159.25patch/s]
+  1%|          | 268/41030 [00:03&lt;03:27, 196.09patch/s]
+  1%|          | 332/41030 [00:03&lt;02:59, 226.63patch/s]
+  1%|          | 396/41030 [00:03&lt;02:43, 248.22patch/s]
+  1%|          | 460/41030 [00:04&lt;02:45, 245.54patch/s]
+  1%|▏         | 524/41030 [00:04&lt;02:33, 264.32patch/s]
+  1%|▏         | 588/41030 [00:04&lt;02:21, 285.37patch/s]
+  2%|▏         | 652/41030 [00:04&lt;02:14, 299.55patch/s]
+  2%|▏         | 716/41030 [00:04&lt;02:12, 303.13patch/s]
+  2%|▏         | 780/41030 [00:04&lt;02:11, 305.50patch/s]
+  2%|▏         | 844/41030 [00:05&lt;02:24, 278.28patch/s]
+  2%|▏         | 908/41030 [00:05&lt;02:19, 287.07patch/s]
+  2%|▏         | 972/41030 [00:05&lt;02:16, 294.43patch/s]
+  3%|▎         | 1036/41030 [00:05&lt;02:06, 316.93patch/s]
+  3%|▎         | 1100/41030 [00:06&lt;02:00, 331.54patch/s]
+  3%|▎         | 1164/41030 [00:06&lt;02:04, 319.78patch/s]
+  3%|▎         | 1228/41030 [00:06&lt;02:15, 294.00patch/s]
+  3%|▎         | 1292/41030 [00:06&lt;02:11, 302.50patch/s]
+  3%|▎         | 1356/41030 [00:06&lt;02:03, 320.68patch/s]
+  3%|▎         | 1420/41030 [00:07&lt;01:57, 336.11patch/s]
+  4%|▎         | 1484/41030 [00:07&lt;02:00, 327.84patch/s]
+  4%|▍         | 1548/41030 [00:07&lt;02:03, 319.31patch/s]
+  4%|▍         | 1612/41030 [00:07&lt;02:21, 279.37patch/s]
+  4%|▍         | 1676/41030 [00:07&lt;02:12, 296.43patch/s]
+  4%|▍         | 1740/41030 [00:08&lt;02:07, 307.38patch/s]
+  4%|▍         | 1804/41030 [00:08&lt;02:02, 320.02patch/s]
+  5%|▍         | 1868/41030 [00:08&lt;01:58, 329.33patch/s]
+  5%|▍         | 1932/41030 [00:08&lt;02:03, 317.20patch/s]
+  5%|▍         | 1996/41030 [00:08&lt;02:14, 289.72patch/s]
+  5%|▌         | 2060/41030 [00:09&lt;02:09, 299.89patch/s]
+  5%|▌         | 2124/41030 [00:09&lt;02:05, 309.59patch/s]
+  5%|▌         | 2188/41030 [00:09&lt;02:01, 318.74patch/s]
+  5%|▌         | 2252/41030 [00:09&lt;02:06, 306.57patch/s]
+  6%|▌         | 2316/41030 [00:10&lt;02:13, 290.23patch/s]
+  6%|▌         | 2380/41030 [00:10&lt;02:05, 308.30patch/s]
+  6%|▌         | 2444/41030 [00:10&lt;02:02, 316.01patch/s]
+  6%|▌         | 2508/41030 [00:10&lt;01:59, 323.04patch/s]
+  6%|▋         | 2572/41030 [00:10&lt;02:00, 318.91patch/s]
+  6%|▋         | 2636/41030 [00:10&lt;02:02, 314.06patch/s]
+  7%|▋         | 2700/41030 [00:11&lt;02:13, 287.34patch/s]
+  7%|▋         | 2764/41030 [00:11&lt;02:10, 293.45patch/s]
+  7%|▋         | 2828/41030 [00:11&lt;02:09, 296.02patch/s]
+  7%|▋         | 2892/41030 [00:11&lt;02:11, 289.59patch/s]
+  7%|▋         | 2956/41030 [00:12&lt;02:14, 283.14patch/s]
+  7%|▋         | 3020/41030 [00:12&lt;02:18, 274.04patch/s]
+  8%|▊         | 3084/41030 [00:12&lt;02:13, 284.07patch/s]
+  8%|▊         | 3148/41030 [00:12&lt;02:10, 290.07patch/s]
+  8%|▊         | 3212/41030 [00:13&lt;02:13, 283.81patch/s]
+  8%|▊         | 3276/41030 [00:13&lt;02:15, 278.34patch/s]
+  8%|▊         | 3340/41030 [00:13&lt;02:18, 271.51patch/s]
+  8%|▊         | 3404/41030 [00:13&lt;02:10, 288.91patch/s]
+  8%|▊         | 3468/41030 [00:13&lt;02:09, 290.65patch/s]
+  9%|▊         | 3532/41030 [00:14&lt;02:10, 288.43patch/s]
+  9%|▉         | 3596/41030 [00:14&lt;02:11, 284.76patch/s]
+  9%|▉         | 3660/41030 [00:14&lt;02:16, 273.72patch/s]
+  9%|▉         | 3724/41030 [00:14&lt;02:09, 288.44patch/s]
+  9%|▉         | 3788/41030 [00:15&lt;02:05, 297.63patch/s]
+  9%|▉         | 3852/41030 [00:15&lt;02:02, 302.63patch/s]
+ 10%|▉         | 3916/41030 [00:15&lt;02:10, 284.58patch/s]
+ 10%|▉         | 3980/41030 [00:15&lt;02:22, 260.08patch/s]
+ 10%|▉         | 4044/41030 [00:16&lt;02:18, 267.65patch/s]
+ 10%|█         | 4108/41030 [00:16&lt;02:11, 280.71patch/s]
+ 10%|█         | 4172/41030 [00:16&lt;02:05, 293.18patch/s]
+ 10%|█         | 4236/41030 [00:16&lt;02:02, 299.73patch/s]
+ 10%|█         | 4300/41030 [00:16&lt;02:16, 270.03patch/s]
+ 11%|█         | 4364/41030 [00:17&lt;02:03, 296.41patch/s]
+ 11%|█         | 4428/41030 [00:17&lt;02:14, 272.68patch/s]
+ 11%|█         | 4492/41030 [00:17&lt;02:11, 278.01patch/s]
+ 11%|█         | 4556/41030 [00:17&lt;02:10, 278.78patch/s]
+ 11%|█▏        | 4620/41030 [00:18&lt;02:06, 286.90patch/s]
+ 11%|█▏        | 4684/41030 [00:18&lt;02:06, 287.98patch/s]
+ 12%|█▏        | 4748/41030 [00:18&lt;02:04, 291.30patch/s]
+ 12%|█▏        | 4812/41030 [00:18&lt;01:57, 309.11patch/s]
+ 12%|█▏        | 4876/41030 [00:18&lt;01:53, 317.64patch/s]
+ 12%|█▏        | 4940/41030 [00:19&lt;01:51, 323.98patch/s]
+ 12%|█▏        | 5004/41030 [00:19&lt;02:04, 289.45patch/s]
+ 12%|█▏        | 5068/41030 [00:19&lt;02:12, 271.88patch/s]
+ 13%|█▎        | 5132/41030 [00:19&lt;02:10, 275.52patch/s]
+ 13%|█▎        | 5196/41030 [00:20&lt;02:12, 270.40patch/s]
+ 13%|█▎        | 5260/41030 [00:20&lt;02:13, 267.22patch/s]
+ 13%|█▎        | 5324/41030 [00:20&lt;02:22, 250.45patch/s]
+ 13%|█▎        | 5388/41030 [00:20&lt;02:29, 239.10patch/s]
+ 13%|█▎        | 5452/41030 [00:21&lt;02:19, 255.75patch/s]
+ 13%|█▎        | 5516/41030 [00:21&lt;02:19, 253.85patch/s]
+ 14%|█▎        | 5580/41030 [00:21&lt;02:21, 251.21patch/s]
+ 14%|█▍        | 5644/41030 [00:21&lt;02:10, 271.97patch/s]
+ 14%|█▍        | 5708/41030 [00:22&lt;02:13, 264.95patch/s]
+ 14%|█▍        | 5772/41030 [00:22&lt;02:12, 265.12patch/s]
+ 14%|█▍        | 5836/41030 [00:22&lt;02:02, 286.74patch/s]
+ 14%|█▍        | 5900/41030 [00:22&lt;01:54, 308.09patch/s]
+ 15%|█▍        | 5964/41030 [00:22&lt;01:59, 294.38patch/s]
+ 15%|█▍        | 6028/41030 [00:23&lt;02:05, 278.57patch/s]
+ 15%|█▍        | 6092/41030 [00:23&lt;02:05, 279.23patch/s]
+ 15%|█▌        | 6156/41030 [00:23&lt;02:04, 279.71patch/s]
+ 15%|█▌        | 6220/41030 [00:23&lt;02:11, 263.91patch/s]
+ 15%|█▌        | 6284/41030 [00:24&lt;02:21, 244.75patch/s]
+ 15%|█▌        | 6348/41030 [00:24&lt;02:22, 243.18patch/s]
+ 16%|█▌        | 6412/41030 [00:24&lt;02:11, 263.07patch/s]
+ 16%|█▌        | 6476/41030 [00:24&lt;02:02, 280.99patch/s]
+ 16%|█▌        | 6540/41030 [00:25&lt;02:01, 284.30patch/s]
+ 16%|█▌        | 6604/41030 [00:25&lt;02:09, 264.94patch/s]
+ 16%|█▋        | 6668/41030 [00:25&lt;02:09, 266.26patch/s]
+ 16%|█▋        | 6732/41030 [00:25&lt;02:05, 272.70patch/s]
+ 17%|█▋        | 6796/41030 [00:25&lt;02:00, 284.70patch/s]
+ 17%|█▋        | 6860/41030 [00:26&lt;01:57, 289.94patch/s]
+ 17%|█▋        | 6924/41030 [00:26&lt;02:03, 276.30patch/s]
+ 17%|█▋        | 6988/41030 [00:26&lt;02:11, 258.19patch/s]
+ 17%|█▋        | 7052/41030 [00:26&lt;02:14, 252.67patch/s]
+ 17%|█▋        | 7116/41030 [00:27&lt;02:05, 270.85patch/s]
+ 17%|█▋        | 7180/41030 [00:27&lt;02:04, 272.49patch/s]
+ 18%|█▊        | 7244/41030 [00:27&lt;02:12, 254.43patch/s]
+ 18%|█▊        | 7308/41030 [00:27&lt;02:03, 272.75patch/s]
+ 18%|█▊        | 7372/41030 [00:28&lt;01:57, 286.98patch/s]
+ 18%|█▊        | 7436/41030 [00:28&lt;01:58, 284.24patch/s]
+ 18%|█▊        | 7500/41030 [00:28&lt;01:54, 293.20patch/s]
+ 18%|█▊        | 7564/41030 [00:28&lt;02:00, 277.01patch/s]
+ 19%|█▊        | 7628/41030 [00:29&lt;02:03, 270.08patch/s]
+ 19%|█▊        | 7692/41030 [00:29&lt;02:05, 266.26patch/s]
+ 19%|█▉        | 7756/41030 [00:29&lt;02:08, 259.50patch/s]
+ 19%|█▉        | 7820/41030 [00:29&lt;02:09, 255.50patch/s]
+ 19%|█▉        | 7884/41030 [00:30&lt;02:19, 237.35patch/s]
+ 19%|█▉        | 7948/41030 [00:30&lt;02:07, 258.57patch/s]
+ 20%|█▉        | 8012/41030 [00:30&lt;01:59, 277.46patch/s]
+ 20%|█▉        | 8076/41030 [00:30&lt;01:56, 282.73patch/s]
+ 20%|█▉        | 8140/41030 [00:30&lt;01:53, 288.85patch/s]
+ 20%|█▉        | 8204/41030 [00:31&lt;02:09, 254.21patch/s]
+ 20%|██        | 8268/41030 [00:31&lt;02:09, 252.81patch/s]
+ 20%|██        | 8332/41030 [00:31&lt;02:08, 253.76patch/s]
+ 20%|██        | 8396/41030 [00:32&lt;02:08, 253.32patch/s]
+ 21%|██        | 8460/41030 [00:32&lt;02:18, 236.00patch/s]
+ 21%|██        | 8524/41030 [00:32&lt;02:02, 264.56patch/s]
+ 21%|██        | 8588/41030 [00:32&lt;01:55, 280.79patch/s]
+ 21%|██        | 8652/41030 [00:32&lt;01:53, 284.45patch/s]
+ 21%|██        | 8716/41030 [00:33&lt;01:46, 303.83patch/s]
+ 21%|██▏       | 8780/41030 [00:33&lt;01:49, 294.10patch/s]
+ 22%|██▏       | 8844/41030 [00:33&lt;01:57, 274.18patch/s]
+ 22%|██▏       | 8908/41030 [00:33&lt;02:03, 260.43patch/s]
+ 22%|██▏       | 8972/41030 [00:34&lt;02:06, 252.83patch/s]
+ 22%|██▏       | 9036/41030 [00:34&lt;02:09, 247.39patch/s]
+ 22%|██▏       | 9100/41030 [00:34&lt;02:20, 227.32patch/s]
+ 22%|██▏       | 9164/41030 [00:34&lt;02:11, 243.04patch/s]
+ 22%|██▏       | 9228/41030 [00:35&lt;02:04, 255.88patch/s]
+ 23%|██▎       | 9292/41030 [00:35&lt;01:58, 267.81patch/s]
+ 23%|██▎       | 9356/41030 [00:35&lt;01:55, 274.76patch/s]
+ 23%|██▎       | 9420/41030 [00:35&lt;02:08, 246.60patch/s]
+ 23%|██▎       | 9484/41030 [00:36&lt;02:05, 251.42patch/s]
+ 23%|██▎       | 9548/41030 [00:36&lt;02:03, 255.71patch/s]
+ 23%|██▎       | 9612/41030 [00:36&lt;02:05, 250.28patch/s]
+ 24%|██▎       | 9676/41030 [00:37&lt;02:15, 231.73patch/s]
+ 24%|██▎       | 9740/41030 [00:37&lt;02:02, 255.15patch/s]
+ 24%|██▍       | 9804/41030 [00:37&lt;01:59, 260.51patch/s]
+ 24%|██▍       | 9868/41030 [00:37&lt;02:00, 259.56patch/s]
+ 24%|██▍       | 9932/41030 [00:37&lt;02:00, 258.30patch/s]
+ 24%|██▍       | 9996/41030 [00:38&lt;02:09, 240.41patch/s]
+ 25%|██▍       | 10060/41030 [00:38&lt;01:56, 266.21patch/s]
+ 25%|██▍       | 10124/41030 [00:38&lt;01:46, 289.72patch/s]
+ 25%|██▍       | 10188/41030 [00:38&lt;01:41, 304.99patch/s]
+ 25%|██▍       | 10252/41030 [00:39&lt;01:50, 277.69patch/s]
+ 25%|██▌       | 10316/41030 [00:39&lt;02:06, 242.76patch/s]
+ 25%|██▌       | 10380/41030 [00:39&lt;02:03, 247.74patch/s]
+ 25%|██▌       | 10444/41030 [00:39&lt;02:00, 254.25patch/s]
+ 26%|██▌       | 10508/41030 [00:40&lt;01:58, 258.08patch/s]
+ 26%|██▌       | 10572/41030 [00:40&lt;02:06, 240.76patch/s]
+ 26%|██▌       | 10636/41030 [00:40&lt;02:04, 244.62patch/s]
+ 26%|██▌       | 10700/41030 [00:40&lt;01:52, 269.50patch/s]
+ 26%|██▌       | 10764/41030 [00:41&lt;01:43, 292.01patch/s]
+ 26%|██▋       | 10828/41030 [00:41&lt;01:46, 283.04patch/s]
+ 27%|██▋       | 10892/41030 [00:41&lt;01:57, 256.31patch/s]
+ 27%|██▋       | 10956/41030 [00:41&lt;01:49, 273.80patch/s]
+ 27%|██▋       | 11020/41030 [00:41&lt;01:41, 296.93patch/s]
+ 27%|██▋       | 11084/41030 [00:42&lt;01:34, 315.95patch/s]
+ 27%|██▋       | 11148/41030 [00:42&lt;01:33, 318.78patch/s]
+ 27%|██▋       | 11212/41030 [00:42&lt;01:33, 318.31patch/s]
+ 27%|██▋       | 11276/41030 [00:42&lt;01:42, 289.29patch/s]
+ 28%|██▊       | 11340/41030 [00:43&lt;01:44, 283.72patch/s]
+ 28%|██▊       | 11404/41030 [00:43&lt;01:49, 270.05patch/s]
+ 28%|██▊       | 11468/41030 [00:43&lt;01:45, 279.97patch/s]
+ 28%|██▊       | 11532/41030 [00:43&lt;01:41, 289.47patch/s]
+ 28%|██▊       | 11596/41030 [00:44&lt;01:51, 263.96patch/s]
+ 28%|██▊       | 11660/41030 [00:44&lt;01:49, 267.49patch/s]
+ 29%|██▊       | 11724/41030 [00:44&lt;01:42, 285.65patch/s]
+ 29%|██▊       | 11788/41030 [00:44&lt;01:47, 272.02patch/s]
+ 29%|██▉       | 11852/41030 [00:44&lt;01:51, 261.76patch/s]
+ 29%|██▉       | 11916/41030 [00:45&lt;01:50, 264.54patch/s]
+ 29%|██▉       | 11980/41030 [00:45&lt;01:49, 265.81patch/s]
+ 29%|██▉       | 12044/41030 [00:45&lt;02:02, 237.37patch/s]
+ 30%|██▉       | 12108/41030 [00:46&lt;01:58, 243.80patch/s]
+ 30%|██▉       | 12172/41030 [00:46&lt;01:48, 265.32patch/s]
+ 30%|██▉       | 12236/41030 [00:46&lt;01:42, 282.03patch/s]
+ 30%|██▉       | 12300/41030 [00:46&lt;01:43, 276.31patch/s]
+ 30%|███       | 12364/41030 [00:46&lt;01:51, 257.38patch/s]
+ 30%|███       | 12428/41030 [00:47&lt;01:53, 252.65patch/s]
+ 30%|███       | 12492/41030 [00:47&lt;01:58, 241.18patch/s]
+ 31%|███       | 12556/41030 [00:47&lt;02:10, 218.77patch/s]
+ 31%|███       | 12620/41030 [00:48&lt;02:09, 219.05patch/s]
+ 31%|███       | 12684/41030 [00:48&lt;02:05, 225.82patch/s]
+ 31%|███       | 12748/41030 [00:48&lt;02:03, 228.94patch/s]
+ 31%|███       | 12812/41030 [00:48&lt;02:03, 228.93patch/s]
+ 31%|███▏      | 12876/41030 [00:49&lt;01:58, 238.11patch/s]
+ 32%|███▏      | 12940/41030 [00:49&lt;01:58, 236.57patch/s]
+ 32%|███▏      | 13004/41030 [00:49&lt;01:52, 250.21patch/s]
+ 32%|███▏      | 13068/41030 [00:49&lt;01:42, 272.08patch/s]
+ 32%|███▏      | 13132/41030 [00:50&lt;01:37, 286.13patch/s]
+ 32%|███▏      | 13196/41030 [00:50&lt;01:37, 284.36patch/s]
+ 32%|███▏      | 13260/41030 [00:50&lt;01:39, 278.89patch/s]
+ 32%|███▏      | 13324/41030 [00:50&lt;01:37, 284.44patch/s]
+ 33%|███▎      | 13388/41030 [00:51&lt;01:38, 280.08patch/s]
+ 33%|███▎      | 13452/41030 [00:51&lt;01:43, 267.28patch/s]
+ 33%|███▎      | 13516/41030 [00:51&lt;01:45, 259.73patch/s]
+ 33%|███▎      | 13580/41030 [00:51&lt;01:49, 250.59patch/s]
+ 33%|███▎      | 13644/41030 [00:52&lt;01:52, 243.53patch/s]
+ 33%|███▎      | 13708/41030 [00:52&lt;01:57, 233.08patch/s]
+ 34%|███▎      | 13772/41030 [00:52&lt;01:58, 230.78patch/s]
+ 34%|███▎      | 13836/41030 [00:52&lt;01:55, 235.50patch/s]
+ 34%|███▍      | 13900/41030 [00:53&lt;01:48, 249.41patch/s]
+ 34%|███▍      | 13964/41030 [00:53&lt;01:45, 256.49patch/s]
+ 34%|███▍      | 14028/41030 [00:53&lt;01:49, 247.29patch/s]
+ 34%|███▍      | 14092/41030 [00:53&lt;01:43, 259.97patch/s]
+ 35%|███▍      | 14156/41030 [00:54&lt;01:36, 279.13patch/s]
+ 35%|███▍      | 14220/41030 [00:54&lt;01:33, 287.13patch/s]
+ 35%|███▍      | 14284/41030 [00:54&lt;01:32, 290.62patch/s]
+ 35%|███▍      | 14348/41030 [00:54&lt;01:37, 273.67patch/s]
+ 35%|███▌      | 14412/41030 [00:54&lt;01:35, 279.41patch/s]
+ 35%|███▌      | 14476/41030 [00:55&lt;01:43, 256.56patch/s]
+ 35%|███▌      | 14540/41030 [00:55&lt;01:47, 246.86patch/s]
+ 36%|███▌      | 14604/41030 [00:55&lt;01:50, 239.11patch/s]
+ 36%|███▌      | 14668/41030 [00:56&lt;01:56, 226.78patch/s]
+ 36%|███▌      | 14732/41030 [00:56&lt;01:54, 229.88patch/s]
+ 36%|███▌      | 14796/41030 [00:56&lt;01:45, 248.70patch/s]
+ 36%|███▌      | 14860/41030 [00:56&lt;01:39, 262.50patch/s]
+ 36%|███▋      | 14924/41030 [00:57&lt;01:33, 280.39patch/s]
+ 37%|███▋      | 14988/41030 [00:57&lt;01:39, 261.17patch/s]
+ 37%|███▋      | 15052/41030 [00:57&lt;01:39, 261.45patch/s]
+ 37%|███▋      | 15116/41030 [00:57&lt;01:39, 260.24patch/s]
+ 37%|███▋      | 15180/41030 [00:58&lt;01:39, 259.68patch/s]
+ 37%|███▋      | 15244/41030 [00:58&lt;01:36, 266.42patch/s]
+ 37%|███▋      | 15308/41030 [00:58&lt;01:40, 255.31patch/s]
+ 37%|███▋      | 15372/41030 [00:58&lt;01:35, 267.83patch/s]
+ 38%|███▊      | 15436/41030 [00:58&lt;01:32, 275.24patch/s]
+ 38%|███▊      | 15500/41030 [00:59&lt;01:31, 279.15patch/s]
+ 38%|███▊      | 15564/41030 [00:59&lt;01:30, 282.30patch/s]
+ 38%|███▊      | 15628/41030 [00:59&lt;01:35, 264.62patch/s]
+ 38%|███▊      | 15692/41030 [00:59&lt;01:28, 286.12patch/s]
+ 38%|███▊      | 15756/41030 [01:00&lt;01:31, 277.64patch/s]
+ 39%|███▊      | 15820/41030 [01:00&lt;01:32, 273.91patch/s]
+ 39%|███▊      | 15884/41030 [01:00&lt;01:32, 270.97patch/s]
+ 39%|███▉      | 15948/41030 [01:00&lt;01:38, 254.98patch/s]
+ 39%|███▉      | 16012/41030 [01:01&lt;01:42, 245.12patch/s]
+ 39%|███▉      | 16076/41030 [01:01&lt;01:42, 243.79patch/s]
+ 39%|███▉      | 16140/41030 [01:01&lt;01:33, 267.35patch/s]
+ 39%|███▉      | 16204/41030 [01:01&lt;01:28, 281.24patch/s]
+ 40%|███▉      | 16268/41030 [01:02&lt;01:33, 265.82patch/s]
+ 40%|███▉      | 16332/41030 [01:02&lt;01:28, 279.31patch/s]
+ 40%|███▉      | 16396/41030 [01:02&lt;01:26, 283.46patch/s]
+ 40%|████      | 16460/41030 [01:02&lt;01:29, 275.82patch/s]
+ 40%|████      | 16524/41030 [01:03&lt;01:29, 272.59patch/s]
+ 40%|████      | 16588/41030 [01:03&lt;01:36, 252.37patch/s]
+ 41%|████      | 16652/41030 [01:03&lt;01:39, 243.98patch/s]
+ 41%|████      | 16716/41030 [01:03&lt;01:43, 235.19patch/s]
+ 41%|████      | 16780/41030 [01:04&lt;01:43, 234.27patch/s]
+ 41%|████      | 16844/41030 [01:04&lt;01:51, 215.97patch/s]
+ 41%|████      | 16908/41030 [01:04&lt;01:52, 213.73patch/s]
+ 41%|████▏     | 16972/41030 [01:05&lt;01:46, 226.53patch/s]
+ 42%|████▏     | 17036/41030 [01:05&lt;01:41, 237.33patch/s]
+ 42%|████▏     | 17100/41030 [01:05&lt;01:42, 232.69patch/s]
+ 42%|████▏     | 17164/41030 [01:05&lt;01:38, 241.20patch/s]
+ 42%|████▏     | 17228/41030 [01:06&lt;01:40, 236.06patch/s]
+ 42%|████▏     | 17292/41030 [01:06&lt;01:39, 238.09patch/s]
+ 42%|████▏     | 17356/41030 [01:06&lt;01:37, 242.32patch/s]
+ 42%|████▏     | 17420/41030 [01:06&lt;01:33, 252.05patch/s]
+ 43%|████▎     | 17484/41030 [01:07&lt;01:28, 265.85patch/s]
+ 43%|████▎     | 17548/41030 [01:07&lt;01:27, 268.82patch/s]
+ 43%|████▎     | 17612/41030 [01:07&lt;01:31, 255.89patch/s]
+ 43%|████▎     | 17676/41030 [01:07&lt;01:37, 238.49patch/s]
+ 43%|████▎     | 17740/41030 [01:08&lt;01:37, 237.79patch/s]
+ 43%|████▎     | 17804/41030 [01:08&lt;01:37, 238.98patch/s]
+ 44%|████▎     | 17868/41030 [01:08&lt;01:38, 234.60patch/s]
+ 44%|████▎     | 17932/41030 [01:08&lt;01:35, 242.47patch/s]
+ 44%|████▍     | 17996/41030 [01:09&lt;01:25, 269.24patch/s]
+ 44%|████▍     | 18060/41030 [01:09&lt;01:33, 246.69patch/s]
+ 44%|████▍     | 18124/41030 [01:09&lt;01:35, 240.07patch/s]
+ 44%|████▍     | 18188/41030 [01:09&lt;01:33, 243.82patch/s]
+ 44%|████▍     | 18252/41030 [01:10&lt;01:35, 237.77patch/s]
+ 45%|████▍     | 18316/41030 [01:10&lt;01:35, 236.67patch/s]
+ 45%|████▍     | 18380/41030 [01:10&lt;01:34, 240.11patch/s]
+ 45%|████▍     | 18444/41030 [01:11&lt;01:33, 242.43patch/s]
+ 45%|████▌     | 18508/41030 [01:11&lt;01:31, 247.07patch/s]
+ 45%|████▌     | 18572/41030 [01:11&lt;01:26, 258.71patch/s]
+ 45%|████▌     | 18636/41030 [01:11&lt;01:31, 243.99patch/s]
+ 46%|████▌     | 18700/41030 [01:12&lt;01:30, 247.36patch/s]
+ 46%|████▌     | 18764/41030 [01:12&lt;01:27, 254.47patch/s]
+ 46%|████▌     | 18828/41030 [01:12&lt;01:27, 252.74patch/s]
+ 46%|████▌     | 18892/41030 [01:12&lt;01:27, 252.18patch/s]
+ 46%|████▌     | 18956/41030 [01:13&lt;01:28, 250.81patch/s]
+ 46%|████▋     | 19020/41030 [01:13&lt;01:23, 263.24patch/s]
+ 47%|████▋     | 19084/41030 [01:13&lt;01:25, 256.97patch/s]
+ 47%|████▋     | 19148/41030 [01:13&lt;01:24, 259.73patch/s]
+ 47%|████▋     | 19212/41030 [01:13&lt;01:15, 287.34patch/s]
+ 47%|████▋     | 19276/41030 [01:14&lt;01:13, 296.43patch/s]
+ 47%|████▋     | 19340/41030 [01:14&lt;01:14, 290.77patch/s]
+ 47%|████▋     | 19404/41030 [01:14&lt;01:18, 276.88patch/s]
+ 47%|████▋     | 19468/41030 [01:14&lt;01:22, 260.02patch/s]
+ 48%|████▊     | 19532/41030 [01:15&lt;01:20, 265.93patch/s]
+ 48%|████▊     | 19596/41030 [01:15&lt;01:21, 261.95patch/s]
+ 48%|████▊     | 19660/41030 [01:15&lt;01:23, 254.78patch/s]
+ 48%|████▊     | 19724/41030 [01:15&lt;01:23, 256.58patch/s]
+ 48%|████▊     | 19788/41030 [01:16&lt;01:29, 238.66patch/s]
+ 48%|████▊     | 19852/41030 [01:16&lt;01:26, 244.85patch/s]
+ 49%|████▊     | 19916/41030 [01:16&lt;01:24, 249.95patch/s]
+ 49%|████▊     | 19980/41030 [01:16&lt;01:21, 259.77patch/s]
+ 49%|████▉     | 20044/41030 [01:17&lt;01:18, 267.83patch/s]
+ 49%|████▉     | 20108/41030 [01:17&lt;01:22, 254.08patch/s]
+ 49%|████▉     | 20172/41030 [01:17&lt;01:21, 254.39patch/s]
+ 49%|████▉     | 20236/41030 [01:17&lt;01:21, 254.11patch/s]
+ 49%|████▉     | 20300/41030 [01:18&lt;01:20, 256.63patch/s]
+ 50%|████▉     | 20364/41030 [01:18&lt;01:16, 269.38patch/s]
+ 50%|████▉     | 20428/41030 [01:18&lt;01:17, 266.62patch/s]
+ 50%|████▉     | 20492/41030 [01:18&lt;01:11, 287.28patch/s]
+ 50%|█████     | 20556/41030 [01:19&lt;01:07, 303.42patch/s]
+ 50%|█████     | 20620/41030 [01:19&lt;01:07, 301.01patch/s]
+ 50%|█████     | 20684/41030 [01:19&lt;01:07, 299.58patch/s]
+ 51%|█████     | 20748/41030 [01:19&lt;01:05, 310.94patch/s]
+ 51%|█████     | 20812/41030 [01:19&lt;01:10, 286.02patch/s]
+ 51%|█████     | 20876/41030 [01:20&lt;01:10, 284.09patch/s]
+ 51%|█████     | 20940/41030 [01:20&lt;01:13, 273.62patch/s]
+ 51%|█████     | 21004/41030 [01:20&lt;01:14, 269.11patch/s]
+ 51%|█████▏    | 21068/41030 [01:20&lt;01:15, 263.77patch/s]
+ 52%|█████▏    | 21132/41030 [01:21&lt;01:22, 241.05patch/s]
+ 52%|█████▏    | 21196/41030 [01:21&lt;01:21, 243.68patch/s]
+ 52%|█████▏    | 21260/41030 [01:21&lt;01:21, 241.20patch/s]
+ 52%|█████▏    | 21324/41030 [01:22&lt;01:22, 239.44patch/s]
+ 52%|█████▏    | 21388/41030 [01:22&lt;01:14, 262.97patch/s]
+ 52%|█████▏    | 21452/41030 [01:22&lt;01:08, 286.32patch/s]
+ 52%|█████▏    | 21516/41030 [01:22&lt;01:19, 246.19patch/s]
+ 53%|█████▎    | 21580/41030 [01:23&lt;01:23, 234.29patch/s]
+ 53%|█████▎    | 21644/41030 [01:23&lt;01:25, 227.07patch/s]
+ 53%|█████▎    | 21708/41030 [01:23&lt;01:19, 243.35patch/s]
+ 53%|█████▎    | 21772/41030 [01:23&lt;01:20, 237.79patch/s]
+ 53%|█████▎    | 21836/41030 [01:24&lt;01:15, 253.51patch/s]
+ 53%|█████▎    | 21900/41030 [01:24&lt;01:13, 261.36patch/s]
+ 54%|█████▎    | 21964/41030 [01:24&lt;01:12, 263.57patch/s]
+ 54%|█████▎    | 22028/41030 [01:24&lt;01:11, 266.98patch/s]
+ 54%|█████▍    | 22092/41030 [01:25&lt;01:16, 249.04patch/s]
+ 54%|█████▍    | 22156/41030 [01:25&lt;01:16, 246.92patch/s]
+ 54%|█████▍    | 22220/41030 [01:25&lt;01:16, 245.39patch/s]
+ 54%|█████▍    | 22284/41030 [01:25&lt;01:16, 246.48patch/s]
+ 54%|█████▍    | 22348/41030 [01:26&lt;01:19, 235.82patch/s]
+ 55%|█████▍    | 22412/41030 [01:26&lt;01:16, 244.77patch/s]
+ 55%|█████▍    | 22476/41030 [01:26&lt;01:16, 243.62patch/s]
+ 55%|█████▍    | 22540/41030 [01:26&lt;01:16, 242.07patch/s]
+ 55%|█████▌    | 22604/41030 [01:27&lt;01:21, 226.97patch/s]
+ 55%|█████▌    | 22668/41030 [01:27&lt;01:18, 232.79patch/s]
+ 55%|█████▌    | 22732/41030 [01:27&lt;01:16, 238.95patch/s]
+ 56%|█████▌    | 22796/41030 [01:27&lt;01:14, 243.89patch/s]
+ 56%|█████▌    | 22860/41030 [01:28&lt;01:18, 231.42patch/s]
+ 56%|█████▌    | 22924/41030 [01:28&lt;01:15, 238.55patch/s]
+ 56%|█████▌    | 22988/41030 [01:28&lt;01:14, 242.65patch/s]
+ 56%|█████▌    | 23052/41030 [01:29&lt;01:09, 257.23patch/s]
+ 56%|█████▋    | 23116/41030 [01:29&lt;01:12, 247.06patch/s]
+ 56%|█████▋    | 23180/41030 [01:29&lt;01:20, 223.03patch/s]
+ 57%|█████▋    | 23244/41030 [01:29&lt;01:16, 232.31patch/s]
+ 57%|█████▋    | 23308/41030 [01:30&lt;01:13, 241.30patch/s]
+ 57%|█████▋    | 23372/41030 [01:30&lt;01:10, 250.59patch/s]
+ 57%|█████▋    | 23436/41030 [01:30&lt;01:09, 252.08patch/s]
+ 57%|█████▋    | 23500/41030 [01:30&lt;01:03, 275.74patch/s]
+ 57%|█████▋    | 23564/41030 [01:31&lt;01:02, 280.73patch/s]
+ 58%|█████▊    | 23628/41030 [01:31&lt;01:01, 282.06patch/s]
+ 58%|█████▊    | 23692/41030 [01:31&lt;01:00, 285.88patch/s]
+ 58%|█████▊    | 23756/41030 [01:31&lt;01:04, 266.95patch/s]
+ 58%|█████▊    | 23820/41030 [01:32&lt;01:08, 249.54patch/s]
+ 58%|█████▊    | 23884/41030 [01:32&lt;01:07, 252.66patch/s]
+ 58%|█████▊    | 23948/41030 [01:32&lt;01:05, 261.54patch/s]
+ 59%|█████▊    | 24012/41030 [01:32&lt;01:01, 278.25patch/s]
+ 59%|█████▊    | 24076/41030 [01:32&lt;01:02, 270.51patch/s]
+ 59%|█████▉    | 24140/41030 [01:33&lt;01:03, 266.43patch/s]
+ 59%|█████▉    | 24204/41030 [01:33&lt;01:04, 260.47patch/s]
+ 59%|█████▉    | 24268/41030 [01:33&lt;01:08, 244.98patch/s]
+ 59%|█████▉    | 24332/41030 [01:34&lt;01:14, 223.44patch/s]
+ 59%|█████▉    | 24396/41030 [01:34&lt;01:13, 225.39patch/s]
+ 60%|█████▉    | 24460/41030 [01:34&lt;01:07, 246.98patch/s]
+ 60%|█████▉    | 24524/41030 [01:34&lt;01:02, 262.90patch/s]
+ 60%|█████▉    | 24588/41030 [01:35&lt;01:03, 259.77patch/s]
+ 60%|██████    | 24652/41030 [01:35&lt;01:03, 256.07patch/s]
+ 60%|██████    | 24716/41030 [01:35&lt;01:03, 256.31patch/s]
+ 60%|██████    | 24780/41030 [01:35&lt;01:00, 268.05patch/s]
+ 61%|██████    | 24844/41030 [01:35&lt;00:58, 275.57patch/s]
+ 61%|██████    | 24908/41030 [01:36&lt;01:05, 247.89patch/s]
+ 61%|██████    | 24972/41030 [01:36&lt;01:10, 229.05patch/s]
+ 61%|██████    | 25036/41030 [01:36&lt;01:10, 226.93patch/s]
+ 61%|██████    | 25100/41030 [01:37&lt;01:09, 227.97patch/s]
+ 61%|██████▏   | 25164/41030 [01:37&lt;01:07, 235.21patch/s]
+ 61%|██████▏   | 25228/41030 [01:37&lt;01:08, 231.27patch/s]
+ 62%|██████▏   | 25292/41030 [01:38&lt;01:07, 234.26patch/s]
+ 62%|██████▏   | 25356/41030 [01:38&lt;01:03, 245.00patch/s]
+ 62%|██████▏   | 25420/41030 [01:38&lt;01:03, 246.04patch/s]
+ 62%|██████▏   | 25484/41030 [01:38&lt;01:09, 225.05patch/s]
+ 62%|██████▏   | 25548/41030 [01:39&lt;01:04, 238.24patch/s]
+ 62%|██████▏   | 25612/41030 [01:39&lt;01:01, 248.98patch/s]
+ 63%|██████▎   | 25676/41030 [01:39&lt;00:58, 261.47patch/s]
+ 63%|██████▎   | 25740/41030 [01:39&lt;00:56, 271.88patch/s]
+ 63%|██████▎   | 25804/41030 [01:40&lt;01:06, 229.22patch/s]
+ 63%|██████▎   | 25868/41030 [01:40&lt;01:07, 225.41patch/s]
+ 63%|██████▎   | 25932/41030 [01:40&lt;01:08, 220.59patch/s]
+ 63%|██████▎   | 25996/41030 [01:40&lt;01:07, 222.36patch/s]
+ 64%|██████▎   | 26060/41030 [01:41&lt;01:11, 208.22patch/s]
+ 64%|██████▎   | 26124/41030 [01:41&lt;01:09, 215.02patch/s]
+ 64%|██████▍   | 26188/41030 [01:41&lt;01:07, 220.79patch/s]
+ 64%|██████▍   | 26252/41030 [01:42&lt;01:04, 229.94patch/s]
+ 64%|██████▍   | 26316/41030 [01:42&lt;01:04, 227.46patch/s]
+ 64%|██████▍   | 26380/41030 [01:42&lt;01:00, 241.88patch/s]
+ 64%|██████▍   | 26444/41030 [01:42&lt;00:59, 244.07patch/s]
+ 65%|██████▍   | 26508/41030 [01:43&lt;00:59, 245.28patch/s]
+ 65%|██████▍   | 26572/41030 [01:43&lt;00:59, 243.36patch/s]
+ 65%|██████▍   | 26636/41030 [01:43&lt;01:04, 221.98patch/s]
+ 65%|██████▌   | 26700/41030 [01:44&lt;01:03, 225.22patch/s]
+ 65%|██████▌   | 26764/41030 [01:44&lt;01:00, 237.34patch/s]
+ 65%|██████▌   | 26828/41030 [01:44&lt;00:56, 249.27patch/s]
+ 66%|██████▌   | 26892/41030 [01:44&lt;00:55, 254.45patch/s]
+ 66%|██████▌   | 26956/41030 [01:45&lt;00:58, 242.49patch/s]
+ 66%|██████▌   | 27020/41030 [01:45&lt;00:54, 257.16patch/s]
+ 66%|██████▌   | 27084/41030 [01:45&lt;01:00, 232.22patch/s]
+ 66%|██████▌   | 27148/41030 [01:45&lt;01:03, 219.83patch/s]
+ 66%|██████▋   | 27212/41030 [01:46&lt;01:01, 224.18patch/s]
+ 66%|██████▋   | 27276/41030 [01:46&lt;01:00, 227.85patch/s]
+ 67%|██████▋   | 27340/41030 [01:46&lt;00:59, 231.82patch/s]
+ 67%|██████▋   | 27404/41030 [01:46&lt;00:56, 239.99patch/s]
+ 67%|██████▋   | 27468/41030 [01:47&lt;00:55, 242.82patch/s]
+ 67%|██████▋   | 27532/41030 [01:47&lt;00:53, 253.48patch/s]
+ 67%|██████▋   | 27596/41030 [01:47&lt;00:51, 260.06patch/s]
+ 67%|██████▋   | 27660/41030 [01:48&lt;00:59, 226.46patch/s]
+ 68%|██████▊   | 27724/41030 [01:48&lt;01:00, 221.30patch/s]
+ 68%|██████▊   | 27788/41030 [01:48&lt;00:59, 221.71patch/s]
+ 68%|██████▊   | 27852/41030 [01:48&lt;01:02, 211.52patch/s]
+ 68%|██████▊   | 27916/41030 [01:49&lt;01:07, 195.33patch/s]
+ 68%|██████▊   | 27980/41030 [01:49&lt;01:06, 196.75patch/s]
+ 68%|██████▊   | 28044/41030 [01:49&lt;01:03, 205.16patch/s]
+ 69%|██████▊   | 28108/41030 [01:50&lt;00:57, 223.97patch/s]
+ 69%|██████▊   | 28172/41030 [01:50&lt;01:01, 207.74patch/s]
+ 69%|██████▉   | 28236/41030 [01:50&lt;01:03, 199.99patch/s]
+ 69%|██████▉   | 28300/41030 [01:51&lt;01:00, 209.10patch/s]
+ 69%|██████▉   | 28364/41030 [01:51&lt;00:58, 216.99patch/s]
+ 69%|██████▉   | 28428/41030 [01:51&lt;00:58, 216.84patch/s]
+ 69%|██████▉   | 28492/41030 [01:51&lt;00:54, 230.89patch/s]
+ 70%|██████▉   | 28556/41030 [01:52&lt;00:53, 233.80patch/s]
+ 70%|██████▉   | 28620/41030 [01:52&lt;00:56, 218.93patch/s]
+ 70%|██████▉   | 28684/41030 [01:52&lt;01:03, 195.81patch/s]
+ 70%|███████   | 28748/41030 [01:53&lt;01:03, 193.21patch/s]
+ 70%|███████   | 28812/41030 [01:53&lt;01:03, 191.13patch/s]
+ 70%|███████   | 28876/41030 [01:54&lt;01:07, 179.61patch/s]
+ 71%|███████   | 28940/41030 [01:54&lt;01:05, 184.65patch/s]
+ 71%|███████   | 29004/41030 [01:54&lt;01:03, 189.27patch/s]
+ 71%|███████   | 29068/41030 [01:55&lt;01:00, 197.89patch/s]
+ 71%|███████   | 29132/41030 [01:55&lt;01:01, 193.33patch/s]
+ 71%|███████   | 29196/41030 [01:55&lt;00:54, 216.26patch/s]
+ 71%|███████▏  | 29260/41030 [01:55&lt;00:49, 237.10patch/s]
+ 71%|███████▏  | 29324/41030 [01:56&lt;00:47, 246.45patch/s]
+ 72%|███████▏  | 29388/41030 [01:56&lt;00:46, 252.25patch/s]
+ 72%|███████▏  | 29452/41030 [01:56&lt;00:48, 238.76patch/s]
+ 72%|███████▏  | 29516/41030 [01:56&lt;00:49, 233.13patch/s]
+ 72%|███████▏  | 29580/41030 [01:57&lt;00:49, 230.43patch/s]
+ 72%|███████▏  | 29644/41030 [01:57&lt;00:47, 239.67patch/s]
+ 72%|███████▏  | 29708/41030 [01:57&lt;00:49, 227.75patch/s]
+ 73%|███████▎  | 29772/41030 [01:57&lt;00:47, 234.89patch/s]
+ 73%|███████▎  | 29836/41030 [01:58&lt;00:47, 234.55patch/s]
+ 73%|███████▎  | 29900/41030 [01:58&lt;00:47, 232.60patch/s]
+ 73%|███████▎  | 29964/41030 [01:58&lt;00:48, 230.41patch/s]
+ 73%|███████▎  | 30028/41030 [01:59&lt;00:45, 243.72patch/s]
+ 73%|███████▎  | 30092/41030 [01:59&lt;00:49, 222.89patch/s]
+ 73%|███████▎  | 30156/41030 [01:59&lt;00:47, 228.43patch/s]
+ 74%|███████▎  | 30220/41030 [01:59&lt;00:49, 219.63patch/s]
+ 74%|███████▍  | 30284/41030 [02:00&lt;00:46, 231.33patch/s]
+ 74%|███████▍  | 30348/41030 [02:00&lt;00:44, 241.17patch/s]
+ 74%|███████▍  | 30412/41030 [02:00&lt;00:42, 252.23patch/s]
+ 74%|███████▍  | 30476/41030 [02:00&lt;00:41, 253.25patch/s]
+ 74%|███████▍  | 30540/41030 [02:01&lt;00:47, 221.81patch/s]
+ 75%|███████▍  | 30604/41030 [02:01&lt;00:47, 221.16patch/s]
+ 75%|███████▍  | 30668/41030 [02:01&lt;00:46, 221.55patch/s]
+ 75%|███████▍  | 30732/41030 [02:02&lt;00:49, 209.74patch/s]
+ 75%|███████▌  | 30796/41030 [02:02&lt;00:54, 189.41patch/s]
+ 75%|███████▌  | 30860/41030 [02:02&lt;00:51, 198.51patch/s]
+ 75%|███████▌  | 30924/41030 [02:03&lt;00:50, 201.36patch/s]
+ 76%|███████▌  | 30988/41030 [02:03&lt;00:48, 206.05patch/s]
+ 76%|███████▌  | 31052/41030 [02:03&lt;00:50, 197.77patch/s]
+ 76%|███████▌  | 31116/41030 [02:04&lt;00:47, 206.58patch/s]
+ 76%|███████▌  | 31180/41030 [02:04&lt;00:47, 205.81patch/s]
+ 76%|███████▌  | 31244/41030 [02:04&lt;00:46, 208.50patch/s]
+ 76%|███████▋  | 31308/41030 [02:05&lt;00:45, 213.90patch/s]
+ 76%|███████▋  | 31372/41030 [02:05&lt;00:45, 213.23patch/s]
+ 77%|███████▋  | 31436/41030 [02:05&lt;00:45, 212.01patch/s]
+ 77%|███████▋  | 31500/41030 [02:05&lt;00:43, 218.20patch/s]
+ 77%|███████▋  | 31564/41030 [02:06&lt;00:44, 211.82patch/s]
+ 77%|███████▋  | 31628/41030 [02:06&lt;00:41, 227.92patch/s]
+ 77%|███████▋  | 31692/41030 [02:06&lt;00:42, 217.62patch/s]
+ 77%|███████▋  | 31756/41030 [02:07&lt;00:49, 188.43patch/s]
+ 78%|███████▊  | 31820/41030 [02:07&lt;00:44, 205.79patch/s]
+ 78%|███████▊  | 31884/41030 [02:07&lt;00:41, 221.43patch/s]
+ 78%|███████▊  | 31948/41030 [02:07&lt;00:38, 233.79patch/s]
+ 78%|███████▊  | 32012/41030 [02:08&lt;00:39, 226.00patch/s]
+ 78%|███████▊  | 32076/41030 [02:08&lt;00:39, 225.86patch/s]
+ 78%|███████▊  | 32140/41030 [02:08&lt;00:41, 213.09patch/s]
+ 78%|███████▊  | 32204/41030 [02:09&lt;00:41, 213.45patch/s]
+ 79%|███████▊  | 32268/41030 [02:09&lt;00:42, 207.34patch/s]
+ 79%|███████▉  | 32332/41030 [02:09&lt;00:41, 208.02patch/s]
+ 79%|███████▉  | 32396/41030 [02:10&lt;00:40, 211.56patch/s]
+ 79%|███████▉  | 32460/41030 [02:10&lt;00:38, 224.99patch/s]
+ 79%|███████▉  | 32524/41030 [02:10&lt;00:36, 236.09patch/s]
+ 79%|███████▉  | 32588/41030 [02:10&lt;00:35, 237.04patch/s]
+ 80%|███████▉  | 32652/41030 [02:11&lt;00:35, 235.90patch/s]
+ 80%|███████▉  | 32716/41030 [02:11&lt;00:39, 212.43patch/s]
+ 80%|███████▉  | 32780/41030 [02:11&lt;00:38, 212.21patch/s]
+ 80%|████████  | 32844/41030 [02:12&lt;00:40, 204.27patch/s]
+ 80%|████████  | 32908/41030 [02:12&lt;00:37, 218.14patch/s]
+ 80%|████████  | 32972/41030 [02:12&lt;00:37, 215.96patch/s]
+ 81%|████████  | 33036/41030 [02:12&lt;00:34, 228.91patch/s]
+ 81%|████████  | 33100/41030 [02:13&lt;00:33, 238.43patch/s]
+ 81%|████████  | 33164/41030 [02:13&lt;00:32, 240.41patch/s]
+ 81%|████████  | 33228/41030 [02:13&lt;00:32, 243.77patch/s]
+ 81%|████████  | 33292/41030 [02:13&lt;00:33, 234.34patch/s]
+ 81%|████████▏ | 33356/41030 [02:14&lt;00:33, 229.46patch/s]
+ 81%|████████▏ | 33420/41030 [02:14&lt;00:33, 226.53patch/s]
+ 82%|████████▏ | 33484/41030 [02:14&lt;00:33, 222.82patch/s]
+ 82%|████████▏ | 33548/41030 [02:15&lt;00:36, 204.16patch/s]
+ 82%|████████▏ | 33612/41030 [02:15&lt;00:35, 210.28patch/s]
+ 82%|████████▏ | 33676/41030 [02:15&lt;00:33, 221.07patch/s]
+ 82%|████████▏ | 33740/41030 [02:16&lt;00:31, 232.74patch/s]
+ 82%|████████▏ | 33804/41030 [02:16&lt;00:35, 204.12patch/s]
+ 83%|████████▎ | 33868/41030 [02:16&lt;00:35, 199.20patch/s]
+ 83%|████████▎ | 33932/41030 [02:17&lt;00:35, 197.94patch/s]
+ 83%|████████▎ | 33996/41030 [02:17&lt;00:35, 197.58patch/s]
+ 83%|████████▎ | 34060/41030 [02:17&lt;00:33, 209.84patch/s]
+ 83%|████████▎ | 34124/41030 [02:17&lt;00:32, 215.34patch/s]
+ 83%|████████▎ | 34188/41030 [02:18&lt;00:31, 218.51patch/s]
+ 83%|████████▎ | 34252/41030 [02:18&lt;00:33, 202.64patch/s]
+ 84%|████████▎ | 34316/41030 [02:18&lt;00:33, 203.22patch/s]
+ 84%|████████▍ | 34380/41030 [02:19&lt;00:30, 216.20patch/s]
+ 84%|████████▍ | 34444/41030 [02:19&lt;00:30, 217.78patch/s]
+ 84%|████████▍ | 34508/41030 [02:19&lt;00:31, 203.83patch/s]
+ 84%|████████▍ | 34572/41030 [02:20&lt;00:30, 213.94patch/s]
+ 84%|████████▍ | 34636/41030 [02:20&lt;00:28, 221.55patch/s]
+ 85%|████████▍ | 34700/41030 [02:20&lt;00:27, 231.68patch/s]
+ 85%|████████▍ | 34764/41030 [02:20&lt;00:28, 223.42patch/s]
+ 85%|████████▍ | 34828/41030 [02:21&lt;00:26, 229.87patch/s]
+ 85%|████████▌ | 34892/41030 [02:21&lt;00:27, 226.83patch/s]
+ 85%|████████▌ | 34956/41030 [02:21&lt;00:26, 225.18patch/s]
+ 85%|████████▌ | 35020/41030 [02:22&lt;00:29, 202.56patch/s]
+ 86%|████████▌ | 35084/41030 [02:22&lt;00:29, 201.79patch/s]
+ 86%|████████▌ | 35148/41030 [02:22&lt;00:29, 201.73patch/s]
+ 86%|████████▌ | 35212/41030 [02:23&lt;00:27, 209.97patch/s]
+ 86%|████████▌ | 35276/41030 [02:23&lt;00:27, 206.66patch/s]
+ 86%|████████▌ | 35340/41030 [02:23&lt;00:25, 221.25patch/s]
+ 86%|████████▋ | 35404/41030 [02:23&lt;00:23, 234.95patch/s]
+ 86%|████████▋ | 35468/41030 [02:24&lt;00:20, 265.92patch/s]
+ 87%|████████▋ | 35532/41030 [02:24&lt;00:19, 289.09patch/s]
+ 87%|████████▋ | 35596/41030 [02:24&lt;00:20, 262.54patch/s]
+ 87%|████████▋ | 35660/41030 [02:24&lt;00:21, 248.12patch/s]
+ 87%|████████▋ | 35724/41030 [02:25&lt;00:22, 238.67patch/s]
+ 87%|████████▋ | 35788/41030 [02:25&lt;00:21, 238.63patch/s]
+ 87%|████████▋ | 35852/41030 [02:25&lt;00:23, 221.12patch/s]
+ 88%|████████▊ | 35916/41030 [02:25&lt;00:22, 225.64patch/s]
+ 88%|████████▊ | 35980/41030 [02:26&lt;00:21, 231.50patch/s]
+ 88%|████████▊ | 36044/41030 [02:26&lt;00:20, 238.99patch/s]
+ 88%|████████▊ | 36108/41030 [02:26&lt;00:22, 217.77patch/s]
+ 88%|████████▊ | 36172/41030 [02:27&lt;00:22, 219.35patch/s]
+ 88%|████████▊ | 36236/41030 [02:27&lt;00:20, 230.53patch/s]
+ 88%|████████▊ | 36300/41030 [02:27&lt;00:19, 241.63patch/s]
+ 89%|████████▊ | 36364/41030 [02:27&lt;00:20, 231.24patch/s]
+ 89%|████████▉ | 36428/41030 [02:28&lt;00:19, 241.67patch/s]
+ 89%|████████▉ | 36492/41030 [02:28&lt;00:18, 248.50patch/s]
+ 89%|████████▉ | 36556/41030 [02:28&lt;00:18, 244.96patch/s]
+ 89%|████████▉ | 36620/41030 [02:28&lt;00:18, 243.13patch/s]
+ 89%|████████▉ | 36684/41030 [02:29&lt;00:18, 235.62patch/s]
+ 90%|████████▉ | 36748/41030 [02:29&lt;00:17, 246.41patch/s]
+ 90%|████████▉ | 36812/41030 [02:29&lt;00:16, 250.87patch/s]
+ 90%|████████▉ | 36876/41030 [02:29&lt;00:16, 245.50patch/s]
+ 90%|█████████ | 36940/41030 [02:30&lt;00:16, 242.88patch/s]
+ 90%|█████████ | 37004/41030 [02:30&lt;00:17, 231.45patch/s]
+ 90%|█████████ | 37068/41030 [02:30&lt;00:16, 241.82patch/s]
+ 90%|█████████ | 37132/41030 [02:30&lt;00:15, 254.48patch/s]
+ 91%|█████████ | 37196/41030 [02:31&lt;00:15, 255.07patch/s]
+ 91%|█████████ | 37260/41030 [02:31&lt;00:14, 252.93patch/s]
+ 91%|█████████ | 37324/41030 [02:31&lt;00:14, 252.33patch/s]
+ 91%|█████████ | 37388/41030 [02:31&lt;00:13, 268.14patch/s]
+ 91%|█████████▏| 37452/41030 [02:32&lt;00:14, 254.00patch/s]
+ 91%|█████████▏| 37516/41030 [02:32&lt;00:14, 248.20patch/s]
+ 92%|█████████▏| 37580/41030 [02:32&lt;00:13, 258.78patch/s]
+ 92%|█████████▏| 37644/41030 [02:33&lt;00:14, 241.01patch/s]
+ 92%|█████████▏| 37708/41030 [02:33&lt;00:13, 248.40patch/s]
+ 92%|█████████▏| 37772/41030 [02:33&lt;00:12, 254.01patch/s]
+ 92%|█████████▏| 37836/41030 [02:33&lt;00:12, 259.03patch/s]
+ 92%|█████████▏| 37900/41030 [02:33&lt;00:12, 253.65patch/s]
+ 93%|█████████▎| 37964/41030 [02:34&lt;00:12, 240.66patch/s]
+ 93%|█████████▎| 38028/41030 [02:34&lt;00:12, 240.32patch/s]
+ 93%|█████████▎| 38092/41030 [02:34&lt;00:11, 250.66patch/s]
+ 93%|█████████▎| 38156/41030 [02:35&lt;00:11, 256.87patch/s]
+ 93%|█████████▎| 38220/41030 [02:35&lt;00:11, 239.34patch/s]
+ 93%|█████████▎| 38284/41030 [02:35&lt;00:11, 246.93patch/s]
+ 93%|█████████▎| 38348/41030 [02:35&lt;00:10, 261.86patch/s]
+ 94%|█████████▎| 38412/41030 [02:36&lt;00:10, 259.02patch/s]
+ 94%|█████████▍| 38476/41030 [02:36&lt;00:09, 257.78patch/s]
+ 94%|█████████▍| 38540/41030 [02:36&lt;00:09, 256.29patch/s]
+ 94%|█████████▍| 38604/41030 [02:36&lt;00:08, 276.47patch/s]
+ 94%|█████████▍| 38668/41030 [02:36&lt;00:08, 282.87patch/s]
+ 94%|█████████▍| 38732/41030 [02:37&lt;00:08, 268.73patch/s]
+ 95%|█████████▍| 38796/41030 [02:37&lt;00:08, 255.66patch/s]
+ 95%|█████████▍| 38860/41030 [02:37&lt;00:08, 245.62patch/s]
+ 95%|█████████▍| 38924/41030 [02:37&lt;00:08, 259.38patch/s]
+ 95%|█████████▌| 38988/41030 [02:38&lt;00:07, 273.39patch/s]
+ 95%|█████████▌| 39052/41030 [02:38&lt;00:06, 283.53patch/s]
+ 95%|█████████▌| 39116/41030 [02:38&lt;00:06, 296.22patch/s]
+ 95%|█████████▌| 39180/41030 [02:38&lt;00:07, 253.85patch/s]
+ 96%|█████████▌| 39244/41030 [02:39&lt;00:07, 248.66patch/s]
+ 96%|█████████▌| 39308/41030 [02:39&lt;00:06, 255.55patch/s]
+ 96%|█████████▌| 39372/41030 [02:39&lt;00:06, 260.80patch/s]
+ 96%|█████████▌| 39436/41030 [02:39&lt;00:06, 247.29patch/s]
+ 96%|█████████▋| 39500/41030 [02:40&lt;00:06, 245.75patch/s]
+ 96%|█████████▋| 39564/41030 [02:40&lt;00:05, 259.90patch/s]
+ 97%|█████████▋| 39628/41030 [02:40&lt;00:05, 261.39patch/s]
+ 97%|█████████▋| 39692/41030 [02:40&lt;00:05, 262.35patch/s]
+ 97%|█████████▋| 39756/41030 [02:41&lt;00:04, 270.59patch/s]
+ 97%|█████████▋| 39820/41030 [02:41&lt;00:04, 254.98patch/s]
+ 97%|█████████▋| 39884/41030 [02:41&lt;00:04, 265.04patch/s]
+ 97%|█████████▋| 39948/41030 [02:41&lt;00:03, 271.81patch/s]
+ 98%|█████████▊| 40012/41030 [02:42&lt;00:03, 279.22patch/s]
+ 98%|█████████▊| 40076/41030 [02:42&lt;00:03, 278.09patch/s]
+ 98%|█████████▊| 40140/41030 [02:42&lt;00:03, 254.19patch/s]
+ 98%|█████████▊| 40204/41030 [02:42&lt;00:03, 268.81patch/s]
+ 98%|█████████▊| 40268/41030 [02:43&lt;00:02, 282.50patch/s]
+ 98%|█████████▊| 40332/41030 [02:43&lt;00:02, 294.39patch/s]
+ 98%|█████████▊| 40396/41030 [02:43&lt;00:02, 297.71patch/s]
+ 99%|█████████▊| 40460/41030 [02:43&lt;00:02, 279.23patch/s]
+ 99%|█████████▉| 40524/41030 [02:43&lt;00:01, 289.69patch/s]
+ 99%|█████████▉| 40588/41030 [02:44&lt;00:01, 299.62patch/s]
+ 99%|█████████▉| 40652/41030 [02:44&lt;00:01, 303.91patch/s]
+ 99%|█████████▉| 40716/41030 [02:44&lt;00:01, 299.50patch/s]
+ 99%|█████████▉| 40780/41030 [02:44&lt;00:00, 271.22patch/s]
+100%|█████████▉| 40844/41030 [02:45&lt;00:00, 270.63patch/s]
+100%|█████████▉| 40908/41030 [02:45&lt;00:00, 268.97patch/s]
+100%|█████████▉| 40972/41030 [02:45&lt;00:00, 273.38patch/s]
+100%|██████████| 41030/41030 [02:45&lt;00:00, 247.91patch/s]
+</pre></div>
+</div>
+<p>If everything went as planned, executing the cell below will plot the result.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># For clarity, only show positive RSA scores</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">stc_rsa</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">stc_rsa</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">stc_rsa</span></a><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">stc_rsa</span></a><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="c1"># Show the RSA maps for both the pixel and FaceNet RDMs</span>
+<a href="https://mne.tools/stable/generated/mne.viz.Brain.html#mne.viz.Brain" title="mne.viz.Brain" class="sphx-glr-backref-module-mne-viz sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">brain_pixels</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">stc_rsa</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+    <span class="s2">&quot;sub-02&quot;</span><span class="p">,</span>
+    <span class="n">subjects_dir</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a><span class="si">}</span><span class="s2">/freesurfer&quot;</span><span class="p">,</span>
+    <span class="n">hemi</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span>
+    <span class="n">initial_time</span><span class="o">=</span><span class="mf">0.081</span><span class="p">,</span>
+    <span class="n">views</span><span class="o">=</span><span class="s2">&quot;ventral&quot;</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;pixels&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<a href="https://mne.tools/stable/generated/mne.viz.Brain.html#mne.viz.Brain" title="mne.viz.Brain" class="sphx-glr-backref-module-mne-viz sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">brain_facenet</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">stc_rsa</span></a><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+    <span class="s2">&quot;sub-02&quot;</span><span class="p">,</span>
+    <span class="n">subjects_dir</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a><span class="si">}</span><span class="s2">/freesurfer&quot;</span><span class="p">,</span>
+    <span class="n">hemi</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span>
+    <span class="n">initial_time</span><span class="o">=</span><span class="mf">0.180</span><span class="p">,</span>
+    <span class="n">views</span><span class="o">=</span><span class="s2">&quot;parietal&quot;</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;FaceNet&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_02_source_level_tutorial_002.png" srcset="../../_images/sphx_glr_02_source_level_tutorial_002.png" alt="02 source level tutorial" class = "sphx-glr-single-img"/><img src="../../_images/sphx_glr_02_source_level_tutorial_003.png" srcset="../../_images/sphx_glr_02_source_level_tutorial_003.png" alt="02 source level tutorial" class = "sphx-glr-single-img"/><p>If you’ve made it this far, you have successfully completed your first source-level
+RSA! 🎉 This is the end of this tutorial. In the next tutorial, we will discuss
+group-level analysis and statistics: <a class="reference internal" href="03_statistics_tutorial.html#tut-statistics"><span class="std std-ref">Tutorial part 3: statistical analysis of group-level RSA results</span></a>.</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (3 minutes 9.795 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-tutorials-02-source-level-tutorial-py">
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/bcf0bca0d59b0e7b73b1215ebe398b6e/02_source_level_tutorial.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">02_source_level_tutorial.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/57744dc9c03b33c0c5b6f297bdb801e6/02_source_level_tutorial.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">02_source_level_tutorial.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-zip docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/34823fc05aa210fdc3ef3edf4a5aa6e0/02_source_level_tutorial.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">02_source_level_tutorial.zip</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="01_sensor_level_tutorial.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Tutorial part 1: RSA on sensor-level MEG data</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="03_statistics_tutorial.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Tutorial part 3: statistical analysis of group-level RSA results</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Tutorial part 2: RSA on source-level MEG data</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#to-source-space">To source space!</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#source-space-rsa">Source-space RSA</a></li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Marijn van Vliet, Aalto University.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
