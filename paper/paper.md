@@ -80,6 +80,8 @@ Here is an example showcasing how to use MNE-RSA to perform an RSA analysis betw
 The RSA is performed using a searchlight across the cortical surface and a sliding window across time.
 The result is shown in \autoref{fig:rsa-result}.
 
+\newpage
+
 ```python
 import os
 
