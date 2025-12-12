@@ -47,14 +47,14 @@ bibliography: paper.bib
 # Summary
 
 MNE-RSA is a Python package for performing representational similarity analysis (RSA) on non-invasive measurements of brain activity, namely electroencephalography (EEG), magnetoencephalography (MEG) and functional magnetic resonance imaging (fMRI).
-It serves as an extension to MNE-Python [@Gramfort2013], which is a comprehensive package for preprocessing EEG/MEG data and performing source estimation and implements the many preprocessing steps required for RSA analysis.
+It serves as an extension to MNE-Python [@Gramfort2013], which is a comprehensive package for preprocessing EEG/MEG data and performing source estimation alongside implementing the many preprocessing steps required for RSA analysis.
 After preprocessing is done, MNE-RSA provides a straightforward way to perform the actual RSA on data that is loaded as MNE-Python datastructures.
 
 ## About RSA
 RSA is a technique to compare information flows within complex systems [@Kriegeskorte2008].
 In the context of this software package, this mostly means comparing different representations of input stimuli to neural representations at different locations and times in the brain.
-Example representations of a stimulus would be the pixels of an image, or the semantic features of the object depicted in the image ("has a tail", "barks", "good boy"), or an embedding vector obtained with a convolutional neural network (CNN) or large language network (LLM) [@Diedrichsen2017].
-Example neural representations include the pattern of electric potentials across EEG sensors, or the magnetic field pattern across MEG sensors, or the pattern of source localized activity across the cortex, or the pattern of beta values across fMRI voxels.
+Example representations of a stimulus would be the pixels of an image, the semantic features of the object depicted in the image ("has a tail", "barks", "good boy"), or an embedding vector obtained with a convolutional neural network (CNN) or large language network (LLM) [@Diedrichsen2017].
+Example neural representations include the pattern of electric potentials across EEG sensors, the magnetic field pattern across MEG sensors, the pattern of source localized activity across the cortex, or the pattern of beta values across fMRI voxels.
 Whenever one can create multiple representations of the same stimuli, one can compare these representations using RSA to judge their "representational similarity" (\autoref{fig:rsa}).
 The key to this is the creation of a representational dissimilarity matrix (RDM) which is an all-to-all distance matrix between the representations of a set of stimuli, usually obtained by correlating the representation vectors of each pair of stimuli.
 Once an RDM is obtained for the different representation schemes (typically you have one obtained through some model and one obtained from brain activity) they can be compared (again using correlation) to yield an RSA score.
@@ -76,7 +76,7 @@ MNE-RSA supports all the distance metrics in `scipy.spatial.distance` for comput
 -  Linear regression (when comparing multiple RDMs at once)
 -  Partial correlation (when comparing multiple RDMs at once)
 
-Here is an example showcasing how to use MNE-RSA to perform an RSA analysis between the Wakeman & Nelson "faces" dataset[@Wakeman2015] and FaceNet[@Schroff2015] embedding vectors.
+Here is an example showcasing how to use MNE-RSA to perform an RSA analysis between the Wakeman & Nelson "faces" dataset [@Wakeman2015] and FaceNet [@Schroff2015] embedding vectors.
 The RSA is performed using a searchlight across the cortical surface and a sliding window across time.
 The result is shown in \autoref{fig:rsa-result}.
 
@@ -135,7 +135,7 @@ stc_rsa.plot(
 
 ## Performance
 Performing RSA in a searchlight pattern will produce tens of thousands of RDMs that can take up multiple gigabytes of space.
-For memory efficiency, RDMs are never kept in memory longer than they need to be, hence the useage of python generators.
+For memory efficiency, RDMs are never kept in memory longer than they need to be, hence the useage of Python generators.
 It is almost always easier to re-compute RDMs than it is to write them to disk and later read them back in.
 The computation of RDMs is parallelized across CPU cores.
 
@@ -143,8 +143,8 @@ The computation of RDMs is parallelized across CPU cores.
 # Statement of need
 
 While the core computations behind RSA are simple, getting the details right is hard.
-Creating a "searchlight" patches across the cortex means using geodesic rather than Euclidean distance (\autoref{fig:distances}), combining MEG gradiometers and magnetometers requires signal whitening, creating proper evoked responses requires averaging across stimulus repetitions, and creating reliable brain RDMs requires cross-validated distance metrics [@Guggenmos2018].
-MNE-RSA provides turn-key solutions for all of these details by interfacing with the metadata available in MNE-Python objects.
+Creating "searchlight" patches across the cortex means using geodesic rather than Euclidean distance (\autoref{fig:distances}), combining MEG gradiometers and magnetometers requires signal whitening, creating proper evoked responses requires averaging across stimulus repetitions, and creating reliable brain RDMs requires cross-validated distance metrics [@Guggenmos2018].
+MNE-RSA provides turnkey solutions for all of these details by interfacing with the metadata available in MNE-Python objects.
 
 ![Depiction of geodesic versus Euclidean distance between points along the cortex.\label{fig:distances}](distances.pdf){width="6cm"}
 
@@ -155,11 +155,11 @@ At the time of writing, MNE-RSA has been used in five studies, two of which invo
 The scope of MNE-RSA is to to add RSA capabilities to MNE-Python and as such is geared towards users who are analyzing EEG/MEG data in Python.
 It provides a streamlined user experience for the most common use cases in this domain.
 
-For users of MATLAB toolboxes such as FieldTrip (https://www.fieldtriptoolbox.org), Brainstorm (https://neuroimage.usc.edu/brainstorm) or EEGLab (https://sccn.ucsd.edu/eeglab), the original RSA-toolbox (https://github.com/rsagroup/rsatoolbox_matlab) may be a good choice.
-The original RSA-toolbox was implemented in MATLAB, although the third iteration now implemented in python [@Bosch2025].
+For users of MATLAB toolboxes such as [FieldTrip](https://www.fieldtriptoolbox.org), [Brainstorm](https://neuroimage.usc.edu/brainstorm) or [EEGLab](https://sccn.ucsd.edu/eeglab), the original [RSA-toolbox](https://github.com/rsagroup/rsatoolbox_matlab) may be a good choice.
+The original RSA-toolbox was implemented in MATLAB, although the third iteration now implemented in Python [@Bosch2025].
 While its focus is mostly on fMRI analysis, the RSA-toolbox aims for a broad implementation of everything related to RSA and its documentation includes an MEG demo.
 
-A python package worth mentioning is PyMVPA [@Hanke2009], which implements a wide array of machine learning methods, including an RSA variant where RDMs are created using decoding performance as distance metric.
+A Python package worth mentioning is PyMVPA [@Hanke2009], which implements a wide array of machine learning methods, including an RSA variant where RDMs are created using decoding performance as distance metric.
 While it is possible to use it for EEG and MEG analysis, it mostly focuses on fMRI.
 
 
