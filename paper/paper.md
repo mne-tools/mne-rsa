@@ -65,7 +65,7 @@ When one does this in a "searchlight" pattern across the brain, the result is a 
 
 ## Functionality
 The core functionality of MNE-RSA consists of an efficient pipeline that operates on NumPy arrays, starting from "searchlight" (i.e. multi-dimensional sliding window) indexing, to cross-validated computation of RDMs, to the comparison with "model" RDMs to produce RSA values.
-On top of the general purpose pipeline, MNE-RSA exposes functions that operate on MNE-Python (EEG, MEG) and Nibabel (fMRI) objects and also return the resulting RSA values as such objects.
+On top of the general purpose pipeline, MNE-RSA exposes functions that operate on MNE-Python (EEG, MEG) [@Gramfort2013] and Nibabel (fMRI) [@Brett2025] objects and also return the resulting RSA values as such objects.
 Those functions leverage the available metadata, such as the sensor layout, edges of cortical 3D meshes, and voxel sizes, to present a more intuitive API.
 
 MNE-RSA supports all the distance metrics in `scipy.spatial.distance` for computing RDMs and the following metrics for comparing RDMs:
