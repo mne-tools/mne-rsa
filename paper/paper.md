@@ -35,7 +35,7 @@ affiliations:
    index: 1
  - name: Max Planck Institute for Human Development, Berlin, Germany
    index: 2
- - name: Department of Cognitive Science, Johns Hopkins University, Baltimore, USA
+ - name: Department of Cognitive Science, Johns Hopkins University, Baltimore, United States of America
    index: 3
  - name: Inria, CEA, Université Paris-Saclay, Palaiseau, France
    index: 4
@@ -137,7 +137,7 @@ stc_rsa.plot(
 
 ## Performance
 Performing RSA in a searchlight pattern will produce tens of thousands of RDMs that can take up multiple gigabytes of space.
-For memory efficiency, RDMs are never kept in memory longer than they need to be, hence the useage of Python generators.
+For memory efficiency, RDMs are never kept in memory longer than they need to be, hence the usage of Python generators.
 It is almost always easier to re-compute RDMs than it is to write them to disk and later read them back in.
 The computation of RDMs is parallelized across CPU cores.
 
