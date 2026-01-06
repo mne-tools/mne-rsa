@@ -126,6 +126,4 @@ Windows: `sphinx-build . _build/html`).
 If you end up using this package for the data analysis that is part of a scientific
 article, please cite:
 
-Marijn van Vliet, Takao Shimizu, Stefan Appelhoff, Yuan-Fang Zhao, & Richard
-Höchenberger. (2024). mne-tools/mne-rsa: Version 0.9.1 (0.9.1). Zenodo.
-https://doi.org/10.5281/zenodo.11258133
+Marijn van Vliet, Stefan Appelhoff, Takao Shimizu, Egor Eremin, Annika Hultén, Yuanfang Zhao, and Richard Höchenberger, (2025). MNE-RSA: Representational Similarity Analysis on EEG, MEG and fMRI data. Journal of Open Source Software, 10(116), 9148, https://doi.org/10.21105/joss.09148
