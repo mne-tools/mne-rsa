@@ -27,8 +27,6 @@ right ear or visual field.
 # sphinx_gallery_thumbnail_number=2
 
 # Import required packages
-import operator
-
 import mne
 import mne_rsa
 import numpy as np
@@ -73,7 +71,7 @@ noise_cov.plot(epochs.info)
 epochs = mne.concatenate_epochs([epochs["audio"], epochs["visual"]])
 
 # Compute model RDM
-model_rdm = mne_rsa.compute_rdm(epochs.events[:, 2], metric=operator.ne)
+model_rdm = mne_rsa.compute_rdm(epochs.events[:, 2], metric=lambda a, b: a != b)
 mne_rsa.plot_rdms(model_rdm)
 
 # Perform RSA across time
