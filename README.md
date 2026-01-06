@@ -83,7 +83,7 @@ mne.viz.plot_compare_evokeds(
 </picture>
 
 ## Documentation
-For a detailed guide on RSA analyis from start to finish on an example dataset, see the [tutorials](https://mne.tools/mne-rsa/stable/auto_examples/tutorials/index.html).
+For a detailed guide on RSA analysis from start to finish on an example dataset, see the [tutorials](https://mne.tools/mne-rsa/stable/auto_examples/tutorials/index.html).
 
 For quick guides on how to do specific things, see the [examples](https://mne.tools/mne-rsa/stable/auto_examples/index.html).
 

@@ -22,15 +22,6 @@ https://doi.org/10.3389/neuro.06.004.2008
    :class: only-dark
 
 
-Installation
-^^^^^^^^^^^^
-
-The package can be installed either through PIP:  
-``pip install mne-rsa``  
-
-or through conda using the conda-forge channel:  
-``conda install -c conda-forge mne-rsa``
-
 Use cases
 ^^^^^^^^^
 
@@ -55,6 +46,16 @@ Supported metrics for comparing RDMs:
 -  Kendall’s Tau-A
 -  Linear regression (when comparing multiple RDMs at once)
 -  Partial correlation (when comparing multiple RDMs at once)
+
+Installation
+^^^^^^^^^^^^
+
+The package can be installed either through PIP: ``pip install mne-rsa``
+
+or through conda using the conda-forge channel: ``conda install -c conda-forge mne-rsa``
+
+Installing through either channel will pull in `MNE-Python <https://mne.tools>`__ as a dependency, along with `Qt 6] <https://www.qt.io>`__, `PyVista <https://pyvista.org>`__ and `Scikit-Learn <https://scikit-learn.org>`__. See `requirements.txt <https://github.com/mne-tools/mne-rsa/blob/main/requirements.txt>`__ for the full list of packages.
+
 
 Example usage
 ^^^^^^^^^^^^^
@@ -87,11 +88,9 @@ time:
 
 Documentation
 ^^^^^^^^^^^^^
-For a detailed guide on how RSA is performed using MNE-RSA, see the `Tutorials
-<auto_examples/tutorials/index.html>`_.
+For a detailed guide on RSA analysis from start to finish on an example dataset, see the `Tutorials <auto_examples/tutorials/index.html>`_.
 
-For quick guides on how to do specific things, see the `Examples
-<auto_examples/index.html>`_.
+For quick guides on how to do specific things, see the `Examples <auto_examples/index.html>`_.
 
 Finally, there is the `API reference documentation <api.html>`_.
 
@@ -122,8 +121,9 @@ For questions and help with your analysis, you are welcome to post on the `MNE f
 Contributing
 ^^^^^^^^^^^^
 
-Development of the package happens on `Github <https://github.com/mne-tools/mne-rsa>`_.
-Everyone is welcome to raise `issues <https://github.com/mne-tools/mne-rsa/issues>`_ or contribute `pull requests <https://github.com/mne-tools/mne-rsa/pulls>`_.
+Development of the package happens on `Github <https://github.com/mne-tools/mne-rsa>`__ under the umbrella of MNE-tools.
+Everyone is welcome to raise `issues <https://github.com/mne-tools/mne-rsa/issues>`__ or contribute `pull requests <https://github.com/mne-tools/mne-rsa/pulls>`__ as long as they abide by our `Code of Conduct <https://github.com/mne-tools/.github/blob/main/CODE_OF_CONDUCT.md>`__.
+For more information about the ways in which one can contribute, see the `Contributing guide of MNE-Python <https://mne.tools/stable/development/contributing.html>`__, which by and large applies to this project as well.
 
 Here is how to install the additional required packages for developing MNE-RSA and set up the package in development mode:
 
