@@ -2,7 +2,6 @@
 
 [![Unit tests](https://github.com/mne-tools/mne-rsa/workflows/unit%20tests/badge.svg)](https://github.com/mne-tools/mne-rsa/actions?query=workflow%3A%22unit+tests%22)
 [![docs](https://github.com/mne-tools/mne-rsa/workflows/build-docs/badge.svg)](https://github.com/mne-tools/mne-rsa/actions?query=workflow%3Abuild-docs)
-[![doi](https://zenodo.org/badge/194268560.svg)](https://zenodo.org/doi/10.5281/zenodo.11242874)
 [![joss](https://joss.theoj.org/papers/224328eb22eab91aaae44579fb00fdaa/status.svg)](https://joss.theoj.org/papers/224328eb22eab91aaae44579fb00fdaa)
 
 This is a Python package for performing representational similarity analysis (RSA) using [MNE-Python](https://martinos.org/mne/stable/index.html>) data structures.
