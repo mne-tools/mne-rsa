@@ -71,7 +71,7 @@ noise_cov.plot(epochs.info)
 epochs = mne.concatenate_epochs([epochs["audio"], epochs["visual"]])
 
 # Compute model RDM
-model_rdm = mne_rsa.compute_rdm(epochs.events[:, 2], metric=lambda a, b: a != b)
+model_rdm = mne_rsa.compute_rdm(epochs.events[:, 2], metric=lambda a, b: a[0] != b[0])
 mne_rsa.plot_rdms(model_rdm)
 
 # Perform RSA across time
