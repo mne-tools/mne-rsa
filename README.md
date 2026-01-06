@@ -2,7 +2,6 @@
 
 [![Unit tests](https://github.com/mne-tools/mne-rsa/workflows/unit%20tests/badge.svg)](https://github.com/mne-tools/mne-rsa/actions?query=workflow%3A%22unit+tests%22)
 [![docs](https://github.com/mne-tools/mne-rsa/workflows/build-docs/badge.svg)](https://github.com/mne-tools/mne-rsa/actions?query=workflow%3Abuild-docs)
-[![doi](https://zenodo.org/badge/194268560.svg)](https://zenodo.org/doi/10.5281/zenodo.11242874)
 [![joss](https://joss.theoj.org/papers/224328eb22eab91aaae44579fb00fdaa/status.svg)](https://joss.theoj.org/papers/224328eb22eab91aaae44579fb00fdaa)
 
 This is a Python package for performing representational similarity analysis (RSA) using [MNE-Python](https://martinos.org/mne/stable/index.html>) data structures.
@@ -84,7 +83,7 @@ mne.viz.plot_compare_evokeds(
 </picture>
 
 ## Documentation
-For a detailed guide on RSA analyis from start to finish on an example dataset, see the [tutorials](https://mne.tools/mne-rsa/stable/auto_examples/tutorials/index.html).
+For a detailed guide on RSA analysis from start to finish on an example dataset, see the [tutorials](https://mne.tools/mne-rsa/stable/auto_examples/tutorials/index.html).
 
 For quick guides on how to do specific things, see the [examples](https://mne.tools/mne-rsa/stable/auto_examples/index.html).
 
@@ -126,6 +125,4 @@ Windows: `sphinx-build . _build/html`).
 If you end up using this package for the data analysis that is part of a scientific
 article, please cite:
 
-Marijn van Vliet, Takao Shimizu, Stefan Appelhoff, Yuan-Fang Zhao, & Richard
-Höchenberger. (2024). mne-tools/mne-rsa: Version 0.9.1 (0.9.1). Zenodo.
-https://doi.org/10.5281/zenodo.11258133
+Marijn van Vliet, Stefan Appelhoff, Takao Shimizu, Egor Eremin, Annika Hultén, Yuanfang Zhao, and Richard Höchenberger, (2025). MNE-RSA: Representational Similarity Analysis on EEG, MEG and fMRI data. Journal of Open Source Software, 10(116), 9148, https://doi.org/10.21105/joss.09148
