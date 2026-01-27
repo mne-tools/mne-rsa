@@ -81,15 +81,15 @@ class TestSearchLight:
         """Test generating spatial searchlight patches."""
         dist = np.array([[0, 1, 2], [1, 0, 1], [2, 1, 0]])
 
-        s = searchlight((5, 10, 3, 4), dist, spatial_radius=2)
+        s = searchlight((10, 3, 4), dist, spatial_radius=2)
         assert len(s) == 3
         assert s.shape == (3,)
         assert_equal(
             list(s),
             [
-                (slice(None), slice(None), np.array([0, 1]), slice(None)),
-                (slice(None), slice(None), np.array([0, 1, 2]), slice(None)),
-                (slice(None), slice(None), np.array([1, 2]), slice(None)),
+                (slice(None), np.array([0, 1]), slice(None)),
+                (slice(None), np.array([0, 1, 2]), slice(None)),
+                (slice(None), np.array([1, 2]), slice(None)),
             ],
         )
 

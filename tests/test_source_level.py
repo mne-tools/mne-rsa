@@ -30,14 +30,16 @@ def load_epochs():
     return epochs
 
 
-def make_stcs():
+def make_stcs(pick_ori="normal"):
     """Create a list of SourceEstimates from some of the MNE-Sample epochs."""
     epochs = load_epochs()
 
     # Project to source space using the inverse operator
     path = mne.datasets.sample.data_path() / "MEG" / "sample"
     inv = read_inverse_operator(path / "sample_audvis-meg-oct-6-meg-inv.fif")
-    stcs = apply_inverse_epochs(epochs, inv, lambda2=1, verbose=False)
+    stcs = apply_inverse_epochs(
+        epochs, inv, lambda2=1, verbose=False, pick_ori=pick_ori
+    )
 
     # Also return the source space
     return stcs, inv["src"], epochs.events[:, 2]
@@ -92,6 +94,10 @@ class TestStcRDMs:
         # Invalid inputs.
         with pytest.raises(ValueError, match="the number of items"):
             next(rdm_stcs(stcs, labels=[1, 2, 3]))
+
+        # Try a different metric.
+        rdms_euc = list(rdm_stcs(stcs, y=labels, dist_metric="euclidean"))
+        assert not np.allclose(rdms, rdms_euc)
 
     def test_rdm_temporal(self):
         """Test making RDMs with a sliding temporal window."""
@@ -192,6 +198,17 @@ class TestStcRDMs:
         assert len(rdms) == len(stcs[0].data) * (len(stcs[0].times) - 2 * 2)
         assert squareform(rdms[0]).shape == (4, 4)
 
+    def test_rdm_vector_stc(self):
+        """Test making RDMs with a searchlight in a VectorSourceEstimate."""
+        stcs, src, labels = make_stcs(pick_ori="vector")
+        rdms = list(
+            rdm_stcs(
+                stcs, src=src, labels=labels, spatial_radius=0.05, temporal_radius=0.02
+            )
+        )
+        assert len(rdms) == len(stcs[0].data) * (len(stcs[0].times) - 2 * 2)
+        assert squareform(rdms[0]).shape == (4, 4)
+
 
 class TestNiftiRDMs:
     """Test making RDMs from fMRI data."""
@@ -269,7 +286,7 @@ class TestStcRSA:
 
     def test_rsa_single_searchlight_patch(self):
         """Test performing RSA with a single searchlight patch."""
-        stcs, _, labels_stcs = make_stcs()
+        stcs, _, labels_stcs = make_stcs(pick_ori=None)
         model_rdm = np.array([0.5, 1, 1, 1, 1, 0.5])
         rsa_result = rsa_stcs(stcs, model_rdm, labels_stcs=labels_stcs)
         assert isinstance(rsa_result, np.ndarray)
@@ -308,7 +325,7 @@ class TestStcRSA:
             stcs, model_rdm, labels_stcs=labels_stcs, temporal_radius=0.02
         )  # 2 samples
         assert rsa_result.data.shape == (1, len(stcs[0].times) - 2 * 2)
-        assert rsa_result.data.max().round(2) == 0.62
+        assert rsa_result.data.max().round(2) == 0.83
         assert rsa_result.times[0].round(2) == 0.12
         assert rsa_result.times[-1].round(2) == 0.18
 
@@ -521,6 +538,23 @@ class TestStcRSA:
             len(stcs[0].times) - 2 * 2,
         )
 
+    def test_rsa_vector_stcs(self):
+        """Test performing RSA on vector source estimates."""
+        stcs, src, labels_stcs = make_stcs(pick_ori="vector")
+        model_rdm = np.array([0.5, 1, 1, 1, 1, 0.5])
+        rsa_result = rsa_stcs(
+            stcs,
+            model_rdm,
+            labels_stcs=labels_stcs,
+            src=src,
+            temporal_radius=0.02,
+            spatial_radius=0.05,
+        )
+        assert rsa_result.data.shape == (
+            stcs[0].data.shape[0],
+            len(stcs[0].times) - 2 * 2,
+        )
+
 
 class TestRoiRSA:
     """Test performing RSA on ROIs."""
@@ -564,6 +598,16 @@ class TestRoiRSA:
             rsa_stcs_rois(stcs, model_rdm, src, rois)
         with pytest.raises(ValueError, match="items encoded in the `labels_stcs`"):
             rsa_stcs_rois(stcs, model_rdm, src, rois, labels_stcs=[1, 2, 3])
+
+        # Vector source estimates
+        stcs, src, labels_stcs = make_stcs(pick_ori="vector")
+        rsa_result, rsa_stc = rsa_stcs_rois(
+            stcs, model_rdm, src, rois, labels_stcs=labels_stcs
+        )
+        assert rsa_result.shape == (len(rois),)
+        assert rsa_stc.data.shape == (stcs[0].shape[0], 1)
+        assert len(rsa_stc.times) == 1
+        assert_equal(rsa_stc.times, stcs[0].times[len(stcs[0].times) // 2])
 
     def test_rsa_rois_temporal(self):
         """Test performing temporal RSA with a searchlight across ROIs."""

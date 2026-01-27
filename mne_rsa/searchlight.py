@@ -19,11 +19,8 @@ class searchlight:
     This function is flexible in regards to shape of the data array. The
     interpretation of the dimensions is as follows:
 
-    4 or more dimensions
-        ``(n_folds, n_items, n_series, n_samples, ...)``
-
-    3 dimensions
-        ``(n_items, n_series, n_samples)``
+    3 or more dimensions
+        ``(n_items, n_series, n_samples, ...)``
 
     2 dimensions
         ``(n_items, n_series)`` when ``spatial_radius`` or ``sel_series`` is set.
@@ -115,10 +112,7 @@ class searchlight:
     ):
         # Interpret the dimensions of the data array (see docstring)
         n_dims = len(shape)
-        if n_dims >= 4:
-            self.series_dim = 2
-            self.samples_dim = 3
-        elif n_dims == 3:
+        if n_dims >= 3:
             self.series_dim = 1
             self.samples_dim = 2
         elif n_dims == 2 and (spatial_radius is not None or sel_series is not None):
