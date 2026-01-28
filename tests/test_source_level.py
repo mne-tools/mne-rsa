@@ -45,14 +45,16 @@ def make_stcs(pick_ori="normal"):
     return stcs, inv["src"], epochs.events[:, 2]
 
 
-def make_vol_stcs():
+def make_vol_stcs(pick_ori=None):
     """Create a list of VolSourceEstimates from some of the MNE-Sample epochs."""
     epochs = load_epochs()
 
     # Project to source space using the inverse operator
     path = mne.datasets.sample.data_path() / "MEG" / "sample"
     inv = read_inverse_operator(path / "sample_audvis-meg-vol-7-meg-inv.fif")
-    stcs = apply_inverse_epochs(epochs, inv, lambda2=1, verbose=False)
+    stcs = apply_inverse_epochs(
+        epochs, inv, lambda2=1, verbose=False, pick_ori=pick_ori
+    )
 
     # Also return the source space
     return stcs, inv["src"], epochs.events[:, 2]
@@ -542,6 +544,21 @@ class TestStcRSA:
         """Test performing RSA on vector source estimates."""
         stcs, src, labels_stcs = make_stcs(pick_ori="vector")
         model_rdm = np.array([0.5, 1, 1, 1, 1, 0.5])
+        rsa_result = rsa_stcs(
+            stcs,
+            model_rdm,
+            labels_stcs=labels_stcs,
+            src=src,
+            temporal_radius=0.02,
+            spatial_radius=0.05,
+        )
+        assert rsa_result.data.shape == (
+            stcs[0].data.shape[0],
+            len(stcs[0].times) - 2 * 2,
+        )
+
+        # Volumetric
+        stcs, src, labels_stcs = make_vol_stcs(pick_ori="vector")
         rsa_result = rsa_stcs(
             stcs,
             model_rdm,

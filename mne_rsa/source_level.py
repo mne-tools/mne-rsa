@@ -63,7 +63,7 @@ def rsa_stcs(
 
     Parameters
     ----------
-    stcs : list of mne.SourceEstimate | list of mne.VolSourceEstimate | list of mne.VectorSourceEstimate
+    stcs : list of (mne.SourceEstimate | mne.VectorSourceEstimate | mne.VolSourceEstimate | mne.VolVectorSourceEstimate)
         For each item, a source estimate for the brain activity.
     rdm_model : ndarray, shape (n, n) | (n * (n - 1) // 2,) | list of ndarray
         The model RDM, see :func:`compute_rdm`. For efficiency, you can give it
@@ -255,7 +255,7 @@ def rsa_stcs(
 
     # Extract the data and setup the search light
     X = np.array([stc.data for stc in stcs])
-    if isinstance(stcs[0], mne.VectorSourceEstimate):
+    if isinstance(stcs[0], (mne.VectorSourceEstimate, mne.VolVectorSourceEstimate)):
         X = X.transpose(0, 1, 3, 2)  # make the 3 source orientations the last dimension
     patches = searchlight(
         X.shape,
@@ -303,7 +303,7 @@ def rsa_stcs(
     tstep = stcs[0].tstep
 
     if one_model:
-        if isinstance(stcs[0], mne.VolSourceEstimate):
+        if isinstance(stcs[0], (mne.VolSourceEstimate, mne.VolVectorSourceEstimate)):
             return mne.VolSourceEstimate(
                 data, vertices, tmin, tstep, subject=stcs[0].subject
             )
@@ -1163,7 +1163,9 @@ def _check_src_compatibility(src, stc):
             "Volume source estimates provided, but not a volume source space "
             f"(src.kind={src.kind})."
         )
-    if src.kind == "volume" and not isinstance(stc, mne.VolSourceEstimate):
+    if src.kind == "volume" and not isinstance(
+        stc, (mne.VolSourceEstimate, mne.VolVectorSourceEstimate)
+    ):
         raise ValueError(
             "Volume source space provided, but not volume source estimates "
             f"(src.kind={src.kind})."

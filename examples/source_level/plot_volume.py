@@ -96,7 +96,16 @@ mne_rsa.plot_rdms(model_rdm, title="Model RDM")
 inv = mne.minimum_norm.read_inverse_operator(
     sample_path / "sample_audvis-meg-vol-7-meg-inv.fif"
 )
-epochs_stc = mne.minimum_norm.apply_inverse_epochs(epochs, inv, lambda2=0.1111)
+
+########################################################################################
+# Especially when performing RSA across single epochs (so no averaging), take care to
+# use proper source orientations. In the case of a volumetric source space,
+# ``pick_ori="vector"`` is a solid choice as it uses all three XYZ components. See the
+# `https://mne.tools/stable/auto_tutorials/inverse/35_dipole_orientations.html
+# <MNE-Python tutorial on dipole orientations>`__ for more details.
+epochs_stc = mne.minimum_norm.apply_inverse_epochs(
+    epochs, inv, lambda2=0.1111, pick_ori="vector"
+)
 
 ########################################################################################
 # Performing the RSA. This will take some time. Consider increasing ``n_jobs`` to
