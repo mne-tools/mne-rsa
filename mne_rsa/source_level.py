@@ -477,7 +477,7 @@ def rdm_stcs(
 
     # Extract the data and setup the search light
     X = np.array([stc.data for stc in stcs])
-    if isinstance(stcs[0], mne.VectorSourceEstimate):
+    if isinstance(stcs[0], (mne.VectorSourceEstimate, mne.VolVectorSourceEstimate)):
         X = X.transpose(0, 1, 3, 2)  # make the 3 source orientations the last dimension
     patches = searchlight(
         X.shape,

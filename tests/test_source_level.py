@@ -101,6 +101,12 @@ class TestStcRDMs:
         rdms_euc = list(rdm_stcs(stcs, y=labels, dist_metric="euclidean"))
         assert not np.allclose(rdms, rdms_euc)
 
+        # Volumetric
+        stcs, _, labels = make_vol_stcs()
+        rdms = list(rdm_stcs(stcs, labels=labels))
+        assert len(rdms) == 1
+        assert squareform(rdms[0]).shape == (4, 4)
+
     def test_rdm_temporal(self):
         """Test making RDMs with a sliding temporal window."""
         stcs, _, labels = make_stcs()
@@ -203,6 +209,16 @@ class TestStcRDMs:
     def test_rdm_vector_stc(self):
         """Test making RDMs with a searchlight in a VectorSourceEstimate."""
         stcs, src, labels = make_stcs(pick_ori="vector")
+        rdms = list(
+            rdm_stcs(
+                stcs, src=src, labels=labels, spatial_radius=0.05, temporal_radius=0.02
+            )
+        )
+        assert len(rdms) == len(stcs[0].data) * (len(stcs[0].times) - 2 * 2)
+        assert squareform(rdms[0]).shape == (4, 4)
+
+        # Volumetric
+        stcs, src, labels_stcs = make_vol_stcs(pick_ori="vector")
         rdms = list(
             rdm_stcs(
                 stcs, src=src, labels=labels, spatial_radius=0.05, temporal_radius=0.02
