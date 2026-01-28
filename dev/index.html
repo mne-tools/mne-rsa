@@ -1,0 +1,596 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" data-theme="auto">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>MNE-RSA &#8212; mne-rsa 1.1.dev documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "auto";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "auto";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="_static/documentation_options.js?v=6858f173"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'index';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '_static/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'dev';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <link rel="canonical" href="https://mne.tools/mne-rsa/index.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Tutorials" href="auto_examples/tutorials/index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.1.dev" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="auto">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="#">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">mne-rsa 1.1.dev documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="auto_examples/tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="auto_examples/index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="api.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/mne-tools/mne-rsa" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="auto_examples/tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="auto_examples/index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="api.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/mne-tools/mne-rsa" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none"></div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="mne-rsa">
+<h1>MNE-RSA<a class="headerlink" href="#mne-rsa" title="Link to this heading">#</a></h1>
+<p>This is a Python package for performing representational similarity analysis (RSA) using
+<a class="reference external" href="https://martinos.org/mne/stable/index.html">MNE-Python</a> data structures.
+The main use-case is to perform RSA using a “searchlight” approach through time and/or a
+volumetric or surface source space.</p>
+<p>Read more on RSA in the paper that introduced the technique:</p>
+<p>Nikolaus Kriegeskorte, Marieke Mur and Peter Bandettini (2008). Representational
+similarity analysis - connecting the branches of systems neuroscience. Frontiers in
+Systems Neuroscience, 2(4).
+<a class="reference external" href="https://doi.org/10.3389/neuro.06.004.2008">https://doi.org/10.3389/neuro.06.004.2008</a></p>
+<a class="only-light reference internal image-reference" href="_images/rsa.png"><img alt="_images/rsa.png" class="only-light" src="_images/rsa.png" width="600" />
+</a>
+<a class="only-dark reference internal image-reference" href="_images/rsa_dark.png"><img alt="_images/rsa_dark.png" class="only-dark" src="_images/rsa_dark.png" width="600" />
+</a>
+<section id="use-cases">
+<h2>Use cases<a class="headerlink" href="#use-cases" title="Link to this heading">#</a></h2>
+<p>This is what the package can do for you:</p>
+<ul class="simple">
+<li><p>Compute RDMs on arbitrary data</p></li>
+<li><p>Compute RDMs in a searchlight across:</p>
+<ul>
+<li><p>vertices/voxels and samples (source level)</p></li>
+<li><p>sensors and samples (sensor level)</p></li>
+<li><p>vertices/voxels only (source level)</p></li>
+<li><p>sensors only (sensor level)</p></li>
+<li><p>samples only (source and sensor level)</p></li>
+</ul>
+</li>
+<li><p>Use cross-validated distance metrics when computing RDMs</p></li>
+<li><p>And of course: compute RSA between RDMs</p></li>
+</ul>
+<p>Supported metrics for comparing RDMs:</p>
+<ul class="simple">
+<li><p>Spearman correlation (the default)</p></li>
+<li><p>Pearson correlation</p></li>
+<li><p>Kendall’s Tau-A</p></li>
+<li><p>Linear regression (when comparing multiple RDMs at once)</p></li>
+<li><p>Partial correlation (when comparing multiple RDMs at once)</p></li>
+</ul>
+</section>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h2>
+<p>The package can be installed either through PIP: <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">mne-rsa</span></code></p>
+<p>or through conda using the conda-forge channel: <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">install</span> <span class="pre">-c</span> <span class="pre">conda-forge</span> <span class="pre">mne-rsa</span></code></p>
+<p>Installing through either channel will pull in <a class="reference external" href="https://mne.tools">MNE-Python</a> as a dependency, along with <a class="reference external" href="https://www.qt.io">Qt 6]</a>, <a class="reference external" href="https://pyvista.org">PyVista</a> and <a class="reference external" href="https://scikit-learn.org">Scikit-Learn</a>. See <a class="reference external" href="https://github.com/mne-tools/mne-rsa/blob/main/requirements.txt">requirements.txt</a> for the full list of packages.</p>
+</section>
+<section id="example-usage">
+<h2>Example usage<a class="headerlink" href="#example-usage" title="Link to this heading">#</a></h2>
+<p>Basic example of performing RSA on the EEG “kiloword” data using a sliding window across
+time:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">mne</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">mne_rsa</span>
+<span class="n">data_path</span> <span class="o">=</span> <span class="n">mne</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">kiloword</span><span class="o">.</span><span class="n">data_path</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">epochs</span> <span class="o">=</span> <span class="n">mne</span><span class="o">.</span><span class="n">read_epochs</span><span class="p">(</span><span class="n">data_path</span> <span class="o">/</span> <span class="s2">&quot;kword_metadata-epo.fif&quot;</span><span class="p">)</span>
+<span class="c1"># Create model RDMs based on each stimulus property</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="n">epochs</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>  <span class="c1"># Skip the first column: WORD</span>
+<span class="n">model_rdms</span> <span class="o">=</span> <span class="p">[</span><span class="n">mne_rsa</span><span class="o">.</span><span class="n">compute_rdm</span><span class="p">(</span><span class="n">epochs</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;euclidean&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">]</span>
+<span class="c1"># Perform RSA in a sliding window across time</span>
+<span class="n">rsa_results</span> <span class="o">=</span> <span class="n">mne_rsa</span><span class="o">.</span><span class="n">rsa_epochs</span><span class="p">(</span><span class="n">epochs</span><span class="p">,</span> <span class="n">model_rdms</span><span class="p">,</span> <span class="n">temporal_radius</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="c1"># Plot the result</span>
+<span class="n">mne</span><span class="o">.</span><span class="n">viz</span><span class="o">.</span><span class="n">plot_compare_evokeds</span><span class="p">({</span><span class="n">column</span><span class="p">:</span> <span class="n">result</span> <span class="k">for</span> <span class="n">column</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">columns</span><span class="p">,</span> <span class="n">rsa_results</span><span class="p">)},</span>
+                             <span class="n">picks</span><span class="o">=</span><span class="s2">&quot;rsa&quot;</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="s2">&quot;lower center&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;RSA result&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="only-light reference internal image-reference" href="_images/rsa_result.png"><img alt="_images/rsa_result.png" class="only-light" src="_images/rsa_result.png" width="600" />
+</a>
+<a class="only-dark reference internal image-reference" href="_images/rsa_result_dark.png"><img alt="_images/rsa_result_dark.png" class="only-dark" src="_images/rsa_result_dark.png" width="600" />
+</a>
+</section>
+<section id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Link to this heading">#</a></h2>
+<p>For a detailed guide on RSA analysis from start to finish on an example dataset, see the <a class="reference external" href="auto_examples/tutorials/index.html">Tutorials</a>.</p>
+<p>For quick guides on how to do specific things, see the <a class="reference external" href="auto_examples/index.html">Examples</a>.</p>
+<p>Finally, there is the <a class="reference external" href="api.html">API reference documentation</a>.</p>
+</section>
+<section id="integration-with-other-packages">
+<h2>Integration with other packages<a class="headerlink" href="#integration-with-other-packages" title="Link to this heading">#</a></h2>
+<p>The main use-case for this package to perform RSA analysis on EEG and MEG data. Hence,
+integration functions with <a class="reference external" href="https://mne.tools">MNE-Python</a> are provided. There is
+also some integration with <a class="reference external" href="https://nipy.org">nipy</a> for fMRI that should do well in a
+<a class="reference external" href="https://nilearn.github.io">nilearn</a> setup.</p>
+</section>
+<section id="performance">
+<h2>Performance<a class="headerlink" href="#performance" title="Link to this heading">#</a></h2>
+<p>This package aims to be fast and memory efficient. An important design feature is that
+under the hood, everything operates on generators. The searchlight routines produce a
+generator of RDMs which are consumed by a generator of RSA values. Parallel processing
+is also supported, so you can use all of your CPU cores.</p>
+</section>
+<section id="support">
+<h2>Support<a class="headerlink" href="#support" title="Link to this heading">#</a></h2>
+<p>This free software comes without any form of official support.
+However, if you think you have encountered a bug or have a particularly great idea for improvements, please open an <a class="reference external" href="https://github.com/mne-tools/mne-rsa/issues">issue on Github</a>.
+For questions and help with your analysis, you are welcome to post on the <a class="reference external" href="https://mne.discourse.group/">MNE forum</a>.</p>
+</section>
+<section id="contributing">
+<h2>Contributing<a class="headerlink" href="#contributing" title="Link to this heading">#</a></h2>
+<p>Development of the package happens on <a class="reference external" href="https://github.com/mne-tools/mne-rsa">Github</a> under the umbrella of MNE-tools.
+Everyone is welcome to raise <a class="reference external" href="https://github.com/mne-tools/mne-rsa/issues">issues</a> or contribute <a class="reference external" href="https://github.com/mne-tools/mne-rsa/pulls">pull requests</a> as long as they abide by our <a class="reference external" href="https://github.com/mne-tools/.github/blob/main/CODE_OF_CONDUCT.md">Code of Conduct</a>.
+For more information about the ways in which one can contribute, see the <a class="reference external" href="https://mne.tools/stable/development/contributing.html">Contributing guide of MNE-Python</a>, which by and large applies to this project as well.</p>
+<p>Here is how to install the additional required packages for developing MNE-RSA and set up the package in development mode:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:mne-tools/mne-rsa.git
+<span class="nb">cd</span><span class="w"> </span>mne-rsa
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements-dev.txt
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+</pre></div>
+</div>
+<p>To run the test suite, execute <code class="docutils literal notranslate"><span class="pre">pytest</span></code> in the main <code class="docutils literal notranslate"><span class="pre">mne-rsa</span></code> folder.
+To build the documentation, execute <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">html</span></code> in the <code class="docutils literal notranslate"><span class="pre">mne-rsa/doc</span></code> folder (or on
+Windows: <code class="docutils literal notranslate"><span class="pre">sphinx-build</span> <span class="pre">.</span> <span class="pre">_build/html</span></code>).</p>
+</section>
+<section id="citation">
+<h2>Citation<a class="headerlink" href="#citation" title="Link to this heading">#</a></h2>
+<p>If you end up using this package for the data analysis that is part of a scientific
+article, please cite:</p>
+<p>Marijn van Vliet, Stefan Appelhoff, Takao Shimizu, Egor Eremin, Annika Hultén, Yuanfang Zhao, and Richard Höchenberger, (2025). MNE-RSA: Representational Similarity Analysis on EEG, MEG and fMRI data. Journal of Open Source Software, 10(116), 9148, <a class="reference external" href="https://doi.org/10.21105/joss.09148">https://doi.org/10.21105/joss.09148</a></p>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="right-next"
+       href="auto_examples/tutorials/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Tutorials</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#use-cases">Use cases</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-usage">Example usage</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#documentation">Documentation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#integration-with-other-packages">Integration with other packages</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#performance">Performance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#support">Support</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributing">Contributing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citation">Citation</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Marijn van Vliet, Aalto University.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

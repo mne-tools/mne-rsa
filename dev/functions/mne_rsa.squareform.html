@@ -1,0 +1,601 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" data-theme="auto">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>mne_rsa.squareform &#8212; mne-rsa 1.1.dev documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "auto";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "auto";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=6858f173"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'functions/mne_rsa.squareform';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '_static/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'dev';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <link rel="canonical" href="https://mne.tools/mne-rsa/functions/mne_rsa.squareform.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="mne_rsa.create_folds" href="mne_rsa.create_folds.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.1.dev" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="auto">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">mne-rsa 1.1.dev documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../auto_examples/tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../auto_examples/index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../api.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/mne-tools/mne-rsa" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../auto_examples/tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../auto_examples/index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../api.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/mne-tools/mne-rsa" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="mne_rsa.rsa_epochs.html">mne_rsa.rsa_epochs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mne_rsa.rsa_evokeds.html">mne_rsa.rsa_evokeds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mne_rsa.rsa_stcs.html">mne_rsa.rsa_stcs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mne_rsa.rsa_nifti.html">mne_rsa.rsa_nifti</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="mne_rsa.compute_rdm.html">mne_rsa.compute_rdm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mne_rsa.compute_rdm_cv.html">mne_rsa.compute_rdm_cv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mne_rsa.rdm_epochs.html">mne_rsa.rdm_epochs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mne_rsa.rdm_stcs.html">mne_rsa.rdm_stcs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mne_rsa.rdm_nifti.html">mne_rsa.rdm_nifti</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="mne_rsa.rdm_array.html">mne_rsa.rdm_array</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="mne_rsa.rsa.html">mne_rsa.rsa</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mne_rsa.rsa_array.html">mne_rsa.rsa_array</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mne_rsa.rsa_gen.html">mne_rsa.rsa_gen</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="mne_rsa.searchlight.html">mne_rsa.searchlight</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="mne_rsa.plot_rdms.html">mne_rsa.plot_rdms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mne_rsa.plot_rdms_topo.html">mne_rsa.plot_rdms_topo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mne_rsa.plot_roi_map.html">mne_rsa.plot_roi_map</a></li>
+</ul>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="mne_rsa.create_folds.html">mne_rsa.create_folds</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">mne_rsa.squareform</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none"></div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="mne-rsa-squareform">
+<h1>mne_rsa.squareform<a class="headerlink" href="#mne-rsa-squareform" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="mne_rsa.squareform">
+<span class="sig-prename descclassname"><span class="pre">mne_rsa.</span></span><span class="sig-name descname"><span class="pre">squareform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'no'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">checks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/scipy/spatial/distance.html#squareform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mne_rsa.squareform" title="Link to this definition">#</a></dt>
+<dd><p>Convert a vector-form distance vector to a square-form distance
+matrix, and vice-versa.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array_like</span></dt><dd><p>Either a condensed or redundant distance matrix.</p>
+</dd>
+<dt><strong>force</strong><span class="classifier">str, optional</span></dt><dd><p>As with MATLAB(TM), if force is equal to <code class="docutils literal notranslate"><span class="pre">'tovector'</span></code> or
+<code class="docutils literal notranslate"><span class="pre">'tomatrix'</span></code>, the input will be treated as a distance matrix or
+distance vector respectively.</p>
+</dd>
+<dt><strong>checks</strong><span class="classifier">bool, optional</span></dt><dd><p>If set to False, no checks will be made for matrix
+symmetry nor zero diagonals. This is useful if it is known that
+<code class="docutils literal notranslate"><span class="pre">X</span> <span class="pre">-</span> <span class="pre">X.T1</span></code> is small and <code class="docutils literal notranslate"><span class="pre">diag(X)</span></code> is close to zero.
+These values are ignored any way so they do not disrupt the
+squareform transformation.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>Y</strong><span class="classifier">ndarray</span></dt><dd><p>If a condensed distance matrix is passed, a redundant one is
+returned, or if a redundant one is passed, a condensed distance
+matrix is returned.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ol class="arabic">
+<li><p><code class="docutils literal notranslate"><span class="pre">v</span> <span class="pre">=</span> <span class="pre">squareform(X)</span></code></p>
+<p>Given a square n-by-n symmetric distance matrix <code class="docutils literal notranslate"><span class="pre">X</span></code>,
+<code class="docutils literal notranslate"><span class="pre">v</span> <span class="pre">=</span> <span class="pre">squareform(X)</span></code> returns an <code class="docutils literal notranslate"><span class="pre">n</span> <span class="pre">*</span> <span class="pre">(n-1)</span> <span class="pre">/</span> <span class="pre">2</span></code>
+(i.e. binomial coefficient n choose 2) sized vector <cite>v</cite>
+where <span class="math notranslate nohighlight">\(v[{n \choose 2} - {n-i \choose 2} + (j-i-1)]\)</span>
+is the distance between distinct points <code class="docutils literal notranslate"><span class="pre">i</span></code> and <code class="docutils literal notranslate"><span class="pre">j</span></code>.
+If <code class="docutils literal notranslate"><span class="pre">X</span></code> is non-square or asymmetric, an error is raised.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">X</span> <span class="pre">=</span> <span class="pre">squareform(v)</span></code></p>
+<p>Given an <code class="docutils literal notranslate"><span class="pre">n</span> <span class="pre">*</span> <span class="pre">(n-1)</span> <span class="pre">/</span> <span class="pre">2</span></code> sized vector <code class="docutils literal notranslate"><span class="pre">v</span></code>
+for some integer <code class="docutils literal notranslate"><span class="pre">n</span> <span class="pre">&gt;=</span> <span class="pre">1</span></code> encoding distances as described,
+<code class="docutils literal notranslate"><span class="pre">X</span> <span class="pre">=</span> <span class="pre">squareform(v)</span></code> returns an n-by-n distance matrix <code class="docutils literal notranslate"><span class="pre">X</span></code>.
+The <code class="docutils literal notranslate"><span class="pre">X[i,</span> <span class="pre">j]</span></code> and <code class="docutils literal notranslate"><span class="pre">X[j,</span> <span class="pre">i]</span></code> values are set to
+<span class="math notranslate nohighlight">\(v[{n \choose 2} - {n-i \choose 2} + (j-i-1)]\)</span>
+and all diagonal elements are zero.</p>
+</li>
+</ol>
+<p>In SciPy 0.19.0, <code class="docutils literal notranslate"><span class="pre">squareform</span></code> stopped casting all input types to
+float64, and started returning arrays of the same dtype as the input.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.spatial.distance</span><span class="w"> </span><span class="kn">import</span> <span class="n">pdist</span><span class="p">,</span> <span class="n">squareform</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">x</span></code> is an array of five points in three-dimensional space.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">]])</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">pdist(x)</span></code> computes the Euclidean distances between each pair of
+points in <code class="docutils literal notranslate"><span class="pre">x</span></code>.  The distances are returned in a one-dimensional
+array with length <code class="docutils literal notranslate"><span class="pre">5*(5</span> <span class="pre">-</span> <span class="pre">1)/2</span> <span class="pre">=</span> <span class="pre">10</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">distvec</span> <span class="o">=</span> <span class="n">pdist</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">distvec</span>
+<span class="go">array([2.23606798, 6.40312424, 7.34846923, 2.82842712, 4.89897949,</span>
+<span class="go">       6.40312424, 1.        , 5.38516481, 4.58257569, 5.47722558])</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">squareform(distvec)</span></code> returns the 5x5 distance matrix.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="n">squareform</span><span class="p">(</span><span class="n">distvec</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span>
+<span class="go">array([[0.        , 2.23606798, 6.40312424, 7.34846923, 2.82842712],</span>
+<span class="go">       [2.23606798, 0.        , 4.89897949, 6.40312424, 1.        ],</span>
+<span class="go">       [6.40312424, 4.89897949, 0.        , 5.38516481, 4.58257569],</span>
+<span class="go">       [7.34846923, 6.40312424, 5.38516481, 0.        , 5.47722558],</span>
+<span class="go">       [2.82842712, 1.        , 4.58257569, 5.47722558, 0.        ]])</span>
+</pre></div>
+</div>
+<p>When given a square distance matrix <code class="docutils literal notranslate"><span class="pre">m</span></code>, <code class="docutils literal notranslate"><span class="pre">squareform(m)</span></code> returns
+the one-dimensional condensed distance vector associated with the
+matrix.  In this case, we recover <code class="docutils literal notranslate"><span class="pre">distvec</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">squareform</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+<span class="go">array([2.23606798, 6.40312424, 7.34846923, 2.82842712, 4.89897949,</span>
+<span class="go">       6.40312424, 1.        , 5.38516481, 4.58257569, 5.47722558])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<div style='clear:both'></div></section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="mne_rsa.create_folds.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">mne_rsa.create_folds</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mne_rsa.squareform"><code class="docutils literal notranslate"><span class="pre">squareform()</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Marijn van Vliet, Aalto University.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
