@@ -63,7 +63,7 @@ def rsa_stcs(
 
     Parameters
     ----------
-    stcs : list of mne.SourceEstimate | list of mne.VolSourceEstimate
+    stcs : list of (mne.SourceEstimate | mne.VectorSourceEstimate | mne.VolSourceEstimate | mne.VolVectorSourceEstimate)
         For each item, a source estimate for the brain activity.
     rdm_model : ndarray, shape (n, n) | (n * (n - 1) // 2,) | list of ndarray
         The model RDM, see :func:`compute_rdm`. For efficiency, you can give it
@@ -253,8 +253,10 @@ def rsa_stcs(
     if tmin is not None or tmax is not None:
         logger.info(f"    Time interval: {tmin}-{tmax} seconds")
 
-    # Perform the RSA
+    # Extract the data and setup the search light
     X = np.array([stc.data for stc in stcs])
+    if isinstance(stcs[0], (mne.VectorSourceEstimate, mne.VolVectorSourceEstimate)):
+        X = X.transpose(0, 1, 3, 2)  # make the 3 source orientations the last dimension
     patches = searchlight(
         X.shape,
         dist=dist,
@@ -266,6 +268,7 @@ def rsa_stcs(
     )
     logger.info(f"    Number of searchlight patches: {len(patches)}")
 
+    # Perform the RSA
     data = rsa_array(
         X,
         rdm_model,
@@ -300,7 +303,7 @@ def rsa_stcs(
     tstep = stcs[0].tstep
 
     if one_model:
-        if isinstance(stcs[0], mne.VolSourceEstimate):
+        if isinstance(stcs[0], (mne.VolSourceEstimate, mne.VolVectorSourceEstimate)):
             return mne.VolSourceEstimate(
                 data, vertices, tmin, tstep, subject=stcs[0].subject
             )
@@ -472,7 +475,10 @@ def rdm_stcs(
     if labels is None and y is not None:
         labels = y
 
+    # Extract the data and setup the search light
     X = np.array([stc.data for stc in stcs])
+    if isinstance(stcs[0], (mne.VectorSourceEstimate, mne.VolVectorSourceEstimate)):
+        X = X.transpose(0, 1, 3, 2)  # make the 3 source orientations the last dimension
     patches = searchlight(
         X.shape,
         dist=dist,
@@ -482,6 +488,8 @@ def rdm_stcs(
         samples_from=samples_from,
         samples_to=samples_to,
     )
+
+    # Start generating RDMs
     yield from rdm_array(
         X,
         patches,
@@ -526,7 +534,7 @@ def rsa_stcs_rois(
 
     Parameters
     ----------
-    stcs : list of mne.SourceEstimate | list of mne.VolSourceEstimate
+    stcs : list of mne.SourceEstimate | list of mne.VolSourceEstimate | list of mne.VectorSourceEstimate
         For each item, a source estimate for the brain activity.
     rdm_model : ndarray, shape (n, n) | (n * (n - 1) // 2,) | list of ndarray
         The model RDM, see :func:`compute_rdm`. For efficiency, you can give it
@@ -638,7 +646,7 @@ def rsa_stcs_rois(
     --------
     compute_rdm
 
-    """
+    """  # noqa E503
     # Check for compatibility of the source estimates and the model features
     one_model = type(rdm_model) is np.ndarray
     if one_model:
@@ -679,8 +687,10 @@ def rsa_stcs_rois(
     # Convert the labels to data indices
     roi_inds = [vertex_selection_to_indices(stcs[0].vertices, roi) for roi in rois]
 
-    # Perform the RSA
+    # Extract the data and setup the search light
     X = np.array([stc.data for stc in stcs])
+    if isinstance(stcs[0], mne.VectorSourceEstimate):
+        X = X.transpose(0, 1, 3, 2)  # make the 3 source orientations the last dimension
     patches = searchlight(
         X.shape,
         spatial_radius=roi_inds,
@@ -688,6 +698,8 @@ def rsa_stcs_rois(
         samples_from=samples_from,
         samples_to=samples_to,
     )
+
+    # Perform the RSA
     data = rsa_array(
         X,
         rdm_model,
@@ -1151,7 +1163,9 @@ def _check_src_compatibility(src, stc):
             "Volume source estimates provided, but not a volume source space "
             f"(src.kind={src.kind})."
         )
-    if src.kind == "volume" and not isinstance(stc, mne.VolSourceEstimate):
+    if src.kind == "volume" and not isinstance(
+        stc, (mne.VolSourceEstimate, mne.VolVectorSourceEstimate)
+    ):
         raise ValueError(
             "Volume source space provided, but not volume source estimates "
             f"(src.kind={src.kind})."

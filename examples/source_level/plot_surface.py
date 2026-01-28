@@ -102,7 +102,18 @@ mne_rsa.plot_rdms(model_rdm, title="Model RDM")
 inv = mne.minimum_norm.read_inverse_operator(
     testing_path / "sample_audvis_trunc-meg-eeg-oct-4-meg-inv.fif"
 )
-epochs_stc = mne.minimum_norm.apply_inverse_epochs(epochs, inv, lambda2=0.1111)
+
+########################################################################################
+# Especially when creating source estimates for single epochs, it is important to think
+# what source orientations to use. Setting ``pick_ori="vector"`` is a solid choice,
+# which means using all three XYZ components of the estimated source activity, and so is
+# ``pick_ori="normal"`` which means using the source ortientation orthogonal to the
+# cortex. See the
+# `https://mne.tools/stable/auto_tutorials/inverse/35_dipole_orientations.html
+# <MNE-Python tutorial on dipole orientations>`__ for more details.
+epochs_stc = mne.minimum_norm.apply_inverse_epochs(
+    epochs, inv, lambda2=0.1111, pick_ori="vector"
+)
 
 ########################################################################################
 # Performing the RSA. This will take some time. Consider increasing ``n_jobs`` to

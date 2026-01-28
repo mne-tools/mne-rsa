@@ -21,7 +21,7 @@ right ear or visual field.
 import mne
 import mne_rsa
 
-mne.set_log_level(True)  # Be less verbose
+mne.set_log_level(False)  # Be less verbose
 mne.viz.set_3d_backend("pyvista")
 
 ########################################################################################
@@ -92,7 +92,9 @@ mne_rsa.plot_rdms(model_rdm, title="Model RDM")
 inv = mne.minimum_norm.read_inverse_operator(
     f"{testing_path}/sample_audvis_trunc-meg-eeg-oct-4-meg-inv.fif"
 )
-epochs_stc = mne.minimum_norm.apply_inverse_epochs(epochs, inv, lambda2=0.1111)
+epochs_stc = mne.minimum_norm.apply_inverse_epochs(
+    epochs, inv, lambda2=0.1111, pick_ori="normal"
+)
 
 ########################################################################################
 # ROIs need to be defined as ``mne.Label`` objects. Here, we load the APARC parcellation

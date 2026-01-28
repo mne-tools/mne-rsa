@@ -18,7 +18,7 @@ spotlight is used in the computation.
 The radius of a searchlight can be defined in space, in time, or both. In this example,
 our searchlight will have a spatial radius of 4.5 cm. and a temporal radius of 50 ms.
 
-..warning::
+.. warning::
     A searchlight across MEG sensors does not make a lot of sense, as the magnetic field
     pattern does not lend itself well to circular searchlight patches.
 
