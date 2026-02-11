@@ -1,0 +1,781 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" data-theme="auto">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>mne_rsa.searchlight &#8212; mne-rsa 0.10 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "auto";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "auto";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=ac14934e"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/mne_rsa/searchlight';</script>
+    <link rel="canonical" href="https://mne.tools/mne-rsa/_modules/mne_rsa/searchlight.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.10" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="auto">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">mne-rsa 0.10 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../auto_examples/tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../auto_examples/index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/mne-tools/mne-rsa" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../auto_examples/tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../auto_examples/index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/mne-tools/mne-rsa" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none"></div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for mne_rsa.searchlight</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Classes and functions having to do with creating searchlights.</span>
+
+<span class="sd">Authors</span>
+<span class="sd">-------</span>
+<span class="sd">Marijn van Vliet &lt;marijn.vanvliet@aalto.fi&gt;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mne.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">logger</span>
+
+
+<div class="viewcode-block" id="searchlight">
+<a class="viewcode-back" href="../../functions/mne_rsa.searchlight.html#mne_rsa.searchlight">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">searchlight</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate indices for searchlight patches.</span>
+
+<span class="sd">    Generates a sequence of tuples that can be used to index a data array.</span>
+<span class="sd">    Depending on the spatial and temporal radius, each tuple extracts a</span>
+<span class="sd">    searchlight patch along time, space or both.</span>
+
+<span class="sd">    This function is flexible in regards to shape of the data array. The</span>
+<span class="sd">    interpretation of the dimensions is as follows:</span>
+
+<span class="sd">    4 or more dimensions</span>
+<span class="sd">        ``(n_folds, n_items, n_series, n_samples, ...)``</span>
+
+<span class="sd">    3 dimensions</span>
+<span class="sd">        ``(n_items, n_series, n_samples)``</span>
+
+<span class="sd">    2 dimensions</span>
+<span class="sd">        ``(n_items, n_series)`` when ``spatial_radius`` or ``sel_series`` is set.</span>
+
+<span class="sd">        ``(n_items, n_samples)`` when ``temporal_radius`` or</span>
+<span class="sd">                ``samples_from``/``samples_to`` is set.</span>
+
+<span class="sd">    1 dimension</span>
+<span class="sd">        ``(n_items,)``</span>
+
+<span class="sd">    The returned tuples will match the dimensions of the data array.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    shape : tuple of int</span>
+<span class="sd">        The shape of the data array to compute the searchlight patches for, as</span>
+<span class="sd">        obtained with the ``.shape`` attribute.</span>
+<span class="sd">    dist : ndarray or sparse matrix, shape (n_series, n_series) | None</span>
+<span class="sd">        The distances between all source points or sensors in meters.</span>
+<span class="sd">        This parameter needs to be specified if a ``spatial_radius`` is set.</span>
+
+<span class="sd">        Since the distance matrix can be huge, sparse matrices are also</span>
+<span class="sd">        supported. When the distance matrix is sparse, all zero distances are</span>
+<span class="sd">        treated as infinity. This allows you to skip far away points during</span>
+<span class="sd">        your distance computations.</span>
+
+<span class="sd">        Defaults to ``None``.</span>
+<span class="sd">    spatial_radius : float | list of list of int | None</span>
+<span class="sd">        This controls how spatial patches will be created. There are several</span>
+<span class="sd">        ways to do this:</span>
+
+<span class="sd">        The first way is to specify a spatial radius in meters. In this case,</span>
+<span class="sd">        the ``dist`` parameter must also be specified. This will create a</span>
+<span class="sd">        searchlight where each patch contains all source points within this</span>
+<span class="sd">        radius.</span>
+
+<span class="sd">        The second way is to specify a list of predefined patches. In this</span>
+<span class="sd">        case, each element of the list should itself be a list of integer</span>
+<span class="sd">        indexes along the spatial dimension of the data array. Each element of</span>
+<span class="sd">        this list will become a separate patch using the data at the specified</span>
+<span class="sd">        indices.</span>
+
+<span class="sd">        The third way is to set this to ``None``, which will disable the making</span>
+<span class="sd">        of spatial patches and only perform the searchlight over time. This can</span>
+<span class="sd">        be thought of as pooling everything into a single spatial patch.</span>
+
+<span class="sd">        Defaults to``None``.</span>
+<span class="sd">    temporal_radius : int | None</span>
+<span class="sd">        The temporal radius of the searchlight patch in samples. Set to</span>
+<span class="sd">        ``None`` to only perform the searchlight over sensors/source points.</span>
+<span class="sd">        Defaults to ``None``.</span>
+<span class="sd">    sel_series : ndarray, shape (n_selected_series,) | None</span>
+<span class="sd">        When set, searchlight patches will only be generated for the subset of</span>
+<span class="sd">        time series with the given indices. Defaults to ``None``, in which case</span>
+<span class="sd">        patches for all series are generated.</span>
+<span class="sd">    samples_from : int</span>
+<span class="sd">        When set, searchlight patches will only be generated for the subset of</span>
+<span class="sd">        time samples with indices equal or greater than the given value. Only</span>
+<span class="sd">        used when the given data shape includes a temporal dimension.</span>
+<span class="sd">        Defaults to 0.</span>
+<span class="sd">    samples_to : int</span>
+<span class="sd">        When set, searchlight patches will only be generated for the subset of</span>
+<span class="sd">        time samples with indices up to, but not including, the given value.</span>
+<span class="sd">        Only used when the given data shape includes a temporal dimension.</span>
+<span class="sd">        Defaults to -1, which means there is no upper bound.</span>
+
+<span class="sd">    Yields</span>
+<span class="sd">    ------</span>
+<span class="sd">    patch : tuple of (slice | ndarray)</span>
+<span class="sd">        A single searchlight patch. Each element of the tuple corresponds to a</span>
+<span class="sd">        dimension of the data array and can be used to index along this</span>
+<span class="sd">        dimension to extract the searchlight patch.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    shape</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">shape</span><span class="p">,</span>
+        <span class="n">dist</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">spatial_radius</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">temporal_radius</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">sel_series</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">samples_from</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">samples_to</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="c1"># Interpret the dimensions of the data array (see docstring)</span>
+        <span class="n">n_dims</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">n_dims</span> <span class="o">&gt;=</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">series_dim</span> <span class="o">=</span> <span class="mi">2</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">samples_dim</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="k">elif</span> <span class="n">n_dims</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">series_dim</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">samples_dim</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="k">elif</span> <span class="n">n_dims</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="p">(</span><span class="n">spatial_radius</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">sel_series</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">series_dim</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">samples_dim</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">elif</span> <span class="n">n_dims</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="p">(</span>
+            <span class="n">temporal_radius</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">samples_from</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">samples_to</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">series_dim</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">samples_dim</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">series_dim</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">samples_dim</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dist</span> <span class="o">=</span> <span class="n">dist</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spatial_radius</span> <span class="o">=</span> <span class="n">spatial_radius</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">temporal_radius</span> <span class="o">=</span> <span class="n">temporal_radius</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sel_series</span> <span class="o">=</span> <span class="n">sel_series</span>
+
+        <span class="c1"># Boundary checking for samples_from and samples_to. Only relevant if</span>
+        <span class="c1"># there is a temporal dimension to the data.</span>
+        <span class="k">if</span> <span class="n">samples_from</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">samples_to</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples_dim</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Cannot select samples: &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;the provided data shape </span><span class="si">{</span><span class="n">shape</span><span class="si">}</span><span class="s2"> has no &quot;</span>
+                    <span class="s2">&quot;temporal dimension.&quot;</span>
+                <span class="p">)</span>
+            <span class="n">n_samples</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">samples_dim</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">samples_from</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">samples_from</span> <span class="o">&gt;</span> <span class="n">n_samples</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;`samples_from=</span><span class="si">{</span><span class="n">samples_from</span><span class="si">}</span><span class="s2">` is out &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;of bounds given data shape (</span><span class="si">{</span><span class="n">shape</span><span class="si">}</span><span class="s2">).&quot;</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="n">samples_to</span> <span class="o">&gt;</span> <span class="n">n_samples</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;`samples_to=</span><span class="si">{</span><span class="n">samples_to</span><span class="si">}</span><span class="s2">` is out &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;of bounds given data shape (</span><span class="si">{</span><span class="n">shape</span><span class="si">}</span><span class="s2">).&quot;</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="n">samples_to</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">samples_to</span> <span class="o">&lt;</span> <span class="n">samples_from</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;`samples_to=</span><span class="si">{</span><span class="n">samples_to</span><span class="si">}</span><span class="s2">` is smaller &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;than `samples_from=</span><span class="si">{</span><span class="n">samples_from</span><span class="si">}</span><span class="s2">`.&quot;</span>
+                <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">samples_from</span> <span class="o">=</span> <span class="n">samples_from</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">samples_to</span> <span class="o">=</span> <span class="n">samples_to</span>
+
+        <span class="c1"># Will we be creating spatial searchlight patches?</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_radius</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">series_dim</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Cannot create spatial searchlight patches: &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;the provided data shape (</span><span class="si">{</span><span class="n">shape</span><span class="si">}</span><span class="s2">) has no &quot;</span>
+                    <span class="s2">&quot;spatial dimension.&quot;</span>
+                <span class="p">)</span>
+            <span class="c1"># If spatial radius is a number, we will be making searchlight</span>
+            <span class="c1"># patches based on distance computations. Alternatively, a list of</span>
+            <span class="c1"># predefined spatial patches may be provided, and we don&#39;t need</span>
+            <span class="c1"># `dist`.</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spatial_radius</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dist</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="s2">&quot;A spatial radius was requested, but no &quot;</span>
+                        <span class="s2">&quot;distance information was specified &quot;</span>
+                        <span class="s2">&quot;(=dist parameter).&quot;</span>
+                    <span class="p">)</span>
+                <span class="c1"># Compressed Sparse Row format is optimal for our computations</span>
+                <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.sparse</span><span class="w"> </span><span class="kn">import</span> <span class="n">issparse</span>
+
+                <span class="k">if</span> <span class="n">issparse</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dist</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dist</span><span class="o">.</span><span class="n">tocsr</span><span class="p">()</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sel_series</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">sel_series</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">series_dim</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Explicit spatial patches were provided</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sel_series</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">sel_series</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spatial_radius</span><span class="p">))</span>
+
+        <span class="c1"># Will we be creating temporal searchlight patches?</span>
+        <span class="k">if</span> <span class="n">temporal_radius</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples_dim</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Cannot create temporal searchlight patches: &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;the provided data shape (</span><span class="si">{</span><span class="n">shape</span><span class="si">}</span><span class="s2">) has no &quot;</span>
+                    <span class="s2">&quot;temporal dimension.&quot;</span>
+                <span class="p">)</span>
+            <span class="n">n_samples</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">samples_dim</span><span class="p">]</span>
+
+            <span class="c1"># Compute the centers of the searchlight patches in time. Make sure</span>
+            <span class="c1"># that adding/subtracting the temporal_radius does not produce</span>
+            <span class="c1"># array out of bounds errors.</span>
+            <span class="n">samples_min</span> <span class="o">=</span> <span class="n">temporal_radius</span>
+            <span class="n">samples_max</span> <span class="o">=</span> <span class="n">n_samples</span> <span class="o">-</span> <span class="n">temporal_radius</span>
+            <span class="k">if</span> <span class="n">samples_min</span> <span class="o">&gt;</span> <span class="n">samples_max</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Temporal radius (</span><span class="si">{</span><span class="n">temporal_radius</span><span class="si">}</span><span class="s2">) too large for the &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;given data shape (</span><span class="si">{</span><span class="n">shape</span><span class="si">}</span><span class="s2">).&quot;</span>
+                <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">time_centers</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+                <span class="nb">range</span><span class="p">(</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">samples_from</span><span class="p">,</span> <span class="n">samples_min</span><span class="p">,</span> <span class="n">samples_max</span><span class="p">),</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
+                        <span class="n">n_samples</span> <span class="k">if</span> <span class="n">samples_to</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="k">else</span> <span class="n">samples_to</span><span class="p">,</span>
+                        <span class="n">samples_min</span><span class="p">,</span>
+                        <span class="n">samples_max</span><span class="p">,</span>
+                    <span class="p">),</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Create a template for the patches that will be generated that is</span>
+        <span class="c1"># compatible with the data array dimensions. By default, we select</span>
+        <span class="c1"># everything along every dimension, taking `sel_series`, `samples_from`</span>
+        <span class="c1"># and `samples_to` into account. This template will be filled-in inside</span>
+        <span class="c1"># the __iter__ function.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">patch_template</span> <span class="o">=</span> <span class="p">[</span><span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">)]</span> <span class="o">*</span> <span class="n">n_dims</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sel_series</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">series_dim</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Cannot select series:&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;the provided data shape </span><span class="si">{</span><span class="n">shape</span><span class="si">}</span><span class="s2"> has no &quot;</span>
+                    <span class="s2">&quot;spatial dimension.&quot;</span>
+                <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">patch_template</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">series_dim</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sel_series</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples_from</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples_to</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># Bounds checking has already been done.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">patch_template</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">samples_dim</span><span class="p">]</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">samples_from</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples_to</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Setup the main generator function that will be providing the</span>
+        <span class="c1"># searchlight patches.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_generator</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+<div class="viewcode-block" id="searchlight.__iter__">
+<a class="viewcode-back" href="../../functions/mne_rsa.searchlight.html#mne_rsa.searchlight.__iter__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get an iterator over the searchlight patches.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_radius</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">temporal_radius</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">iterator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_iter_spatio_temporal</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_radius</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">iterator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_iter_spatial</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">temporal_radius</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">iterator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_iter_temporal</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Single searchlight patch only</span>
+            <span class="n">iterator</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">([</span><span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">patch_template</span><span class="p">)])</span>
+        <span class="k">return</span> <span class="n">iterator</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate searchlight patches.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_generator</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_iter_spatio_temporal</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate spatio-temporal searchlight patches.&quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Creating spatio-temporal searchlight patches&quot;</span><span class="p">)</span>
+        <span class="n">patch</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">patch_template</span><span class="p">)</span>  <span class="c1"># Copy the template</span>
+        <span class="k">for</span> <span class="n">series</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sel_series</span><span class="p">:</span>
+            <span class="c1"># Compute all spatial locations in the searchligh path.</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spatial_radius</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+                <span class="n">spat_ind</span> <span class="o">=</span> <span class="n">_get_in_radius</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dist</span><span class="p">,</span> <span class="n">series</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_radius</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">spat_ind</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_radius</span><span class="p">[</span><span class="n">series</span><span class="p">]</span>
+            <span class="n">patch</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">series_dim</span><span class="p">]</span> <span class="o">=</span> <span class="n">spat_ind</span>
+            <span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_centers</span><span class="p">:</span>
+                <span class="n">temp_ind</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span>
+                    <span class="n">sample</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">temporal_radius</span><span class="p">,</span> <span class="n">sample</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">temporal_radius</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="p">)</span>
+                <span class="n">patch</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">samples_dim</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_ind</span>
+                <span class="k">yield</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">patch</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_iter_spatial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate spatial searchlight patches only.&quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Creating spatial searchlight patches&quot;</span><span class="p">)</span>
+        <span class="n">patch</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">patch_template</span><span class="p">)</span>  <span class="c1"># Copy the template</span>
+        <span class="k">for</span> <span class="n">series</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sel_series</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spatial_radius</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+                <span class="n">spat_ind</span> <span class="o">=</span> <span class="n">_get_in_radius</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dist</span><span class="p">,</span> <span class="n">series</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_radius</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">spat_ind</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_radius</span><span class="p">[</span><span class="n">series</span><span class="p">]</span>
+            <span class="n">patch</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">series_dim</span><span class="p">]</span> <span class="o">=</span> <span class="n">spat_ind</span>
+            <span class="k">yield</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">patch</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_iter_temporal</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate temporal searchlight patches only.&quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Creating temporal searchlight patches&quot;</span><span class="p">)</span>
+        <span class="n">patch</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">patch_template</span><span class="p">)</span>  <span class="c1"># Copy the template</span>
+        <span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_centers</span><span class="p">:</span>
+            <span class="n">patch</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">samples_dim</span><span class="p">]</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span>
+                <span class="n">sample</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">temporal_radius</span><span class="p">,</span> <span class="n">sample</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">temporal_radius</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="p">)</span>
+            <span class="k">yield</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">patch</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the number of generated patches along multiple dimensions.</span>
+
+<span class="sd">        This is useful for re-shaping the result obtained after consuming the</span>
+<span class="sd">        this generator.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        shape : tuple of int</span>
+<span class="sd">            For a spatio-temporal searchlight:</span>
+<span class="sd">                Two elements: the number of time-series and number of time</span>
+<span class="sd">                samples for which patches are generated.</span>
+<span class="sd">            For a spatial searchlight:</span>
+<span class="sd">                One element: the number of time-series for which patches are</span>
+<span class="sd">                generated.</span>
+<span class="sd">            For a temporal searchlight:</span>
+<span class="sd">                One element: the number of time-samples for which patches are</span>
+<span class="sd">                generated.</span>
+<span class="sd">            For no searchlight:</span>
+<span class="sd">                Zero elements.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_radius</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">temporal_radius</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sel_series</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_centers</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_radius</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sel_series</span><span class="p">),)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">temporal_radius</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_centers</span><span class="p">),)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">tuple</span><span class="p">()</span>
+
+<div class="viewcode-block" id="searchlight.__len__">
+<a class="viewcode-back" href="../../functions/mne_rsa.searchlight.html#mne_rsa.searchlight.__len__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get total number of searchlight patches that will be generated.&quot;&quot;&quot;</span>
+        <span class="n">total</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>  <span class="c1"># Number of patches generated in each dimension</span>
+            <span class="n">total</span> <span class="o">*=</span> <span class="n">n</span>
+        <span class="k">return</span> <span class="n">total</span></div>
+</div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_in_radius</span><span class="p">(</span><span class="n">dist</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">radius</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Obtain indices for all points within the given radius from a seed point.</span>
+
+<span class="sd">    Takes care to work with sparse matrices too.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dist : ndarray or sparse matrix, shape (n_points, n_points)</span>
+<span class="sd">        The distances between all points.</span>
+<span class="sd">    seed : int</span>
+<span class="sd">        The index of the point used as a seed.</span>
+<span class="sd">    radius : float</span>
+<span class="sd">        The maximum distance that points can be to be included.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ind : ndarray, shape (n_points_in_radius,)</span>
+<span class="sd">        Indices of all points in the given radius from the seed point.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.sparse</span><span class="w"> </span><span class="kn">import</span> <span class="n">issparse</span>
+
+    <span class="k">if</span> <span class="n">issparse</span><span class="p">(</span><span class="n">dist</span><span class="p">):</span>
+        <span class="c1"># Treat all zero distances as missing data</span>
+        <span class="n">ind</span> <span class="o">=</span> <span class="n">dist</span><span class="p">[</span><span class="n">seed</span><span class="p">]</span><span class="o">.</span><span class="n">nonzero</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># Find indices for points within the radius</span>
+        <span class="n">ind</span> <span class="o">=</span> <span class="n">ind</span><span class="p">[</span><span class="n">dist</span><span class="p">[</span><span class="n">seed</span><span class="p">]</span><span class="o">.</span><span class="n">data</span> <span class="o">&lt;</span> <span class="n">radius</span><span class="p">]</span>
+        <span class="n">ind</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+        <span class="c1"># Be sure to add the seed point, which has distance of 0 to itself</span>
+        <span class="n">ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">ind</span><span class="p">,</span> <span class="p">[</span><span class="n">seed</span><span class="p">]))</span>  <span class="c1"># Di</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">dist</span><span class="p">[</span><span class="n">seed</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">radius</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">ind</span><span class="p">)</span>
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Marijn van Vliet, Aalto University.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

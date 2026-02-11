@@ -1,0 +1,73 @@
+
+:orphan:
+
+.. _sphx_glr_sg_execution_times:
+
+
+Computation times
+=================
+**12:16.426** total execution time for 13 files **from all galleries**:
+
+.. container::
+
+  .. raw:: html
+
+    <style scoped>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+    </style>
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script type="text/javascript" class="init">
+    $(document).ready( function () {
+        $('table.sg-datatable').DataTable({order: [[1, 'desc']]});
+    } );
+    </script>
+
+  .. list-table::
+   :header-rows: 1
+   :class: table table-striped sg-datatable
+
+   * - Example
+     - Time
+     - Mem (MB)
+   * - :ref:`sphx_glr_auto_examples_tutorials_02_source_level_tutorial.py` (``../examples/tutorials/02_source_level_tutorial.py``)
+     - 02:45.805
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_source_level_plot_rsa_roi.py` (``../examples/source_level/plot_rsa_roi.py``)
+     - 02:27.865
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_tutorials_03_statistics_tutorial.py` (``../examples/tutorials/03_statistics_tutorial.py``)
+     - 01:59.384
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_source_level_plot_surface.py` (``../examples/source_level/plot_surface.py``)
+     - 01:33.693
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_tutorials_01_sensor_level_tutorial.py` (``../examples/tutorials/01_sensor_level_tutorial.py``)
+     - 00:56.843
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_source_level_plot_nifti.py` (``../examples/source_level/plot_nifti.py``)
+     - 00:48.896
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_source_level_plot_volume.py` (``../examples/source_level/plot_volume.py``)
+     - 00:32.833
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_sensor_level_plot_sensor_level.py` (``../examples/sensor_level/plot_sensor_level.py``)
+     - 00:30.446
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_sensor_level_plot_whitening.py` (``../examples/sensor_level/plot_whitening.py``)
+     - 00:26.643
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_core_plot_rsa_between_rdms.py` (``../examples/core/plot_rsa_between_rdms.py``)
+     - 00:07.233
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_sensor_level_plot_sensor_rdms.py` (``../examples/sensor_level/plot_sensor_rdms.py``)
+     - 00:03.800
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_core_plot_cross_validation.py` (``../examples/core/plot_cross_validation.py``)
+     - 00:02.762
+     - 0.0
+   * - :ref:`sphx_glr_auto_examples_core_plot_construct_model_rdm.py` (``../examples/core/plot_construct_model_rdm.py``)
+     - 00:00.222
+     - 0.0

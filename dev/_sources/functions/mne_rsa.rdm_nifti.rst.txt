@@ -1,0 +1,12 @@
+﻿mne_rsa.rdm_nifti
+=================
+
+.. currentmodule:: mne_rsa
+
+.. autofunction:: rdm_nifti
+
+.. include:: mne_rsa.rdm_nifti.examples
+
+.. raw:: html
+
+    <div style='clear:both'></div>

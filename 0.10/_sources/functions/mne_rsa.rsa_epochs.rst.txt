@@ -1,0 +1,12 @@
+﻿mne_rsa.rsa_epochs
+==================
+
+.. currentmodule:: mne_rsa
+
+.. autofunction:: rsa_epochs
+
+.. include:: mne_rsa.rsa_epochs.examples
+
+.. raw:: html
+
+    <div style='clear:both'></div>

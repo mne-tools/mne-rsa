@@ -1,0 +1,12 @@
+﻿mne_rsa.compute_rdm
+===================
+
+.. currentmodule:: mne_rsa
+
+.. autofunction:: compute_rdm
+
+.. include:: mne_rsa.compute_rdm.examples
+
+.. raw:: html
+
+    <div style='clear:both'></div>

@@ -1,0 +1,12 @@
+﻿mne_rsa.plot_rdms
+=================
+
+.. currentmodule:: mne_rsa
+
+.. autofunction:: plot_rdms
+
+.. include:: mne_rsa.plot_rdms.examples
+
+.. raw:: html
+
+    <div style='clear:both'></div>
