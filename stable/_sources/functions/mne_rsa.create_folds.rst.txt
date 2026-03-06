@@ -1,0 +1,12 @@
+﻿mne_rsa.create_folds
+====================
+
+.. currentmodule:: mne_rsa
+
+.. autofunction:: create_folds
+
+.. include:: mne_rsa.create_folds.examples
+
+.. raw:: html
+
+    <div style='clear:both'></div>

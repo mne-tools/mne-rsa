@@ -1,0 +1,1888 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" data-theme="auto">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Source-level RSA using a searchlight on surface data &#8212; mne-rsa 1.1.dev documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "auto";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "auto";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=6858f173"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/source_level/plot_surface';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '_static/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'dev';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <link rel="canonical" href="https://mne.tools/mne-rsa/auto_examples/source_level/plot_surface.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Source-level RSA using a searchlight on volumetric data" href="plot_volume.html" />
+    <link rel="prev" title="Source-level RSA using ROI’s" href="plot_rsa_roi.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.1.dev" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="auto">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">mne-rsa 1.1.dev documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/mne-tools/mne-rsa" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/mne-tools/mne-rsa" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../core/index.html">Core RSA functionality</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../core/plot_construct_model_rdm.html">Construct a model RDM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/plot_cross_validation.html">Using cross-validation when computing RDMs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/plot_rsa_between_rdms.html">Compute RSA between RDMs</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../sensor_level/index.html">Sensor-Level RSA</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../sensor_level/plot_sensor_level.html">Sensor-level RSA using a searchlight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sensor_level/plot_sensor_rdms.html">Plot sensor-level RDMs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sensor_level/plot_whitening.html">Sensor-level RSA using mixed sensor types</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Source-Level RSA</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="plot_nifti.html">Source-level RSA using a searchlight on fMRI data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_rsa_roi.html">Source-level RSA using ROI’s</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Source-level RSA using a searchlight on surface data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_volume.html">Source-level RSA using a searchlight on volumetric data</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials/index.html">Tutorials</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/01_sensor_level_tutorial.html">Tutorial part 1: RSA on sensor-level MEG data</a></li>
+
+
+
+
+
+
+
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/02_source_level_tutorial.html">Tutorial part 2: RSA on source-level MEG data</a></li>
+
+
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/03_statistics_tutorial.html">Tutorial part 3: statistical analysis of group-level RSA results</a></li>
+
+
+
+
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none"></div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-auto-examples-source-level-plot-surface-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code.</p>
+</div>
+<section class="sphx-glr-example-title" id="source-level-rsa-using-a-searchlight-on-surface-data">
+<span id="sphx-glr-auto-examples-source-level-plot-surface-py"></span><h1>Source-level RSA using a searchlight on surface data<a class="headerlink" href="#source-level-rsa-using-a-searchlight-on-surface-data" title="Link to this heading">#</a></h1>
+<p>This example demonstrates how to perform representational similarity analysis (RSA) on
+source localized MEG data, using a searchlight approach.</p>
+<p>In the searchlight approach, representational similarity is computed between the model
+and searchlight “patches”. A patch is defined by a seed vertex on the cortex and all
+vertices within a given radius. By default, patches are created using each vertex as a
+seed point, so you can think of it as a “searchlight” that scans along the cortex.</p>
+<p>The radius of a searchlight can be defined in space, in time, or both. In this example,
+our searchlight will have a spatial radius of 2 cm. and a temporal radius of 20 ms.</p>
+<p>The dataset will be the MNE-sample dataset: a collection of 288 epochs in which the
+participant was presented with an auditory beep or visual stimulus to either the left or
+right ear or visual field.</p>
+<div class="line-block">
+<div class="line">Authors:</div>
+<div class="line">Marijn van Vliet &lt;<a class="reference external" href="mailto:marijn&#46;vanvliet&#37;&#52;&#48;aalto&#46;fi">marijn<span>&#46;</span>vanvliet<span>&#64;</span>aalto<span>&#46;</span>fi</a>&gt;</div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># sphinx_gallery_thumbnail_number=2</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">mne</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">mne_rsa</span>
+
+<span class="c1"># Import required packages</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<a href="https://mne.tools/stable/generated/mne.set_log_level.html#mne.set_log_level" title="mne.set_log_level" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-function"><span class="n">mne</span><span class="o">.</span><span class="n">set_log_level</span></a><span class="p">(</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># Be less verbose</span>
+<a href="https://mne.tools/stable/generated/mne.viz.set_3d_backend.html#mne.viz.set_3d_backend" title="mne.viz.set_3d_backend" class="sphx-glr-backref-module-mne-viz sphx-glr-backref-type-py-function"><span class="n">mne</span><span class="o">.</span><span class="n">viz</span><span class="o">.</span><span class="n">set_3d_backend</span></a><span class="p">(</span><span class="s2">&quot;pyvista&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&#39;pyvistaqt&#39;
+</pre></div>
+</div>
+<p>We’ll be using the data from the MNE-sample set. To speed up computations in this
+example, we’re going to use one of the sparse source spaces from the testing set.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sample_root</span></a> <span class="o">=</span> <a href="https://mne.tools/stable/generated/mne.datasets.sample.data_path.html#mne.datasets.sample.data_path" title="mne.datasets.sample.data_path" class="sphx-glr-backref-module-mne-datasets-sample sphx-glr-backref-type-py-function"><span class="n">mne</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">sample</span><span class="o">.</span><span class="n">data_path</span></a><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">testing_root</span></a> <span class="o">=</span> <span class="n">mne</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">data_path</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sample_path</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sample_root</span></a> <span class="o">/</span> <span class="s2">&quot;MEG&quot;</span> <span class="o">/</span> <span class="s2">&quot;sample&quot;</span>
+<a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">testing_path</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">testing_root</span></a> <span class="o">/</span> <span class="s2">&quot;MEG&quot;</span> <span class="o">/</span> <span class="s2">&quot;sample&quot;</span>
+<a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">subjects_dir</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sample_root</span></a> <span class="o">/</span> <span class="s2">&quot;subjects&quot;</span>
+</pre></div>
+</div>
+<p>Creating epochs from the continuous (raw) data. We downsample to 100 Hz to speed up
+the RSA computations later on.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw" title="mne.io.Raw" class="sphx-glr-backref-module-mne-io sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">raw</span></a> <span class="o">=</span> <a href="https://mne.tools/stable/generated/mne.io.read_raw_fif.html#mne.io.read_raw_fif" title="mne.io.read_raw_fif" class="sphx-glr-backref-module-mne-io sphx-glr-backref-type-py-function"><span class="n">mne</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_raw_fif</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sample_path</span></a> <span class="o">/</span> <span class="s2">&quot;sample_audvis_filt-0-40_raw.fif&quot;</span><span class="p">)</span>
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">events</span></a> <span class="o">=</span> <a href="https://mne.tools/stable/generated/mne.read_events.html#mne.read_events" title="mne.read_events" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-function"><span class="n">mne</span><span class="o">.</span><span class="n">read_events</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sample_path</span></a> <span class="o">/</span> <span class="s2">&quot;sample_audvis_filt-0-40_raw-eve.fif&quot;</span><span class="p">)</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">event_id</span></a> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;audio/left&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;audio/right&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;visual/left&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;visual/right&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}</span>
+<a href="https://mne.tools/stable/generated/mne.EpochsArray.html#mne.EpochsArray" title="mne.EpochsArray" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">epochs</span></a> <span class="o">=</span> <a href="https://mne.tools/stable/generated/mne.Epochs.html#mne.Epochs" title="mne.Epochs" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-class"><span class="n">mne</span><span class="o">.</span><span class="n">Epochs</span></a><span class="p">(</span><a href="https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw" title="mne.io.Raw" class="sphx-glr-backref-module-mne-io sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">raw</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">events</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">event_id</span></a><span class="p">,</span> <span class="n">preload</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a href="https://mne.tools/stable/generated/mne.EpochsArray.html#mne.EpochsArray.resample" title="mne.EpochsArray.resample" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-method"><span class="n">epochs</span><span class="o">.</span><span class="n">resample</span></a><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<script type="text/javascript">
+    // must be `var` (not `const`) because this can get embedded multiple times on a page
+var toggleVisibility = (className) => {
+
+    const elements = document.querySelectorAll(`.${className}`);
+
+    elements.forEach(element => {
+        if (element.classList.contains("mne-repr-section-header")) {
+            return  // Don't collapse the section header row
+        }
+        element.classList.toggle("mne-repr-collapsed");
+    });
+
+    // trigger caret to rotate
+    var sel = `.mne-repr-section-header.${className} > th.mne-repr-section-toggle > button`;
+    const button = document.querySelector(sel);
+    button.classList.toggle("collapsed");
+
+    // adjust tooltip
+    sel = `tr.mne-repr-section-header.${className}`;
+    const secHeadRow = document.querySelector(sel);
+    secHeadRow.classList.toggle("collapsed");
+    secHeadRow.title = secHeadRow.title === "Hide section" ? "Show section" : "Hide section";
+}
+</script>
+
+<style type="text/css">
+    /*
+Styles in this section apply both to the sphinx-built website docs and to notebooks
+rendered in an IDE or in Jupyter. In our web docs, styles here are complemented by
+doc/_static/styles.css and other CSS files (e.g. from the sphinx theme, sphinx-gallery,
+or bootstrap). In IDEs/Jupyter, those style files are unavailable, so only the rules in
+this file apply (plus whatever default styling the IDE applies).
+*/
+.mne-repr-table {
+    display: inline;  /* prevent using full container width */
+}
+.mne-repr-table tr.mne-repr-section-header > th {
+    padding-top: 1rem;
+    text-align: left;
+    vertical-align: middle;
+}
+.mne-repr-section-toggle > button {
+    all: unset;
+    display: block;
+    height: 1rem;
+    width: 1rem;
+}
+.mne-repr-section-toggle > button > svg {
+    height: 60%;
+}
+
+/* transition (rotation) effects on the collapser button */
+.mne-repr-section-toggle > button.collapsed > svg {
+    transition: 0.1s ease-out;
+    transform: rotate(-90deg);
+}
+.mne-repr-section-toggle > button:not(.collapsed) > svg {
+    transition: 0.1s ease-out;
+    transform: rotate(0deg);
+}
+
+/* hide collapsed table rows */
+.mne-repr-collapsed {
+    display: none;
+}
+
+
+@layer {
+    /*
+    Selectors in a `@layer` will always be lower-precedence than selectors outside the
+    layer. So even though e.g. `div.output_html` is present in the sphinx-rendered
+    website docs, the styles here won't take effect there as long as some other rule
+    somewhere in the page's CSS targets the same element.
+
+    In IDEs or Jupyter notebooks, though, the CSS files from the sphinx theme,
+    sphinx-gallery, and bootstrap are unavailable, so these styles will apply.
+
+    Notes:
+
+    - the selector `.accordion-body` is for MNE Reports
+    - the selector `.output_html` is for VSCode's notebook interface
+    - the selector `.jp-RenderedHTML` is for Jupyter notebook
+    - variables starting with `--theme-` are VSCode-specific.
+    - variables starting with `--jp-` are Jupyter styles, *some of which* are also
+      available in VSCode. Here we try the `--theme-` variable first, then fall back to
+      the `--jp-` ones.
+    */
+    .mne-repr-table {
+        --mne-toggle-color: var(--theme-foreground, var(--jp-ui-font-color1));
+        --mne-button-bg-color: var(--theme-button-background, var(--jp-info-color0, var(--jp-content-link-color)));
+        --mne-button-fg-color: var(--theme-button-foreground, var(--jp-ui-inverse-font-color0, var(--jp-editor-background)));
+        --mne-button-hover-bg-color: var(--theme-button-hover-background, var(--jp-info-color1));
+        --mne-button-radius: var(--jp-border-radius, 0.25rem);
+    }
+    /* chevron position/alignment; in VSCode it looks ok without adjusting */
+    .accordion-body .mne-repr-section-toggle > button,
+    .jp-RenderedHTML .mne-repr-section-toggle > button {
+        padding: 0 0 45% 25% !important;
+    }
+    /* chevron color; MNE Report doesn't have light/dark mode */
+    div.output_html .mne-repr-section-toggle > button > svg > path,
+    .jp-RenderedHTML .mne-repr-section-toggle > button > svg > path {
+        fill: var(--mne-toggle-color);
+    }
+    .accordion-body .mne-ch-names-btn,
+    div.output_html .mne-ch-names-btn,
+    .jp-RenderedHTML .mne-ch-names-btn {
+        -webkit-border-radius: var(--mne-button-radius);
+        -moz-border-radius: var(--mne-button-radius);
+        border-radius: var(--mne-button-radius);
+        border: none;
+        background-image: none;
+        background-color: var(--mne-button-bg-color);
+        color: var(--mne-button-fg-color);
+        font-size: inherit;
+        min-width: 1.5rem;
+        padding: 0.25rem;
+        text-align: center;
+        text-decoration: none;
+    }
+    .accordion-body .mne-ch-names-btn:hover,
+    div.output_html .mne.ch-names-btn:hover,
+    .jp-RenderedHTML .mne-ch-names-btn:hover {
+        background-color: var(--mne-button-hover-bg-color);
+        text-decoration: underline;
+    }
+    .accordion-body .mne-ch-names-btn:focus-visible,
+    div.output_html .mne-ch-names-btn:focus-visible,
+    .jp-RenderedHTML .mne-ch-names-btn:focus-visible {
+        outline: 0.1875rem solid var(--mne-button-bg-color) !important;
+        outline-offset: 0.1875rem !important;
+    }
+}
+</style>
+
+
+
+<table class="table mne-repr-table">
+
+
+
+
+
+
+
+
+<tr class="mne-repr-section-header general-0f96ccca-0136-4e7d-9cce-8187bd2faecd"
+     title="Hide section"
+    onclick="toggleVisibility('general-0f96ccca-0136-4e7d-9cce-8187bd2faecd')">
+    <th class="mne-repr-section-toggle">
+        <button >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
+        </button>
+    </th>
+    <th colspan="2">
+        <strong>General</strong>
+    </th>
+</tr>
+
+
+<tr class="repr-element general-0f96ccca-0136-4e7d-9cce-8187bd2faecd ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>MNE object type</td>
+    <td>Epochs</td>
+</tr>
+<tr class="repr-element general-0f96ccca-0136-4e7d-9cce-8187bd2faecd ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Measurement date</td>
+
+    <td>2002-12-03 at 19:01:10 UTC</td>
+
+</tr>
+<tr class="repr-element general-0f96ccca-0136-4e7d-9cce-8187bd2faecd ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Participant</td>
+
+    <td>Unknown</td>
+
+</tr>
+<tr class="repr-element general-0f96ccca-0136-4e7d-9cce-8187bd2faecd ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Experimenter</td>
+
+    <td>Unknown</td>
+
+</tr>
+
+
+
+
+
+
+
+
+<tr class="mne-repr-section-header acquisition-e3ab2697-f706-40ca-8893-ffe0b2901ee3"
+     title="Hide section"
+    onclick="toggleVisibility('acquisition-e3ab2697-f706-40ca-8893-ffe0b2901ee3')">
+    <th class="mne-repr-section-toggle">
+        <button >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
+        </button>
+    </th>
+    <th colspan="2">
+        <strong>Acquisition</strong>
+    </th>
+</tr>
+
+
+
+
+
+<tr class="repr-element acquisition-e3ab2697-f706-40ca-8893-ffe0b2901ee3 ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Total number of events</td>
+    <td>288</td>
+</tr>
+
+
+<tr class="repr-element acquisition-e3ab2697-f706-40ca-8893-ffe0b2901ee3 ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Events counts</td>
+
+    <td>
+
+        audio/left: 72
+        <br />
+
+        audio/right: 73
+        <br />
+
+        visual/left: 73
+        <br />
+
+        visual/right: 70
+
+
+    </td>
+
+</tr>
+
+
+<tr class="repr-element acquisition-e3ab2697-f706-40ca-8893-ffe0b2901ee3 ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Time range</td>
+    <td>-0.200 – 0.500 s</td>
+</tr>
+
+
+<tr class="repr-element acquisition-e3ab2697-f706-40ca-8893-ffe0b2901ee3 ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Baseline</td>
+    <td>-0.200 – 0.000 s</td>
+</tr>
+
+
+<tr class="repr-element acquisition-e3ab2697-f706-40ca-8893-ffe0b2901ee3 ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Sampling frequency</td>
+    <td>100.00 Hz</td>
+</tr>
+
+
+<tr class="repr-element acquisition-e3ab2697-f706-40ca-8893-ffe0b2901ee3 ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Time points</td>
+    <td>71</td>
+</tr>
+
+
+<tr class="repr-element acquisition-e3ab2697-f706-40ca-8893-ffe0b2901ee3 ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Metadata</td>
+    <td>No metadata set</td>
+</tr>
+
+
+
+
+
+
+
+
+
+<tr class="mne-repr-section-header channels-1de13e91-6170-4b5f-9394-a2f9abc712fc"
+     title="Hide section"
+    onclick="toggleVisibility('channels-1de13e91-6170-4b5f-9394-a2f9abc712fc')">
+    <th class="mne-repr-section-toggle">
+        <button >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
+        </button>
+    </th>
+    <th colspan="2">
+        <strong>Channels</strong>
+    </th>
+</tr>
+
+
+
+<tr class="repr-element channels-1de13e91-6170-4b5f-9394-a2f9abc712fc ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Magnetometers</td>
+    <td>
+        <button class="mne-ch-names-btn sd-sphinx-override sd-btn sd-btn-info sd-text-wrap sd-shadow-sm" onclick="alert('Good Magnetometers:\n\nMEG&nbsp;0111, MEG&nbsp;0121, MEG&nbsp;0131, MEG&nbsp;0141, MEG&nbsp;0211, MEG&nbsp;0221, MEG&nbsp;0231, MEG&nbsp;0241, MEG&nbsp;0311, MEG&nbsp;0321, MEG&nbsp;0331, MEG&nbsp;0341, MEG&nbsp;0411, MEG&nbsp;0421, MEG&nbsp;0431, MEG&nbsp;0441, MEG&nbsp;0511, MEG&nbsp;0521, MEG&nbsp;0531, MEG&nbsp;0541, MEG&nbsp;0611, MEG&nbsp;0621, MEG&nbsp;0631, MEG&nbsp;0641, MEG&nbsp;0711, MEG&nbsp;0721, MEG&nbsp;0731, MEG&nbsp;0741, MEG&nbsp;0811, MEG&nbsp;0821, MEG&nbsp;0911, MEG&nbsp;0921, MEG&nbsp;0931, MEG&nbsp;0941, MEG&nbsp;1011, MEG&nbsp;1021, MEG&nbsp;1031, MEG&nbsp;1041, MEG&nbsp;1111, MEG&nbsp;1121, MEG&nbsp;1131, MEG&nbsp;1141, MEG&nbsp;1211, MEG&nbsp;1221, MEG&nbsp;1231, MEG&nbsp;1241, MEG&nbsp;1311, MEG&nbsp;1321, MEG&nbsp;1331, MEG&nbsp;1341, MEG&nbsp;1411, MEG&nbsp;1421, MEG&nbsp;1431, MEG&nbsp;1441, MEG&nbsp;1511, MEG&nbsp;1521, MEG&nbsp;1531, MEG&nbsp;1541, MEG&nbsp;1611, MEG&nbsp;1621, MEG&nbsp;1631, MEG&nbsp;1641, MEG&nbsp;1711, MEG&nbsp;1721, MEG&nbsp;1731, MEG&nbsp;1741, MEG&nbsp;1811, MEG&nbsp;1821, MEG&nbsp;1831, MEG&nbsp;1841, MEG&nbsp;1911, MEG&nbsp;1921, MEG&nbsp;1931, MEG&nbsp;1941, MEG&nbsp;2011, MEG&nbsp;2021, MEG&nbsp;2031, MEG&nbsp;2041, MEG&nbsp;2111, MEG&nbsp;2121, MEG&nbsp;2131, MEG&nbsp;2141, MEG&nbsp;2211, MEG&nbsp;2221, MEG&nbsp;2231, MEG&nbsp;2241, MEG&nbsp;2311, MEG&nbsp;2321, MEG&nbsp;2331, MEG&nbsp;2341, MEG&nbsp;2411, MEG&nbsp;2421, MEG&nbsp;2431, MEG&nbsp;2441, MEG&nbsp;2511, MEG&nbsp;2521, MEG&nbsp;2531, MEG&nbsp;2541, MEG&nbsp;2611, MEG&nbsp;2621, MEG&nbsp;2631, MEG&nbsp;2641')" title="(Click to open in popup)&#13;&#13;MEG&nbsp;0111, MEG&nbsp;0121, MEG&nbsp;0131, MEG&nbsp;0141, MEG&nbsp;0211, MEG&nbsp;0221, MEG&nbsp;0231, MEG&nbsp;0241, MEG&nbsp;0311, MEG&nbsp;0321, MEG&nbsp;0331, MEG&nbsp;0341, MEG&nbsp;0411, MEG&nbsp;0421, MEG&nbsp;0431, MEG&nbsp;0441, MEG&nbsp;0511, MEG&nbsp;0521, MEG&nbsp;0531, MEG&nbsp;0541, MEG&nbsp;0611, MEG&nbsp;0621, MEG&nbsp;0631, MEG&nbsp;0641, MEG&nbsp;0711, MEG&nbsp;0721, MEG&nbsp;0731, MEG&nbsp;0741, MEG&nbsp;0811, MEG&nbsp;0821, MEG&nbsp;0911, MEG&nbsp;0921, MEG&nbsp;0931, MEG&nbsp;0941, MEG&nbsp;1011, MEG&nbsp;1021, MEG&nbsp;1031, MEG&nbsp;1041, MEG&nbsp;1111, MEG&nbsp;1121, MEG&nbsp;1131, MEG&nbsp;1141, MEG&nbsp;1211, MEG&nbsp;1221, MEG&nbsp;1231, MEG&nbsp;1241, MEG&nbsp;1311, MEG&nbsp;1321, MEG&nbsp;1331, MEG&nbsp;1341, MEG&nbsp;1411, MEG&nbsp;1421, MEG&nbsp;1431, MEG&nbsp;1441, MEG&nbsp;1511, MEG&nbsp;1521, MEG&nbsp;1531, MEG&nbsp;1541, MEG&nbsp;1611, MEG&nbsp;1621, MEG&nbsp;1631, MEG&nbsp;1641, MEG&nbsp;1711, MEG&nbsp;1721, MEG&nbsp;1731, MEG&nbsp;1741, MEG&nbsp;1811, MEG&nbsp;1821, MEG&nbsp;1831, MEG&nbsp;1841, MEG&nbsp;1911, MEG&nbsp;1921, MEG&nbsp;1931, MEG&nbsp;1941, MEG&nbsp;2011, MEG&nbsp;2021, MEG&nbsp;2031, MEG&nbsp;2041, MEG&nbsp;2111, MEG&nbsp;2121, MEG&nbsp;2131, MEG&nbsp;2141, MEG&nbsp;2211, MEG&nbsp;2221, MEG&nbsp;2231, MEG&nbsp;2241, MEG&nbsp;2311, MEG&nbsp;2321, MEG&nbsp;2331, MEG&nbsp;2341, MEG&nbsp;2411, MEG&nbsp;2421, MEG&nbsp;2431, MEG&nbsp;2441, MEG&nbsp;2511, MEG&nbsp;2521, MEG&nbsp;2531, MEG&nbsp;2541, MEG&nbsp;2611, MEG&nbsp;2621, MEG&nbsp;2631, MEG&nbsp;2641">
+            102
+        </button>
+
+
+    </td>
+</tr>
+
+
+<tr class="repr-element channels-1de13e91-6170-4b5f-9394-a2f9abc712fc ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Gradiometers</td>
+    <td>
+        <button class="mne-ch-names-btn sd-sphinx-override sd-btn sd-btn-info sd-text-wrap sd-shadow-sm" onclick="alert('Good Gradiometers:\n\nMEG&nbsp;0113, MEG&nbsp;0112, MEG&nbsp;0122, MEG&nbsp;0123, MEG&nbsp;0132, MEG&nbsp;0133, MEG&nbsp;0143, MEG&nbsp;0142, MEG&nbsp;0213, MEG&nbsp;0212, MEG&nbsp;0222, MEG&nbsp;0223, MEG&nbsp;0232, MEG&nbsp;0233, MEG&nbsp;0243, MEG&nbsp;0242, MEG&nbsp;0313, MEG&nbsp;0312, MEG&nbsp;0322, MEG&nbsp;0323, MEG&nbsp;0333, MEG&nbsp;0332, MEG&nbsp;0343, MEG&nbsp;0342, MEG&nbsp;0413, MEG&nbsp;0412, MEG&nbsp;0422, MEG&nbsp;0423, MEG&nbsp;0432, MEG&nbsp;0433, MEG&nbsp;0443, MEG&nbsp;0442, MEG&nbsp;0513, MEG&nbsp;0512, MEG&nbsp;0523, MEG&nbsp;0522, MEG&nbsp;0532, MEG&nbsp;0533, MEG&nbsp;0542, MEG&nbsp;0543, MEG&nbsp;0613, MEG&nbsp;0612, MEG&nbsp;0622, MEG&nbsp;0623, MEG&nbsp;0633, MEG&nbsp;0632, MEG&nbsp;0642, MEG&nbsp;0643, MEG&nbsp;0713, MEG&nbsp;0712, MEG&nbsp;0723, MEG&nbsp;0722, MEG&nbsp;0733, MEG&nbsp;0732, MEG&nbsp;0743, MEG&nbsp;0742, MEG&nbsp;0813, MEG&nbsp;0812, MEG&nbsp;0822, MEG&nbsp;0823, MEG&nbsp;0913, MEG&nbsp;0912, MEG&nbsp;0923, MEG&nbsp;0922, MEG&nbsp;0932, MEG&nbsp;0933, MEG&nbsp;0942, MEG&nbsp;0943, MEG&nbsp;1013, MEG&nbsp;1012, MEG&nbsp;1023, MEG&nbsp;1022, MEG&nbsp;1032, MEG&nbsp;1033, MEG&nbsp;1043, MEG&nbsp;1042, MEG&nbsp;1112, MEG&nbsp;1113, MEG&nbsp;1123, MEG&nbsp;1122, MEG&nbsp;1133, MEG&nbsp;1132, MEG&nbsp;1142, MEG&nbsp;1143, MEG&nbsp;1213, MEG&nbsp;1212, MEG&nbsp;1223, MEG&nbsp;1222, MEG&nbsp;1232, MEG&nbsp;1233, MEG&nbsp;1243, MEG&nbsp;1242, MEG&nbsp;1312, MEG&nbsp;1313, MEG&nbsp;1323, MEG&nbsp;1322, MEG&nbsp;1333, MEG&nbsp;1332, MEG&nbsp;1342, MEG&nbsp;1343, MEG&nbsp;1412, MEG&nbsp;1413, MEG&nbsp;1423, MEG&nbsp;1422, MEG&nbsp;1433, MEG&nbsp;1432, MEG&nbsp;1442, MEG&nbsp;1443, MEG&nbsp;1512, MEG&nbsp;1513, MEG&nbsp;1522, MEG&nbsp;1523, MEG&nbsp;1533, MEG&nbsp;1532, MEG&nbsp;1543, MEG&nbsp;1542, MEG&nbsp;1613, MEG&nbsp;1612, MEG&nbsp;1622, MEG&nbsp;1623, MEG&nbsp;1632, MEG&nbsp;1633, MEG&nbsp;1643, MEG&nbsp;1642, MEG&nbsp;1713, MEG&nbsp;1712, MEG&nbsp;1722, MEG&nbsp;1723, MEG&nbsp;1732, MEG&nbsp;1733, MEG&nbsp;1743, MEG&nbsp;1742, MEG&nbsp;1813, MEG&nbsp;1812, MEG&nbsp;1822, MEG&nbsp;1823, MEG&nbsp;1832, MEG&nbsp;1833, MEG&nbsp;1843, MEG&nbsp;1842, MEG&nbsp;1912, MEG&nbsp;1913, MEG&nbsp;1923, MEG&nbsp;1922, MEG&nbsp;1932, MEG&nbsp;1933, MEG&nbsp;1943, MEG&nbsp;1942, MEG&nbsp;2013, MEG&nbsp;2012, MEG&nbsp;2023, MEG&nbsp;2022, MEG&nbsp;2032, MEG&nbsp;2033, MEG&nbsp;2042, MEG&nbsp;2043, MEG&nbsp;2113, MEG&nbsp;2112, MEG&nbsp;2122, MEG&nbsp;2123, MEG&nbsp;2133, MEG&nbsp;2132, MEG&nbsp;2143, MEG&nbsp;2142, MEG&nbsp;2212, MEG&nbsp;2213, MEG&nbsp;2223, MEG&nbsp;2222, MEG&nbsp;2233, MEG&nbsp;2232, MEG&nbsp;2242, MEG&nbsp;2243, MEG&nbsp;2312, MEG&nbsp;2313, MEG&nbsp;2323, MEG&nbsp;2322, MEG&nbsp;2332, MEG&nbsp;2333, MEG&nbsp;2343, MEG&nbsp;2342, MEG&nbsp;2412, MEG&nbsp;2413, MEG&nbsp;2423, MEG&nbsp;2422, MEG&nbsp;2433, MEG&nbsp;2432, MEG&nbsp;2442, MEG&nbsp;2512, MEG&nbsp;2513, MEG&nbsp;2522, MEG&nbsp;2523, MEG&nbsp;2533, MEG&nbsp;2532, MEG&nbsp;2543, MEG&nbsp;2542, MEG&nbsp;2612, MEG&nbsp;2613, MEG&nbsp;2623, MEG&nbsp;2622, MEG&nbsp;2633, MEG&nbsp;2632, MEG&nbsp;2642, MEG&nbsp;2643')" title="(Click to open in popup)&#13;&#13;MEG&nbsp;0113, MEG&nbsp;0112, MEG&nbsp;0122, MEG&nbsp;0123, MEG&nbsp;0132, MEG&nbsp;0133, MEG&nbsp;0143, MEG&nbsp;0142, MEG&nbsp;0213, MEG&nbsp;0212, MEG&nbsp;0222, MEG&nbsp;0223, MEG&nbsp;0232, MEG&nbsp;0233, MEG&nbsp;0243, MEG&nbsp;0242, MEG&nbsp;0313, MEG&nbsp;0312, MEG&nbsp;0322, MEG&nbsp;0323, MEG&nbsp;0333, MEG&nbsp;0332, MEG&nbsp;0343, MEG&nbsp;0342, MEG&nbsp;0413, MEG&nbsp;0412, MEG&nbsp;0422, MEG&nbsp;0423, MEG&nbsp;0432, MEG&nbsp;0433, MEG&nbsp;0443, MEG&nbsp;0442, MEG&nbsp;0513, MEG&nbsp;0512, MEG&nbsp;0523, MEG&nbsp;0522, MEG&nbsp;0532, MEG&nbsp;0533, MEG&nbsp;0542, MEG&nbsp;0543, MEG&nbsp;0613, MEG&nbsp;0612, MEG&nbsp;0622, MEG&nbsp;0623, MEG&nbsp;0633, MEG&nbsp;0632, MEG&nbsp;0642, MEG&nbsp;0643, MEG&nbsp;0713, MEG&nbsp;0712, MEG&nbsp;0723, MEG&nbsp;0722, MEG&nbsp;0733, MEG&nbsp;0732, MEG&nbsp;0743, MEG&nbsp;0742, MEG&nbsp;0813, MEG&nbsp;0812, MEG&nbsp;0822, MEG&nbsp;0823, MEG&nbsp;0913, MEG&nbsp;0912, MEG&nbsp;0923, MEG&nbsp;0922, MEG&nbsp;0932, MEG&nbsp;0933, MEG&nbsp;0942, MEG&nbsp;0943, MEG&nbsp;1013, MEG&nbsp;1012, MEG&nbsp;1023, MEG&nbsp;1022, MEG&nbsp;1032, MEG&nbsp;1033, MEG&nbsp;1043, MEG&nbsp;1042, MEG&nbsp;1112, MEG&nbsp;1113, MEG&nbsp;1123, MEG&nbsp;1122, MEG&nbsp;1133, MEG&nbsp;1132, MEG&nbsp;1142, MEG&nbsp;1143, MEG&nbsp;1213, MEG&nbsp;1212, MEG&nbsp;1223, MEG&nbsp;1222, MEG&nbsp;1232, MEG&nbsp;1233, MEG&nbsp;1243, MEG&nbsp;1242, MEG&nbsp;1312, MEG&nbsp;1313, MEG&nbsp;1323, MEG&nbsp;1322, MEG&nbsp;1333, MEG&nbsp;1332, MEG&nbsp;1342, MEG&nbsp;1343, MEG&nbsp;1412, MEG&nbsp;1413, MEG&nbsp;1423, MEG&nbsp;1422, MEG&nbsp;1433, MEG&nbsp;1432, MEG&nbsp;1442, MEG&nbsp;1443, MEG&nbsp;1512, MEG&nbsp;1513, MEG&nbsp;1522, MEG&nbsp;1523, MEG&nbsp;1533, MEG&nbsp;1532, MEG&nbsp;1543, MEG&nbsp;1542, MEG&nbsp;1613, MEG&nbsp;1612, MEG&nbsp;1622, MEG&nbsp;1623, MEG&nbsp;1632, MEG&nbsp;1633, MEG&nbsp;1643, MEG&nbsp;1642, MEG&nbsp;1713, MEG&nbsp;1712, MEG&nbsp;1722, MEG&nbsp;1723, MEG&nbsp;1732, MEG&nbsp;1733, MEG&nbsp;1743, MEG&nbsp;1742, MEG&nbsp;1813, MEG&nbsp;1812, MEG&nbsp;1822, MEG&nbsp;1823, MEG&nbsp;1832, MEG&nbsp;1833, MEG&nbsp;1843, MEG&nbsp;1842, MEG&nbsp;1912, MEG&nbsp;1913, MEG&nbsp;1923, MEG&nbsp;1922, MEG&nbsp;1932, MEG&nbsp;1933, MEG&nbsp;1943, MEG&nbsp;1942, MEG&nbsp;2013, MEG&nbsp;2012, MEG&nbsp;2023, MEG&nbsp;2022, MEG&nbsp;2032, MEG&nbsp;2033, MEG&nbsp;2042, MEG&nbsp;2043, MEG&nbsp;2113, MEG&nbsp;2112, MEG&nbsp;2122, MEG&nbsp;2123, MEG&nbsp;2133, MEG&nbsp;2132, MEG&nbsp;2143, MEG&nbsp;2142, MEG&nbsp;2212, MEG&nbsp;2213, MEG&nbsp;2223, MEG&nbsp;2222, MEG&nbsp;2233, MEG&nbsp;2232, MEG&nbsp;2242, MEG&nbsp;2243, MEG&nbsp;2312, MEG&nbsp;2313, MEG&nbsp;2323, MEG&nbsp;2322, MEG&nbsp;2332, MEG&nbsp;2333, MEG&nbsp;2343, MEG&nbsp;2342, MEG&nbsp;2412, MEG&nbsp;2413, MEG&nbsp;2423, MEG&nbsp;2422, MEG&nbsp;2433, MEG&nbsp;2432, MEG&nbsp;2442, MEG&nbsp;2512, MEG&nbsp;2513, MEG&nbsp;2522, MEG&nbsp;2523, MEG&nbsp;2533, MEG&nbsp;2532, MEG&nbsp;2543, MEG&nbsp;2542, MEG&nbsp;2612, MEG&nbsp;2613, MEG&nbsp;2623, MEG&nbsp;2622, MEG&nbsp;2633, MEG&nbsp;2632, MEG&nbsp;2642, MEG&nbsp;2643">
+            203
+        </button>
+
+
+
+        and <button class="mne-ch-names-btn sd-sphinx-override sd-btn sd-btn-info sd-text-wrap sd-shadow-sm" onclick="alert('Bad Gradiometers:\n\nMEG&nbsp;2443')" title="(Click to open in popup)&#13;&#13;MEG&nbsp;2443">
+            1 bad
+        </button>
+
+    </td>
+</tr>
+
+
+<tr class="repr-element channels-1de13e91-6170-4b5f-9394-a2f9abc712fc ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>EEG</td>
+    <td>
+        <button class="mne-ch-names-btn sd-sphinx-override sd-btn sd-btn-info sd-text-wrap sd-shadow-sm" onclick="alert('Good EEG:\n\nEEG&nbsp;001, EEG&nbsp;002, EEG&nbsp;003, EEG&nbsp;004, EEG&nbsp;005, EEG&nbsp;006, EEG&nbsp;007, EEG&nbsp;008, EEG&nbsp;009, EEG&nbsp;010, EEG&nbsp;011, EEG&nbsp;012, EEG&nbsp;013, EEG&nbsp;014, EEG&nbsp;015, EEG&nbsp;016, EEG&nbsp;017, EEG&nbsp;018, EEG&nbsp;019, EEG&nbsp;020, EEG&nbsp;021, EEG&nbsp;022, EEG&nbsp;023, EEG&nbsp;024, EEG&nbsp;025, EEG&nbsp;026, EEG&nbsp;027, EEG&nbsp;028, EEG&nbsp;029, EEG&nbsp;030, EEG&nbsp;031, EEG&nbsp;032, EEG&nbsp;033, EEG&nbsp;034, EEG&nbsp;035, EEG&nbsp;036, EEG&nbsp;037, EEG&nbsp;038, EEG&nbsp;039, EEG&nbsp;040, EEG&nbsp;041, EEG&nbsp;042, EEG&nbsp;043, EEG&nbsp;044, EEG&nbsp;045, EEG&nbsp;046, EEG&nbsp;047, EEG&nbsp;048, EEG&nbsp;049, EEG&nbsp;050, EEG&nbsp;051, EEG&nbsp;052, EEG&nbsp;054, EEG&nbsp;055, EEG&nbsp;056, EEG&nbsp;057, EEG&nbsp;058, EEG&nbsp;059, EEG&nbsp;060')" title="(Click to open in popup)&#13;&#13;EEG&nbsp;001, EEG&nbsp;002, EEG&nbsp;003, EEG&nbsp;004, EEG&nbsp;005, EEG&nbsp;006, EEG&nbsp;007, EEG&nbsp;008, EEG&nbsp;009, EEG&nbsp;010, EEG&nbsp;011, EEG&nbsp;012, EEG&nbsp;013, EEG&nbsp;014, EEG&nbsp;015, EEG&nbsp;016, EEG&nbsp;017, EEG&nbsp;018, EEG&nbsp;019, EEG&nbsp;020, EEG&nbsp;021, EEG&nbsp;022, EEG&nbsp;023, EEG&nbsp;024, EEG&nbsp;025, EEG&nbsp;026, EEG&nbsp;027, EEG&nbsp;028, EEG&nbsp;029, EEG&nbsp;030, EEG&nbsp;031, EEG&nbsp;032, EEG&nbsp;033, EEG&nbsp;034, EEG&nbsp;035, EEG&nbsp;036, EEG&nbsp;037, EEG&nbsp;038, EEG&nbsp;039, EEG&nbsp;040, EEG&nbsp;041, EEG&nbsp;042, EEG&nbsp;043, EEG&nbsp;044, EEG&nbsp;045, EEG&nbsp;046, EEG&nbsp;047, EEG&nbsp;048, EEG&nbsp;049, EEG&nbsp;050, EEG&nbsp;051, EEG&nbsp;052, EEG&nbsp;054, EEG&nbsp;055, EEG&nbsp;056, EEG&nbsp;057, EEG&nbsp;058, EEG&nbsp;059, EEG&nbsp;060">
+            59
+        </button>
+
+
+
+        and <button class="mne-ch-names-btn sd-sphinx-override sd-btn sd-btn-info sd-text-wrap sd-shadow-sm" onclick="alert('Bad EEG:\n\nEEG&nbsp;053')" title="(Click to open in popup)&#13;&#13;EEG&nbsp;053">
+            1 bad
+        </button>
+
+    </td>
+</tr>
+
+
+<tr class="repr-element channels-1de13e91-6170-4b5f-9394-a2f9abc712fc ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>EOG</td>
+    <td>
+        <button class="mne-ch-names-btn sd-sphinx-override sd-btn sd-btn-info sd-text-wrap sd-shadow-sm" onclick="alert('Good EOG:\n\nEOG&nbsp;061')" title="(Click to open in popup)&#13;&#13;EOG&nbsp;061">
+            1
+        </button>
+
+
+    </td>
+</tr>
+
+
+<tr class="repr-element channels-1de13e91-6170-4b5f-9394-a2f9abc712fc ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Stimulus</td>
+    <td>
+        <button class="mne-ch-names-btn sd-sphinx-override sd-btn sd-btn-info sd-text-wrap sd-shadow-sm" onclick="alert('Good Stimulus:\n\nSTI&nbsp;001, STI&nbsp;002, STI&nbsp;003, STI&nbsp;004, STI&nbsp;005, STI&nbsp;006, STI&nbsp;014, STI&nbsp;015, STI&nbsp;016')" title="(Click to open in popup)&#13;&#13;STI&nbsp;001, STI&nbsp;002, STI&nbsp;003, STI&nbsp;004, STI&nbsp;005, STI&nbsp;006, STI&nbsp;014, STI&nbsp;015, STI&nbsp;016">
+            9
+        </button>
+
+
+    </td>
+</tr>
+
+
+<tr class="repr-element channels-1de13e91-6170-4b5f-9394-a2f9abc712fc ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Head & sensor digitization</td>
+
+    <td>146 points</td>
+
+</tr>
+
+
+
+
+
+
+
+
+<tr class="mne-repr-section-header filters-b8f1b675-987b-408f-b2fa-6249d7f32b96"
+     title="Hide section"
+    onclick="toggleVisibility('filters-b8f1b675-987b-408f-b2fa-6249d7f32b96')">
+    <th class="mne-repr-section-toggle">
+        <button >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
+        </button>
+    </th>
+    <th colspan="2">
+        <strong>Filters</strong>
+    </th>
+</tr>
+
+
+<tr class="repr-element filters-b8f1b675-987b-408f-b2fa-6249d7f32b96 ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Highpass</td>
+    <td>0.10 Hz</td>
+</tr>
+
+
+<tr class="repr-element filters-b8f1b675-987b-408f-b2fa-6249d7f32b96 ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Lowpass</td>
+    <td>40.00 Hz</td>
+</tr>
+
+
+<tr class="repr-element filters-b8f1b675-987b-408f-b2fa-6249d7f32b96 ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Projections</td>
+    <td>
+
+        PCA-v1 (on)
+        <br />
+
+        PCA-v2 (on)
+        <br />
+
+        PCA-v3 (on)
+        <br />
+
+        Average EEG reference (on)
+
+
+    </td>
+</tr>
+
+</table>
+</div>
+<br />
+<br /><p>It’s important that the model RDM and the epochs are in the same order, so that each
+row in the model RDM will correspond to an epoch. The model RDM will be easier to
+interpret visually if the data is ordered such that all epochs belonging to the same
+experimental condition are right next to each-other, so patterns jump out. This can be
+achieved by first splitting the epochs by experimental condition and then
+concatenating them together again.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">epoch_splits</span></a> <span class="o">=</span> <span class="p">[</span>
+    <a href="https://mne.tools/stable/generated/mne.EpochsArray.html#mne.EpochsArray" title="mne.EpochsArray" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">epochs</span></a><span class="p">[</span><span class="n">cl</span><span class="p">]</span> <span class="k">for</span> <span class="n">cl</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;audio/left&quot;</span><span class="p">,</span> <span class="s2">&quot;audio/right&quot;</span><span class="p">,</span> <span class="s2">&quot;visual/left&quot;</span><span class="p">,</span> <span class="s2">&quot;visual/right&quot;</span><span class="p">]</span>
+<span class="p">]</span>
+<a href="https://mne.tools/stable/generated/mne.EpochsArray.html#mne.EpochsArray" title="mne.EpochsArray" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">epochs</span></a> <span class="o">=</span> <a href="https://mne.tools/stable/generated/mne.concatenate_epochs.html#mne.concatenate_epochs" title="mne.concatenate_epochs" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-function"><span class="n">mne</span><span class="o">.</span><span class="n">concatenate_epochs</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">epoch_splits</span></a><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now that the epochs are in the proper order, we can create a RDM based on the
+experimental conditions. This type of RDM is referred to as a “sensitivity RDM”. Let’s
+create a sensitivity RDM that will pick up the left auditory response when RSA-ed
+against the MEG data. Since we want to capture areas where left beeps generate a large
+signal, we specify that left beeps should be similar to other left beeps. Since we do
+not want areas where visual stimuli generate a large signal, we specify that beeps
+must be different from visual stimuli. Furthermore, since in areas where visual
+stimuli generate only a small signal, random noise will dominate, we also specify that
+visual stimuli are different from other visual stimuli. Finally left and right
+auditory beeps will be somewhat similar.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">sensitivity_metric</span><span class="p">(</span><span class="n">event_id_1</span><span class="p">,</span> <span class="n">event_id_2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine similarity between two epochs, given their event ids.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">event_id_1</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">event_id_2</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>  <span class="c1"># Completely similar</span>
+    <span class="k">if</span> <span class="n">event_id_1</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">event_id_2</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mf">0.5</span>  <span class="c1"># Somewhat similar</span>
+    <span class="k">elif</span> <span class="n">event_id_1</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">event_id_2</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mf">0.5</span>  <span class="c1"># Somewhat similar</span>
+    <span class="k">elif</span> <span class="n">event_id_1</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">event_id_1</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mf">0.5</span>  <span class="c1"># Somewhat similar</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">1</span>  <span class="c1"># Not similar at all</span>
+
+
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">model_rdm</span></a> <span class="o">=</span> <span class="n">mne_rsa</span><span class="o">.</span><span class="n">compute_rdm</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">epochs</span><span class="o">.</span><span class="n">events</span></a><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">metric</span><span class="o">=</span><span class="n">sensitivity_metric</span><span class="p">)</span>
+<span class="n">mne_rsa</span><span class="o">.</span><span class="n">plot_rdms</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">model_rdm</span></a><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Model RDM&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_surface_001.png" srcset="../../_images/sphx_glr_plot_surface_001.png" alt="Model RDM" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;Figure size 200x200 with 2 Axes&gt;
+</pre></div>
+</div>
+<p>This example is going to be on source-level, so let’s load the inverse operator and
+apply it to obtain a cortical surface source estimate for each epoch. To speed up the
+computation, we going to load an inverse operator from the testing dataset that was
+created using a sparse source space with not too many vertices.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://mne.tools/stable/generated/mne.minimum_norm.InverseOperator.html#mne.minimum_norm.InverseOperator" title="mne.minimum_norm.InverseOperator" class="sphx-glr-backref-module-mne-minimum_norm sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">inv</span></a> <span class="o">=</span> <a href="https://mne.tools/stable/generated/mne.minimum_norm.read_inverse_operator.html#mne.minimum_norm.read_inverse_operator" title="mne.minimum_norm.read_inverse_operator" class="sphx-glr-backref-module-mne-minimum_norm sphx-glr-backref-type-py-function"><span class="n">mne</span><span class="o">.</span><span class="n">minimum_norm</span><span class="o">.</span><span class="n">read_inverse_operator</span></a><span class="p">(</span>
+    <a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">testing_path</span></a> <span class="o">/</span> <span class="s2">&quot;sample_audvis_trunc-meg-eeg-oct-4-meg-inv.fif&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Especially when creating source estimates for single epochs, it is important to think
+what source orientations to use. Setting <code class="docutils literal notranslate"><span class="pre">pick_ori=&quot;vector&quot;</span></code> is a solid choice,
+which means using all three XYZ components of the estimated source activity, and so is
+<code class="docutils literal notranslate"><span class="pre">pick_ori=&quot;normal&quot;</span></code> which means using the source ortientation orthogonal to the
+cortex. See the
+<a class="reference external" href="MNE-Pythontutorialondipoleorientations">https://mne.tools/stable/auto_tutorials/inverse/35_dipole_orientations.html</a> for more details.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">epochs_stc</span></a> <span class="o">=</span> <a href="https://mne.tools/stable/generated/mne.minimum_norm.apply_inverse_epochs.html#mne.minimum_norm.apply_inverse_epochs" title="mne.minimum_norm.apply_inverse_epochs" class="sphx-glr-backref-module-mne-minimum_norm sphx-glr-backref-type-py-function"><span class="n">mne</span><span class="o">.</span><span class="n">minimum_norm</span><span class="o">.</span><span class="n">apply_inverse_epochs</span></a><span class="p">(</span>
+    <a href="https://mne.tools/stable/generated/mne.EpochsArray.html#mne.EpochsArray" title="mne.EpochsArray" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">epochs</span></a><span class="p">,</span> <a href="https://mne.tools/stable/generated/mne.minimum_norm.InverseOperator.html#mne.minimum_norm.InverseOperator" title="mne.minimum_norm.InverseOperator" class="sphx-glr-backref-module-mne-minimum_norm sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">inv</span></a><span class="p">,</span> <span class="n">lambda2</span><span class="o">=</span><span class="mf">0.1111</span><span class="p">,</span> <span class="n">pick_ori</span><span class="o">=</span><span class="s2">&quot;vector&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Performing the RSA. This will take some time. Consider increasing <code class="docutils literal notranslate"><span class="pre">n_jobs</span></code> to
+parallelize the computation across multiple CPUs.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://mne.tools/stable/generated/mne.SourceEstimate.html#mne.SourceEstimate" title="mne.SourceEstimate" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">rsa_vals</span></a> <span class="o">=</span> <span class="n">mne_rsa</span><span class="o">.</span><span class="n">rsa_stcs</span><span class="p">(</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">epochs_stc</span></a><span class="p">,</span>  <span class="c1"># The source localized epochs</span>
+    <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">model_rdm</span></a><span class="p">,</span>  <span class="c1"># The model RDM we constructed above</span>
+    <span class="n">src</span><span class="o">=</span><a href="https://mne.tools/stable/generated/mne.minimum_norm.InverseOperator.html#mne.minimum_norm.InverseOperator" title="mne.minimum_norm.InverseOperator" class="sphx-glr-backref-module-mne-minimum_norm sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">inv</span></a><span class="p">[</span><span class="s2">&quot;src&quot;</span><span class="p">],</span>  <span class="c1"># The inverse operator has our source space</span>
+    <span class="n">stc_rdm_metric</span><span class="o">=</span><span class="s2">&quot;correlation&quot;</span><span class="p">,</span>  <span class="c1"># Metric to compute the MEG RDMs</span>
+    <span class="n">rsa_metric</span><span class="o">=</span><span class="s2">&quot;kendall-tau-a&quot;</span><span class="p">,</span>  <span class="c1"># Metric to compare model and EEG RDMs</span>
+    <span class="n">spatial_radius</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span>  <span class="c1"># Spatial radius of the searchlight patch</span>
+    <span class="n">temporal_radius</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span>  <span class="c1"># Temporal radius of the searchlight path</span>
+    <span class="n">tmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">tmax</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>  <span class="c1"># To save time, only analyze this time interval</span>
+    <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>  <span class="c1"># Only use one CPU core. Increase this for more speed.</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>  <span class="c1"># Set to True to display a progress bar</span>
+
+<span class="c1"># Find the searchlight patch with highest RSA score</span>
+<a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.int64" title="numpy.int64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">peak_vertex</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">peak_time</span></a> <span class="o">=</span> <a href="https://mne.tools/stable/generated/mne.SourceEstimate.html#mne.SourceEstimate.get_peak" title="mne.SourceEstimate.get_peak" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-method"><span class="n">rsa_vals</span><span class="o">.</span><span class="n">get_peak</span></a><span class="p">(</span><span class="n">vert_as_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Plot the result at the timepoint where the maximum RSA value occurs.</span>
+<a href="https://mne.tools/stable/generated/mne.SourceEstimate.html#mne.SourceEstimate.plot" title="mne.SourceEstimate.plot" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-method"><span class="n">rsa_vals</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="s2">&quot;sample&quot;</span><span class="p">,</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">subjects_dir</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">subjects_dir</span></a><span class="p">,</span> <span class="n">initial_time</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">peak_time</span></a><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_surface_002.png" srcset="../../_images/sphx_glr_plot_surface_002.png" alt="plot surface" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Calculating source space distances (limit=20.0 mm)...
+Not adding patch information, dist_limit too small
+Performing RSA between SourceEstimates and 1 model RDM(s)
+    Spatial radius: 0.02 meters
+    Using 498 vertices
+    Temporal radius: 2 samples
+    Time interval: 0-0.3 seconds
+    Number of searchlight patches: 14940
+
+  0%|          | 0/14940 [00:00&lt;?, ?patch/s]Creating spatio-temporal searchlight patches
+
+  0%|          | 20/14940 [00:00&lt;01:15, 197.80patch/s]
+  0%|          | 41/14940 [00:00&lt;01:14, 201.08patch/s]
+  0%|          | 62/14940 [00:00&lt;01:12, 204.78patch/s]
+  1%|          | 83/14940 [00:00&lt;01:11, 206.49patch/s]
+  1%|          | 104/14940 [00:00&lt;01:13, 201.43patch/s]
+  1%|          | 125/14940 [00:00&lt;01:15, 195.33patch/s]
+  1%|          | 145/14940 [00:00&lt;01:17, 191.92patch/s]
+  1%|          | 165/14940 [00:00&lt;01:17, 189.94patch/s]
+  1%|          | 185/14940 [00:00&lt;01:17, 190.16patch/s]
+  1%|▏         | 206/14940 [00:01&lt;01:15, 195.89patch/s]
+  2%|▏         | 227/14940 [00:01&lt;01:13, 199.42patch/s]
+  2%|▏         | 248/14940 [00:01&lt;01:13, 201.02patch/s]
+  2%|▏         | 269/14940 [00:01&lt;01:13, 200.58patch/s]
+  2%|▏         | 290/14940 [00:01&lt;01:15, 195.19patch/s]
+  2%|▏         | 310/14940 [00:01&lt;01:15, 194.14patch/s]
+  2%|▏         | 330/14940 [00:01&lt;01:14, 195.38patch/s]
+  2%|▏         | 351/14940 [00:01&lt;01:13, 199.34patch/s]
+  2%|▏         | 371/14940 [00:01&lt;01:14, 196.81patch/s]
+  3%|▎         | 391/14940 [00:01&lt;01:16, 191.31patch/s]
+  3%|▎         | 411/14940 [00:02&lt;01:16, 189.19patch/s]
+  3%|▎         | 431/14940 [00:02&lt;01:15, 191.67patch/s]
+  3%|▎         | 452/14940 [00:02&lt;01:13, 196.77patch/s]
+  3%|▎         | 473/14940 [00:02&lt;01:12, 200.08patch/s]
+  3%|▎         | 495/14940 [00:02&lt;01:11, 203.42patch/s]
+  3%|▎         | 516/14940 [00:02&lt;01:11, 202.78patch/s]
+  4%|▎         | 537/14940 [00:02&lt;01:12, 197.30patch/s]
+  4%|▎         | 557/14940 [00:02&lt;01:14, 193.61patch/s]
+  4%|▍         | 577/14940 [00:02&lt;01:15, 191.03patch/s]
+  4%|▍         | 597/14940 [00:03&lt;01:15, 189.30patch/s]
+  4%|▍         | 616/14940 [00:03&lt;01:16, 188.09patch/s]
+  4%|▍         | 635/14940 [00:03&lt;01:16, 187.44patch/s]
+  4%|▍         | 654/14940 [00:03&lt;01:16, 186.69patch/s]
+  5%|▍         | 673/14940 [00:03&lt;01:16, 186.19patch/s]
+  5%|▍         | 692/14940 [00:03&lt;01:16, 185.65patch/s]
+  5%|▍         | 711/14940 [00:03&lt;01:16, 185.35patch/s]
+  5%|▍         | 731/14940 [00:03&lt;01:15, 188.99patch/s]
+  5%|▌         | 752/14940 [00:03&lt;01:13, 194.26patch/s]
+  5%|▌         | 772/14940 [00:03&lt;01:13, 191.53patch/s]
+  5%|▌         | 792/14940 [00:04&lt;01:15, 187.98patch/s]
+  5%|▌         | 811/14940 [00:04&lt;01:16, 185.35patch/s]
+  6%|▌         | 830/14940 [00:04&lt;01:16, 184.91patch/s]
+  6%|▌         | 849/14940 [00:04&lt;01:16, 184.99patch/s]
+  6%|▌         | 868/14940 [00:04&lt;01:16, 185.15patch/s]
+  6%|▌         | 887/14940 [00:04&lt;01:18, 179.93patch/s]
+  6%|▌         | 906/14940 [00:04&lt;01:19, 177.13patch/s]
+  6%|▌         | 924/14940 [00:04&lt;01:18, 177.66patch/s]
+  6%|▋         | 945/14940 [00:04&lt;01:15, 184.63patch/s]
+  6%|▋         | 966/14940 [00:05&lt;01:13, 189.06patch/s]
+  7%|▋         | 985/14940 [00:05&lt;01:14, 186.07patch/s]
+  7%|▋         | 1006/14940 [00:05&lt;01:13, 190.75patch/s]
+  7%|▋         | 1026/14940 [00:05&lt;01:12, 193.12patch/s]
+  7%|▋         | 1046/14940 [00:05&lt;01:13, 188.66patch/s]
+  7%|▋         | 1066/14940 [00:05&lt;01:12, 190.25patch/s]
+  7%|▋         | 1087/14940 [00:05&lt;01:11, 193.92patch/s]
+  7%|▋         | 1109/14940 [00:05&lt;01:09, 198.70patch/s]
+  8%|▊         | 1130/14940 [00:05&lt;01:09, 199.52patch/s]
+  8%|▊         | 1151/14940 [00:05&lt;01:08, 200.89patch/s]
+  8%|▊         | 1172/14940 [00:06&lt;01:07, 203.04patch/s]
+  8%|▊         | 1193/14940 [00:06&lt;01:07, 204.57patch/s]
+  8%|▊         | 1214/14940 [00:06&lt;01:06, 205.97patch/s]
+  8%|▊         | 1235/14940 [00:06&lt;01:06, 205.26patch/s]
+  8%|▊         | 1256/14940 [00:06&lt;01:08, 198.61patch/s]
+  9%|▊         | 1276/14940 [00:06&lt;01:10, 194.32patch/s]
+  9%|▊         | 1296/14940 [00:06&lt;01:11, 191.71patch/s]
+  9%|▉         | 1316/14940 [00:06&lt;01:11, 189.90patch/s]
+  9%|▉         | 1336/14940 [00:06&lt;01:12, 188.15patch/s]
+  9%|▉         | 1355/14940 [00:07&lt;01:12, 188.38patch/s]
+  9%|▉         | 1375/14940 [00:07&lt;01:10, 191.66patch/s]
+  9%|▉         | 1395/14940 [00:07&lt;01:11, 190.66patch/s]
+  9%|▉         | 1415/14940 [00:07&lt;01:11, 188.36patch/s]
+ 10%|▉         | 1434/14940 [00:07&lt;01:12, 185.77patch/s]
+ 10%|▉         | 1453/14940 [00:07&lt;01:14, 181.21patch/s]
+ 10%|▉         | 1472/14940 [00:07&lt;01:15, 178.10patch/s]
+ 10%|▉         | 1493/14940 [00:07&lt;01:11, 187.12patch/s]
+ 10%|█         | 1513/14940 [00:07&lt;01:11, 188.66patch/s]
+ 10%|█         | 1532/14940 [00:07&lt;01:11, 188.32patch/s]
+ 10%|█         | 1553/14940 [00:08&lt;01:08, 194.29patch/s]
+ 11%|█         | 1573/14940 [00:08&lt;01:10, 189.67patch/s]
+ 11%|█         | 1593/14940 [00:08&lt;01:12, 183.87patch/s]
+ 11%|█         | 1614/14940 [00:08&lt;01:10, 188.69patch/s]
+ 11%|█         | 1633/14940 [00:08&lt;01:11, 185.18patch/s]
+ 11%|█         | 1652/14940 [00:08&lt;01:13, 180.63patch/s]
+ 11%|█         | 1672/14940 [00:08&lt;01:11, 185.93patch/s]
+ 11%|█▏        | 1691/14940 [00:08&lt;01:12, 181.80patch/s]
+ 11%|█▏        | 1710/14940 [00:08&lt;01:15, 174.43patch/s]
+ 12%|█▏        | 1731/14940 [00:09&lt;01:12, 181.98patch/s]
+ 12%|█▏        | 1752/14940 [00:09&lt;01:09, 188.52patch/s]
+ 12%|█▏        | 1773/14940 [00:09&lt;01:08, 191.89patch/s]
+ 12%|█▏        | 1793/14940 [00:09&lt;01:12, 180.86patch/s]
+ 12%|█▏        | 1812/14940 [00:09&lt;01:16, 172.22patch/s]
+ 12%|█▏        | 1830/14940 [00:09&lt;01:19, 165.78patch/s]
+ 12%|█▏        | 1849/14940 [00:09&lt;01:16, 170.99patch/s]
+ 13%|█▎        | 1869/14940 [00:09&lt;01:13, 177.73patch/s]
+ 13%|█▎        | 1890/14940 [00:09&lt;01:10, 186.39patch/s]
+ 13%|█▎        | 1909/14940 [00:10&lt;01:10, 185.67patch/s]
+ 13%|█▎        | 1928/14940 [00:10&lt;01:10, 185.19patch/s]
+ 13%|█▎        | 1947/14940 [00:10&lt;01:10, 185.37patch/s]
+ 13%|█▎        | 1968/14940 [00:10&lt;01:07, 191.32patch/s]
+ 13%|█▎        | 1988/14940 [00:10&lt;01:06, 193.39patch/s]
+ 13%|█▎        | 2008/14940 [00:10&lt;01:07, 190.80patch/s]
+ 14%|█▎        | 2028/14940 [00:10&lt;01:08, 187.60patch/s]
+ 14%|█▎        | 2047/14940 [00:10&lt;01:08, 187.09patch/s]
+ 14%|█▍        | 2067/14940 [00:10&lt;01:07, 190.82patch/s]
+ 14%|█▍        | 2087/14940 [00:10&lt;01:07, 189.05patch/s]
+ 14%|█▍        | 2106/14940 [00:11&lt;01:07, 189.28patch/s]
+ 14%|█▍        | 2127/14940 [00:11&lt;01:06, 192.61patch/s]
+ 14%|█▍        | 2147/14940 [00:11&lt;01:07, 190.62patch/s]
+ 15%|█▍        | 2167/14940 [00:11&lt;01:09, 184.52patch/s]
+ 15%|█▍        | 2186/14940 [00:11&lt;01:13, 173.85patch/s]
+ 15%|█▍        | 2206/14940 [00:11&lt;01:11, 179.31patch/s]
+ 15%|█▍        | 2226/14940 [00:11&lt;01:09, 182.35patch/s]
+ 15%|█▌        | 2245/14940 [00:11&lt;01:12, 174.75patch/s]
+ 15%|█▌        | 2264/14940 [00:11&lt;01:11, 178.15patch/s]
+ 15%|█▌        | 2283/14940 [00:12&lt;01:09, 181.02patch/s]
+ 15%|█▌        | 2302/14940 [00:12&lt;01:13, 171.11patch/s]
+ 16%|█▌        | 2320/14940 [00:12&lt;01:14, 170.25patch/s]
+ 16%|█▌        | 2339/14940 [00:12&lt;01:12, 174.60patch/s]
+ 16%|█▌        | 2357/14940 [00:12&lt;01:11, 175.85patch/s]
+ 16%|█▌        | 2375/14940 [00:12&lt;01:11, 174.58patch/s]
+ 16%|█▌        | 2393/14940 [00:12&lt;01:14, 169.26patch/s]
+ 16%|█▌        | 2410/14940 [00:12&lt;01:16, 164.71patch/s]
+ 16%|█▌        | 2427/14940 [00:12&lt;01:17, 160.55patch/s]
+ 16%|█▋        | 2447/14940 [00:13&lt;01:13, 169.76patch/s]
+ 17%|█▋        | 2467/14940 [00:13&lt;01:10, 176.89patch/s]
+ 17%|█▋        | 2486/14940 [00:13&lt;01:09, 179.16patch/s]
+ 17%|█▋        | 2504/14940 [00:13&lt;01:12, 172.49patch/s]
+ 17%|█▋        | 2522/14940 [00:13&lt;01:14, 167.44patch/s]
+ 17%|█▋        | 2543/14940 [00:13&lt;01:10, 176.97patch/s]
+ 17%|█▋        | 2564/14940 [00:13&lt;01:07, 183.71patch/s]
+ 17%|█▋        | 2584/14940 [00:13&lt;01:06, 186.05patch/s]
+ 17%|█▋        | 2603/14940 [00:13&lt;01:09, 178.56patch/s]
+ 18%|█▊        | 2621/14940 [00:14&lt;01:09, 177.84patch/s]
+ 18%|█▊        | 2640/14940 [00:14&lt;01:08, 179.73patch/s]
+ 18%|█▊        | 2660/14940 [00:14&lt;01:06, 185.35patch/s]
+ 18%|█▊        | 2680/14940 [00:14&lt;01:05, 187.25patch/s]
+ 18%|█▊        | 2699/14940 [00:14&lt;01:05, 186.72patch/s]
+ 18%|█▊        | 2718/14940 [00:14&lt;01:05, 186.28patch/s]
+ 18%|█▊        | 2737/14940 [00:14&lt;01:07, 182.07patch/s]
+ 18%|█▊        | 2756/14940 [00:14&lt;01:09, 174.35patch/s]
+ 19%|█▊        | 2774/14940 [00:14&lt;01:11, 169.45patch/s]
+ 19%|█▊        | 2792/14940 [00:14&lt;01:12, 166.49patch/s]
+ 19%|█▉        | 2809/14940 [00:15&lt;01:12, 166.78patch/s]
+ 19%|█▉        | 2826/14940 [00:15&lt;01:12, 166.02patch/s]
+ 19%|█▉        | 2843/14940 [00:15&lt;01:13, 163.70patch/s]
+ 19%|█▉        | 2860/14940 [00:15&lt;01:13, 163.61patch/s]
+ 19%|█▉        | 2877/14940 [00:15&lt;01:13, 165.14patch/s]
+ 19%|█▉        | 2895/14940 [00:15&lt;01:11, 168.52patch/s]
+ 19%|█▉        | 2913/14940 [00:15&lt;01:10, 171.51patch/s]
+ 20%|█▉        | 2931/14940 [00:15&lt;01:09, 173.87patch/s]
+ 20%|█▉        | 2949/14940 [00:15&lt;01:09, 172.06patch/s]
+ 20%|█▉        | 2967/14940 [00:16&lt;01:11, 167.98patch/s]
+ 20%|█▉        | 2985/14940 [00:16&lt;01:09, 171.36patch/s]
+ 20%|██        | 3004/14940 [00:16&lt;01:08, 174.04patch/s]
+ 20%|██        | 3022/14940 [00:16&lt;01:09, 172.71patch/s]
+ 20%|██        | 3040/14940 [00:16&lt;01:08, 172.81patch/s]
+ 20%|██        | 3058/14940 [00:16&lt;01:08, 174.46patch/s]
+ 21%|██        | 3077/14940 [00:16&lt;01:06, 177.43patch/s]
+ 21%|██        | 3096/14940 [00:16&lt;01:05, 180.86patch/s]
+ 21%|██        | 3116/14940 [00:16&lt;01:03, 186.24patch/s]
+ 21%|██        | 3135/14940 [00:16&lt;01:06, 177.53patch/s]
+ 21%|██        | 3153/14940 [00:17&lt;01:08, 170.95patch/s]
+ 21%|██        | 3172/14940 [00:17&lt;01:07, 175.00patch/s]
+ 21%|██▏       | 3190/14940 [00:17&lt;01:08, 171.96patch/s]
+ 21%|██▏       | 3208/14940 [00:17&lt;01:10, 165.50patch/s]
+ 22%|██▏       | 3225/14940 [00:17&lt;01:10, 165.65patch/s]
+ 22%|██▏       | 3242/14940 [00:17&lt;01:10, 166.69patch/s]
+ 22%|██▏       | 3261/14940 [00:17&lt;01:07, 172.28patch/s]
+ 22%|██▏       | 3280/14940 [00:17&lt;01:06, 176.08patch/s]
+ 22%|██▏       | 3299/14940 [00:17&lt;01:04, 179.11patch/s]
+ 22%|██▏       | 3317/14940 [00:18&lt;01:07, 172.91patch/s]
+ 22%|██▏       | 3335/14940 [00:18&lt;01:08, 170.56patch/s]
+ 22%|██▏       | 3354/14940 [00:18&lt;01:06, 174.96patch/s]
+ 23%|██▎       | 3373/14940 [00:18&lt;01:04, 177.97patch/s]
+ 23%|██▎       | 3392/14940 [00:18&lt;01:04, 179.83patch/s]
+ 23%|██▎       | 3411/14940 [00:18&lt;01:03, 181.22patch/s]
+ 23%|██▎       | 3430/14940 [00:18&lt;01:03, 182.29patch/s]
+ 23%|██▎       | 3449/14940 [00:18&lt;01:02, 183.02patch/s]
+ 23%|██▎       | 3468/14940 [00:18&lt;01:03, 181.82patch/s]
+ 23%|██▎       | 3487/14940 [00:18&lt;01:03, 181.44patch/s]
+ 23%|██▎       | 3506/14940 [00:19&lt;01:02, 182.61patch/s]
+ 24%|██▎       | 3525/14940 [00:19&lt;01:02, 183.27patch/s]
+ 24%|██▎       | 3544/14940 [00:19&lt;01:02, 183.37patch/s]
+ 24%|██▍       | 3563/14940 [00:19&lt;01:02, 182.38patch/s]
+ 24%|██▍       | 3582/14940 [00:19&lt;01:02, 182.55patch/s]
+ 24%|██▍       | 3601/14940 [00:19&lt;01:01, 183.21patch/s]
+ 24%|██▍       | 3620/14940 [00:19&lt;01:01, 183.79patch/s]
+ 24%|██▍       | 3639/14940 [00:19&lt;01:03, 178.46patch/s]
+ 24%|██▍       | 3657/14940 [00:19&lt;01:06, 169.92patch/s]
+ 25%|██▍       | 3675/14940 [00:20&lt;01:05, 172.27patch/s]
+ 25%|██▍       | 3693/14940 [00:20&lt;01:04, 173.86patch/s]
+ 25%|██▍       | 3711/14940 [00:20&lt;01:07, 166.73patch/s]
+ 25%|██▍       | 3728/14940 [00:20&lt;01:08, 163.24patch/s]
+ 25%|██▌       | 3745/14940 [00:20&lt;01:09, 161.96patch/s]
+ 25%|██▌       | 3763/14940 [00:20&lt;01:07, 165.24patch/s]
+ 25%|██▌       | 3782/14940 [00:20&lt;01:05, 170.63patch/s]
+ 25%|██▌       | 3800/14940 [00:20&lt;01:04, 173.16patch/s]
+ 26%|██▌       | 3818/14940 [00:20&lt;01:04, 173.22patch/s]
+ 26%|██▌       | 3836/14940 [00:20&lt;01:04, 171.61patch/s]
+ 26%|██▌       | 3854/14940 [00:21&lt;01:04, 172.78patch/s]
+ 26%|██▌       | 3872/14940 [00:21&lt;01:03, 173.96patch/s]
+ 26%|██▌       | 3890/14940 [00:21&lt;01:04, 172.07patch/s]
+ 26%|██▌       | 3908/14940 [00:21&lt;01:05, 168.34patch/s]
+ 26%|██▋       | 3925/14940 [00:21&lt;01:07, 163.37patch/s]
+ 26%|██▋       | 3942/14940 [00:21&lt;01:08, 160.89patch/s]
+ 26%|██▋       | 3959/14940 [00:21&lt;01:08, 160.23patch/s]
+ 27%|██▋       | 3976/14940 [00:21&lt;01:07, 161.91patch/s]
+ 27%|██▋       | 3994/14940 [00:21&lt;01:06, 164.76patch/s]
+ 27%|██▋       | 4013/14940 [00:22&lt;01:04, 170.66patch/s]
+ 27%|██▋       | 4032/14940 [00:22&lt;01:02, 175.05patch/s]
+ 27%|██▋       | 4051/14940 [00:22&lt;01:01, 178.30patch/s]
+ 27%|██▋       | 4070/14940 [00:22&lt;01:00, 180.48patch/s]
+ 27%|██▋       | 4089/14940 [00:22&lt;00:59, 181.66patch/s]
+ 27%|██▋       | 4108/14940 [00:22&lt;00:59, 182.53patch/s]
+ 28%|██▊       | 4127/14940 [00:22&lt;00:59, 182.79patch/s]
+ 28%|██▊       | 4146/14940 [00:22&lt;00:59, 181.40patch/s]
+ 28%|██▊       | 4165/14940 [00:22&lt;01:00, 177.18patch/s]
+ 28%|██▊       | 4183/14940 [00:22&lt;01:00, 176.72patch/s]
+ 28%|██▊       | 4201/14940 [00:23&lt;01:00, 176.96patch/s]
+ 28%|██▊       | 4220/14940 [00:23&lt;00:59, 179.42patch/s]
+ 28%|██▊       | 4239/14940 [00:23&lt;00:59, 180.31patch/s]
+ 29%|██▊       | 4258/14940 [00:23&lt;00:59, 180.60patch/s]
+ 29%|██▊       | 4277/14940 [00:23&lt;01:02, 171.82patch/s]
+ 29%|██▊       | 4295/14940 [00:23&lt;01:03, 168.45patch/s]
+ 29%|██▉       | 4315/14940 [00:23&lt;00:59, 177.16patch/s]
+ 29%|██▉       | 4333/14940 [00:23&lt;01:00, 174.22patch/s]
+ 29%|██▉       | 4351/14940 [00:23&lt;01:02, 169.44patch/s]
+ 29%|██▉       | 4369/14940 [00:24&lt;01:03, 165.64patch/s]
+ 29%|██▉       | 4387/14940 [00:24&lt;01:02, 167.52patch/s]
+ 29%|██▉       | 4407/14940 [00:24&lt;00:59, 176.39patch/s]
+ 30%|██▉       | 4426/14940 [00:24&lt;00:58, 179.46patch/s]
+ 30%|██▉       | 4445/14940 [00:24&lt;00:57, 181.09patch/s]
+ 30%|██▉       | 4464/14940 [00:24&lt;00:57, 181.74patch/s]
+ 30%|███       | 4483/14940 [00:24&lt;00:57, 182.48patch/s]
+ 30%|███       | 4502/14940 [00:24&lt;00:56, 183.88patch/s]
+ 30%|███       | 4522/14940 [00:24&lt;00:55, 188.48patch/s]
+ 30%|███       | 4541/14940 [00:25&lt;00:57, 182.10patch/s]
+ 31%|███       | 4560/14940 [00:25&lt;01:00, 171.80patch/s]
+ 31%|███       | 4578/14940 [00:25&lt;00:59, 173.68patch/s]
+ 31%|███       | 4596/14940 [00:25&lt;00:59, 175.08patch/s]
+ 31%|███       | 4615/14940 [00:25&lt;00:58, 176.62patch/s]
+ 31%|███       | 4634/14940 [00:25&lt;00:57, 178.89patch/s]
+ 31%|███       | 4653/14940 [00:25&lt;00:57, 180.00patch/s]
+ 31%|███▏      | 4672/14940 [00:25&lt;00:56, 181.35patch/s]
+ 31%|███▏      | 4691/14940 [00:25&lt;00:57, 179.00patch/s]
+ 32%|███▏      | 4709/14940 [00:25&lt;00:58, 175.55patch/s]
+ 32%|███▏      | 4727/14940 [00:26&lt;00:59, 170.40patch/s]
+ 32%|███▏      | 4745/14940 [00:26&lt;01:00, 168.72patch/s]
+ 32%|███▏      | 4764/14940 [00:26&lt;00:58, 173.42patch/s]
+ 32%|███▏      | 4784/14940 [00:26&lt;00:56, 179.65patch/s]
+ 32%|███▏      | 4804/14940 [00:26&lt;00:55, 184.24patch/s]
+ 32%|███▏      | 4823/14940 [00:26&lt;00:55, 183.78patch/s]
+ 32%|███▏      | 4842/14940 [00:26&lt;00:56, 178.42patch/s]
+ 33%|███▎      | 4860/14940 [00:26&lt;00:58, 172.46patch/s]
+ 33%|███▎      | 4881/14940 [00:26&lt;00:54, 182.90patch/s]
+ 33%|███▎      | 4902/14940 [00:27&lt;00:53, 188.66patch/s]
+ 33%|███▎      | 4922/14940 [00:27&lt;00:52, 191.30patch/s]
+ 33%|███▎      | 4942/14940 [00:27&lt;00:52, 189.13patch/s]
+ 33%|███▎      | 4961/14940 [00:27&lt;00:53, 187.92patch/s]
+ 33%|███▎      | 4980/14940 [00:27&lt;00:53, 187.10patch/s]
+ 33%|███▎      | 4999/14940 [00:27&lt;00:53, 186.19patch/s]
+ 34%|███▎      | 5019/14940 [00:27&lt;00:52, 187.55patch/s]
+ 34%|███▎      | 5039/14940 [00:27&lt;00:51, 191.15patch/s]
+ 34%|███▍      | 5059/14940 [00:27&lt;00:51, 193.40patch/s]
+ 34%|███▍      | 5079/14940 [00:27&lt;00:50, 195.16patch/s]
+ 34%|███▍      | 5100/14940 [00:28&lt;00:49, 196.89patch/s]
+ 34%|███▍      | 5120/14940 [00:28&lt;00:52, 187.17patch/s]
+ 34%|███▍      | 5139/14940 [00:28&lt;00:52, 186.20patch/s]
+ 35%|███▍      | 5160/14940 [00:28&lt;00:50, 192.75patch/s]
+ 35%|███▍      | 5180/14940 [00:28&lt;00:52, 184.61patch/s]
+ 35%|███▍      | 5199/14940 [00:28&lt;00:53, 181.48patch/s]
+ 35%|███▍      | 5218/14940 [00:28&lt;00:53, 182.50patch/s]
+ 35%|███▌      | 5237/14940 [00:28&lt;00:53, 182.97patch/s]
+ 35%|███▌      | 5256/14940 [00:28&lt;00:52, 183.29patch/s]
+ 35%|███▌      | 5275/14940 [00:29&lt;00:52, 183.82patch/s]
+ 35%|███▌      | 5295/14940 [00:29&lt;00:51, 187.21patch/s]
+ 36%|███▌      | 5315/14940 [00:29&lt;00:51, 187.93patch/s]
+ 36%|███▌      | 5334/14940 [00:29&lt;00:52, 181.47patch/s]
+ 36%|███▌      | 5353/14940 [00:29&lt;00:52, 183.52patch/s]
+ 36%|███▌      | 5374/14940 [00:29&lt;00:50, 189.04patch/s]
+ 36%|███▌      | 5395/14940 [00:29&lt;00:48, 194.88patch/s]
+ 36%|███▌      | 5415/14940 [00:29&lt;00:49, 193.32patch/s]
+ 36%|███▋      | 5435/14940 [00:29&lt;00:49, 191.74patch/s]
+ 37%|███▋      | 5455/14940 [00:29&lt;00:48, 194.05patch/s]
+ 37%|███▋      | 5475/14940 [00:30&lt;00:49, 192.34patch/s]
+ 37%|███▋      | 5495/14940 [00:30&lt;00:49, 189.40patch/s]
+ 37%|███▋      | 5514/14940 [00:30&lt;00:50, 186.61patch/s]
+ 37%|███▋      | 5534/14940 [00:30&lt;00:49, 190.10patch/s]
+ 37%|███▋      | 5555/14940 [00:30&lt;00:48, 193.77patch/s]
+ 37%|███▋      | 5575/14940 [00:30&lt;00:49, 191.04patch/s]
+ 37%|███▋      | 5595/14940 [00:30&lt;00:48, 192.55patch/s]
+ 38%|███▊      | 5616/14940 [00:30&lt;00:47, 195.61patch/s]
+ 38%|███▊      | 5637/14940 [00:30&lt;00:46, 199.29patch/s]
+ 38%|███▊      | 5657/14940 [00:31&lt;00:47, 193.87patch/s]
+ 38%|███▊      | 5677/14940 [00:31&lt;00:49, 188.88patch/s]
+ 38%|███▊      | 5696/14940 [00:31&lt;00:49, 185.66patch/s]
+ 38%|███▊      | 5717/14940 [00:31&lt;00:48, 190.69patch/s]
+ 38%|███▊      | 5738/14940 [00:31&lt;00:47, 195.01patch/s]
+ 39%|███▊      | 5758/14940 [00:31&lt;00:46, 196.27patch/s]
+ 39%|███▊      | 5779/14940 [00:31&lt;00:45, 199.41patch/s]
+ 39%|███▉      | 5799/14940 [00:31&lt;00:46, 198.58patch/s]
+ 39%|███▉      | 5819/14940 [00:31&lt;00:46, 194.46patch/s]
+ 39%|███▉      | 5839/14940 [00:31&lt;00:46, 195.95patch/s]
+ 39%|███▉      | 5859/14940 [00:32&lt;00:46, 196.81patch/s]
+ 39%|███▉      | 5879/14940 [00:32&lt;00:45, 197.67patch/s]
+ 39%|███▉      | 5899/14940 [00:32&lt;00:47, 191.72patch/s]
+ 40%|███▉      | 5919/14940 [00:32&lt;00:47, 188.52patch/s]
+ 40%|███▉      | 5938/14940 [00:32&lt;00:47, 187.69patch/s]
+ 40%|███▉      | 5957/14940 [00:32&lt;00:48, 186.65patch/s]
+ 40%|████      | 5976/14940 [00:32&lt;00:48, 185.25patch/s]
+ 40%|████      | 5995/14940 [00:32&lt;00:48, 182.96patch/s]
+ 40%|████      | 6014/14940 [00:32&lt;00:49, 181.87patch/s]
+ 40%|████      | 6033/14940 [00:32&lt;00:49, 181.34patch/s]
+ 41%|████      | 6052/14940 [00:33&lt;00:48, 182.32patch/s]
+ 41%|████      | 6072/14940 [00:33&lt;00:47, 185.74patch/s]
+ 41%|████      | 6092/14940 [00:33&lt;00:46, 189.83patch/s]
+ 41%|████      | 6113/14940 [00:33&lt;00:45, 193.19patch/s]
+ 41%|████      | 6134/14940 [00:33&lt;00:44, 196.94patch/s]
+ 41%|████      | 6155/14940 [00:33&lt;00:44, 198.54patch/s]
+ 41%|████▏     | 6175/14940 [00:33&lt;00:45, 194.60patch/s]
+ 41%|████▏     | 6195/14940 [00:33&lt;00:44, 194.94patch/s]
+ 42%|████▏     | 6215/14940 [00:33&lt;00:44, 194.63patch/s]
+ 42%|████▏     | 6235/14940 [00:34&lt;00:45, 189.82patch/s]
+ 42%|████▏     | 6255/14940 [00:34&lt;00:45, 190.93patch/s]
+ 42%|████▏     | 6275/14940 [00:34&lt;00:45, 191.76patch/s]
+ 42%|████▏     | 6295/14940 [00:34&lt;00:46, 187.64patch/s]
+ 42%|████▏     | 6315/14940 [00:34&lt;00:45, 189.42patch/s]
+ 42%|████▏     | 6335/14940 [00:34&lt;00:44, 191.48patch/s]
+ 43%|████▎     | 6355/14940 [00:34&lt;00:45, 189.53patch/s]
+ 43%|████▎     | 6375/14940 [00:34&lt;00:44, 191.38patch/s]
+ 43%|████▎     | 6396/14940 [00:34&lt;00:43, 194.53patch/s]
+ 43%|████▎     | 6417/14940 [00:34&lt;00:42, 198.71patch/s]
+ 43%|████▎     | 6437/14940 [00:35&lt;00:43, 193.80patch/s]
+ 43%|████▎     | 6457/14940 [00:35&lt;00:44, 192.19patch/s]
+ 43%|████▎     | 6478/14940 [00:35&lt;00:42, 197.07patch/s]
+ 44%|████▎     | 6499/14940 [00:35&lt;00:42, 200.31patch/s]
+ 44%|████▎     | 6520/14940 [00:35&lt;00:41, 201.24patch/s]
+ 44%|████▍     | 6541/14940 [00:35&lt;00:41, 200.50patch/s]
+ 44%|████▍     | 6562/14940 [00:35&lt;00:42, 195.24patch/s]
+ 44%|████▍     | 6582/14940 [00:35&lt;00:42, 196.29patch/s]
+ 44%|████▍     | 6603/14940 [00:35&lt;00:42, 198.24patch/s]
+ 44%|████▍     | 6623/14940 [00:36&lt;00:43, 192.44patch/s]
+ 44%|████▍     | 6643/14940 [00:36&lt;00:44, 188.46patch/s]
+ 45%|████▍     | 6662/14940 [00:36&lt;00:44, 185.56patch/s]
+ 45%|████▍     | 6681/14940 [00:36&lt;00:44, 185.08patch/s]
+ 45%|████▍     | 6701/14940 [00:36&lt;00:44, 187.10patch/s]
+ 45%|████▍     | 6722/14940 [00:36&lt;00:43, 191.09patch/s]
+ 45%|████▌     | 6743/14940 [00:36&lt;00:42, 193.85patch/s]
+ 45%|████▌     | 6763/14940 [00:36&lt;00:41, 195.18patch/s]
+ 45%|████▌     | 6783/14940 [00:36&lt;00:41, 196.39patch/s]
+ 46%|████▌     | 6803/14940 [00:36&lt;00:41, 197.39patch/s]
+ 46%|████▌     | 6824/14940 [00:37&lt;00:40, 199.95patch/s]
+ 46%|████▌     | 6845/14940 [00:37&lt;00:40, 201.71patch/s]
+ 46%|████▌     | 6866/14940 [00:37&lt;00:40, 201.24patch/s]
+ 46%|████▌     | 6887/14940 [00:37&lt;00:40, 200.46patch/s]
+ 46%|████▌     | 6908/14940 [00:37&lt;00:40, 200.24patch/s]
+ 46%|████▋     | 6929/14940 [00:37&lt;00:39, 200.62patch/s]
+ 47%|████▋     | 6950/14940 [00:37&lt;00:39, 202.96patch/s]
+ 47%|████▋     | 6971/14940 [00:37&lt;00:39, 200.61patch/s]
+ 47%|████▋     | 6992/14940 [00:37&lt;00:40, 195.79patch/s]
+ 47%|████▋     | 7013/14940 [00:38&lt;00:39, 199.47patch/s]
+ 47%|████▋     | 7033/14940 [00:38&lt;00:40, 197.22patch/s]
+ 47%|████▋     | 7053/14940 [00:38&lt;00:40, 193.59patch/s]
+ 47%|████▋     | 7073/14940 [00:38&lt;00:41, 191.10patch/s]
+ 47%|████▋     | 7093/14940 [00:38&lt;00:40, 193.60patch/s]
+ 48%|████▊     | 7114/14940 [00:38&lt;00:39, 197.96patch/s]
+ 48%|████▊     | 7135/14940 [00:38&lt;00:38, 201.06patch/s]
+ 48%|████▊     | 7156/14940 [00:38&lt;00:38, 203.32patch/s]
+ 48%|████▊     | 7177/14940 [00:38&lt;00:38, 203.63patch/s]
+ 48%|████▊     | 7198/14940 [00:38&lt;00:38, 202.50patch/s]
+ 48%|████▊     | 7219/14940 [00:39&lt;00:38, 201.37patch/s]
+ 48%|████▊     | 7240/14940 [00:39&lt;00:38, 201.66patch/s]
+ 49%|████▊     | 7261/14940 [00:39&lt;00:37, 203.65patch/s]
+ 49%|████▊     | 7282/14940 [00:39&lt;00:37, 202.13patch/s]
+ 49%|████▉     | 7303/14940 [00:39&lt;00:37, 201.31patch/s]
+ 49%|████▉     | 7324/14940 [00:39&lt;00:37, 201.67patch/s]
+ 49%|████▉     | 7345/14940 [00:39&lt;00:37, 203.48patch/s]
+ 49%|████▉     | 7366/14940 [00:39&lt;00:37, 202.94patch/s]
+ 49%|████▉     | 7387/14940 [00:39&lt;00:37, 202.77patch/s]
+ 50%|████▉     | 7408/14940 [00:39&lt;00:36, 204.65patch/s]
+ 50%|████▉     | 7429/14940 [00:40&lt;00:37, 199.14patch/s]
+ 50%|████▉     | 7449/14940 [00:40&lt;00:37, 198.20patch/s]
+ 50%|█████     | 7471/14940 [00:40&lt;00:37, 201.58patch/s]
+ 50%|█████     | 7492/14940 [00:40&lt;00:37, 200.96patch/s]
+ 50%|█████     | 7513/14940 [00:40&lt;00:36, 201.05patch/s]
+ 50%|█████     | 7534/14940 [00:40&lt;00:36, 202.33patch/s]
+ 51%|█████     | 7555/14940 [00:40&lt;00:36, 201.68patch/s]
+ 51%|█████     | 7576/14940 [00:40&lt;00:37, 197.57patch/s]
+ 51%|█████     | 7596/14940 [00:40&lt;00:37, 194.13patch/s]
+ 51%|█████     | 7616/14940 [00:41&lt;00:37, 195.76patch/s]
+ 51%|█████     | 7637/14940 [00:41&lt;00:36, 199.11patch/s]
+ 51%|█████▏    | 7658/14940 [00:41&lt;00:36, 201.86patch/s]
+ 51%|█████▏    | 7679/14940 [00:41&lt;00:35, 204.09patch/s]
+ 52%|█████▏    | 7700/14940 [00:41&lt;00:36, 198.20patch/s]
+ 52%|█████▏    | 7720/14940 [00:41&lt;00:37, 194.16patch/s]
+ 52%|█████▏    | 7740/14940 [00:41&lt;00:37, 191.42patch/s]
+ 52%|█████▏    | 7760/14940 [00:41&lt;00:37, 193.81patch/s]
+ 52%|█████▏    | 7780/14940 [00:41&lt;00:37, 193.05patch/s]
+ 52%|█████▏    | 7800/14940 [00:41&lt;00:37, 190.42patch/s]
+ 52%|█████▏    | 7820/14940 [00:42&lt;00:36, 192.84patch/s]
+ 52%|█████▏    | 7840/14940 [00:42&lt;00:36, 192.48patch/s]
+ 53%|█████▎    | 7860/14940 [00:42&lt;00:37, 190.34patch/s]
+ 53%|█████▎    | 7880/14940 [00:42&lt;00:37, 188.16patch/s]
+ 53%|█████▎    | 7900/14940 [00:42&lt;00:36, 190.41patch/s]
+ 53%|█████▎    | 7921/14940 [00:42&lt;00:35, 195.59patch/s]
+ 53%|█████▎    | 7941/14940 [00:42&lt;00:35, 196.76patch/s]
+ 53%|█████▎    | 7961/14940 [00:42&lt;00:36, 193.82patch/s]
+ 53%|█████▎    | 7981/14940 [00:42&lt;00:36, 189.29patch/s]
+ 54%|█████▎    | 8000/14940 [00:43&lt;00:36, 188.25patch/s]
+ 54%|█████▎    | 8020/14940 [00:43&lt;00:36, 190.47patch/s]
+ 54%|█████▍    | 8041/14940 [00:43&lt;00:35, 195.37patch/s]
+ 54%|█████▍    | 8061/14940 [00:43&lt;00:34, 196.60patch/s]
+ 54%|█████▍    | 8081/14940 [00:43&lt;00:35, 191.47patch/s]
+ 54%|█████▍    | 8101/14940 [00:43&lt;00:37, 184.10patch/s]
+ 54%|█████▍    | 8120/14940 [00:43&lt;00:37, 184.19patch/s]
+ 54%|█████▍    | 8140/14940 [00:43&lt;00:36, 187.97patch/s]
+ 55%|█████▍    | 8161/14940 [00:43&lt;00:34, 193.78patch/s]
+ 55%|█████▍    | 8181/14940 [00:43&lt;00:35, 188.90patch/s]
+ 55%|█████▍    | 8200/14940 [00:44&lt;00:36, 185.70patch/s]
+ 55%|█████▌    | 8219/14940 [00:44&lt;00:36, 183.65patch/s]
+ 55%|█████▌    | 8238/14940 [00:44&lt;00:36, 183.74patch/s]
+ 55%|█████▌    | 8257/14940 [00:44&lt;00:36, 183.58patch/s]
+ 55%|█████▌    | 8276/14940 [00:44&lt;00:36, 182.76patch/s]
+ 56%|█████▌    | 8297/14940 [00:44&lt;00:35, 188.32patch/s]
+ 56%|█████▌    | 8318/14940 [00:44&lt;00:34, 193.98patch/s]
+ 56%|█████▌    | 8339/14940 [00:44&lt;00:33, 198.12patch/s]
+ 56%|█████▌    | 8360/14940 [00:44&lt;00:32, 201.35patch/s]
+ 56%|█████▌    | 8381/14940 [00:45&lt;00:32, 203.45patch/s]
+ 56%|█████▌    | 8402/14940 [00:45&lt;00:31, 204.54patch/s]
+ 56%|█████▋    | 8423/14940 [00:45&lt;00:32, 203.50patch/s]
+ 57%|█████▋    | 8444/14940 [00:45&lt;00:32, 198.16patch/s]
+ 57%|█████▋    | 8464/14940 [00:45&lt;00:33, 193.50patch/s]
+ 57%|█████▋    | 8485/14940 [00:45&lt;00:33, 195.54patch/s]
+ 57%|█████▋    | 8505/14940 [00:45&lt;00:32, 196.62patch/s]
+ 57%|█████▋    | 8525/14940 [00:45&lt;00:32, 196.38patch/s]
+ 57%|█████▋    | 8545/14940 [00:45&lt;00:33, 192.96patch/s]
+ 57%|█████▋    | 8565/14940 [00:45&lt;00:33, 190.63patch/s]
+ 57%|█████▋    | 8585/14940 [00:46&lt;00:33, 187.65patch/s]
+ 58%|█████▊    | 8604/14940 [00:46&lt;00:34, 181.55patch/s]
+ 58%|█████▊    | 8623/14940 [00:46&lt;00:34, 180.89patch/s]
+ 58%|█████▊    | 8642/14940 [00:46&lt;00:34, 182.35patch/s]
+ 58%|█████▊    | 8661/14940 [00:46&lt;00:34, 183.19patch/s]
+ 58%|█████▊    | 8681/14940 [00:46&lt;00:33, 187.04patch/s]
+ 58%|█████▊    | 8702/14940 [00:46&lt;00:32, 192.82patch/s]
+ 58%|█████▊    | 8722/14940 [00:46&lt;00:32, 190.21patch/s]
+ 59%|█████▊    | 8742/14940 [00:46&lt;00:33, 187.25patch/s]
+ 59%|█████▊    | 8761/14940 [00:47&lt;00:33, 184.96patch/s]
+ 59%|█████▉    | 8780/14940 [00:47&lt;00:33, 185.05patch/s]
+ 59%|█████▉    | 8799/14940 [00:47&lt;00:33, 184.95patch/s]
+ 59%|█████▉    | 8818/14940 [00:47&lt;00:33, 185.10patch/s]
+ 59%|█████▉    | 8839/14940 [00:47&lt;00:31, 191.22patch/s]
+ 59%|█████▉    | 8860/14940 [00:47&lt;00:30, 196.67patch/s]
+ 59%|█████▉    | 8881/14940 [00:47&lt;00:30, 199.10patch/s]
+ 60%|█████▉    | 8901/14940 [00:47&lt;00:31, 188.97patch/s]
+ 60%|█████▉    | 8921/14940 [00:47&lt;00:32, 184.02patch/s]
+ 60%|█████▉    | 8940/14940 [00:47&lt;00:32, 182.31patch/s]
+ 60%|█████▉    | 8961/14940 [00:48&lt;00:31, 189.91patch/s]
+ 60%|██████    | 8982/14940 [00:48&lt;00:30, 193.98patch/s]
+ 60%|██████    | 9002/14940 [00:48&lt;00:30, 195.56patch/s]
+ 60%|██████    | 9023/14940 [00:48&lt;00:30, 196.98patch/s]
+ 61%|██████    | 9044/14940 [00:48&lt;00:29, 199.40patch/s]
+ 61%|██████    | 9065/14940 [00:48&lt;00:29, 200.07patch/s]
+ 61%|██████    | 9086/14940 [00:48&lt;00:30, 195.04patch/s]
+ 61%|██████    | 9106/14940 [00:48&lt;00:29, 195.50patch/s]
+ 61%|██████    | 9127/14940 [00:48&lt;00:29, 197.87patch/s]
+ 61%|██████    | 9148/14940 [00:49&lt;00:28, 201.19patch/s]
+ 61%|██████▏   | 9169/14940 [00:49&lt;00:30, 187.62patch/s]
+ 61%|██████▏   | 9188/14940 [00:49&lt;00:31, 181.02patch/s]
+ 62%|██████▏   | 9207/14940 [00:49&lt;00:31, 182.02patch/s]
+ 62%|██████▏   | 9227/14940 [00:49&lt;00:30, 186.17patch/s]
+ 62%|██████▏   | 9247/14940 [00:49&lt;00:30, 188.39patch/s]
+ 62%|██████▏   | 9266/14940 [00:49&lt;00:30, 187.40patch/s]
+ 62%|██████▏   | 9285/14940 [00:49&lt;00:30, 186.25patch/s]
+ 62%|██████▏   | 9304/14940 [00:49&lt;00:30, 184.44patch/s]
+ 62%|██████▏   | 9323/14940 [00:49&lt;00:31, 179.25patch/s]
+ 63%|██████▎   | 9343/14940 [00:50&lt;00:30, 183.19patch/s]
+ 63%|██████▎   | 9364/14940 [00:50&lt;00:29, 189.08patch/s]
+ 63%|██████▎   | 9383/14940 [00:50&lt;00:29, 187.84patch/s]
+ 63%|██████▎   | 9402/14940 [00:50&lt;00:29, 186.82patch/s]
+ 63%|██████▎   | 9421/14940 [00:50&lt;00:29, 187.14patch/s]
+ 63%|██████▎   | 9442/14940 [00:50&lt;00:28, 193.60patch/s]
+ 63%|██████▎   | 9462/14940 [00:50&lt;00:28, 193.18patch/s]
+ 63%|██████▎   | 9482/14940 [00:50&lt;00:28, 189.33patch/s]
+ 64%|██████▎   | 9501/14940 [00:50&lt;00:30, 176.63patch/s]
+ 64%|██████▎   | 9519/14940 [00:51&lt;00:30, 175.41patch/s]
+ 64%|██████▍   | 9540/14940 [00:51&lt;00:29, 182.69patch/s]
+ 64%|██████▍   | 9559/14940 [00:51&lt;00:30, 177.99patch/s]
+ 64%|██████▍   | 9577/14940 [00:51&lt;00:30, 177.22patch/s]
+ 64%|██████▍   | 9596/14940 [00:51&lt;00:29, 179.19patch/s]
+ 64%|██████▍   | 9615/14940 [00:51&lt;00:29, 180.89patch/s]
+ 64%|██████▍   | 9634/14940 [00:51&lt;00:29, 182.80patch/s]
+ 65%|██████▍   | 9655/14940 [00:51&lt;00:28, 188.03patch/s]
+ 65%|██████▍   | 9674/14940 [00:51&lt;00:28, 186.76patch/s]
+ 65%|██████▍   | 9693/14940 [00:51&lt;00:28, 182.99patch/s]
+ 65%|██████▌   | 9712/14940 [00:52&lt;00:30, 172.27patch/s]
+ 65%|██████▌   | 9730/14940 [00:52&lt;00:31, 167.13patch/s]
+ 65%|██████▌   | 9747/14940 [00:52&lt;00:31, 164.80patch/s]
+ 65%|██████▌   | 9767/14940 [00:52&lt;00:29, 172.76patch/s]
+ 66%|██████▌   | 9787/14940 [00:52&lt;00:28, 178.80patch/s]
+ 66%|██████▌   | 9806/14940 [00:52&lt;00:28, 180.96patch/s]
+ 66%|██████▌   | 9825/14940 [00:52&lt;00:28, 180.65patch/s]
+ 66%|██████▌   | 9844/14940 [00:52&lt;00:28, 181.47patch/s]
+ 66%|██████▌   | 9864/14940 [00:52&lt;00:27, 186.71patch/s]
+ 66%|██████▌   | 9885/14940 [00:53&lt;00:26, 192.38patch/s]
+ 66%|██████▋   | 9906/14940 [00:53&lt;00:25, 197.28patch/s]
+ 66%|██████▋   | 9927/14940 [00:53&lt;00:24, 200.97patch/s]
+ 67%|██████▋   | 9948/14940 [00:53&lt;00:26, 185.66patch/s]
+ 67%|██████▋   | 9967/14940 [00:53&lt;00:27, 178.35patch/s]
+ 67%|██████▋   | 9986/14940 [00:53&lt;00:27, 180.32patch/s]
+ 67%|██████▋   | 10005/14940 [00:53&lt;00:27, 181.72patch/s]
+ 67%|██████▋   | 10024/14940 [00:53&lt;00:26, 182.54patch/s]
+ 67%|██████▋   | 10043/14940 [00:53&lt;00:26, 183.30patch/s]
+ 67%|██████▋   | 10062/14940 [00:54&lt;00:26, 183.43patch/s]
+ 67%|██████▋   | 10081/14940 [00:54&lt;00:26, 183.21patch/s]
+ 68%|██████▊   | 10100/14940 [00:54&lt;00:27, 175.01patch/s]
+ 68%|██████▊   | 10118/14940 [00:54&lt;00:28, 168.98patch/s]
+ 68%|██████▊   | 10135/14940 [00:54&lt;00:29, 164.00patch/s]
+ 68%|██████▊   | 10153/14940 [00:54&lt;00:28, 167.09patch/s]
+ 68%|██████▊   | 10172/14940 [00:54&lt;00:27, 172.35patch/s]
+ 68%|██████▊   | 10193/14940 [00:54&lt;00:26, 180.70patch/s]
+ 68%|██████▊   | 10212/14940 [00:54&lt;00:25, 182.97patch/s]
+ 68%|██████▊   | 10231/14940 [00:54&lt;00:25, 182.88patch/s]
+ 69%|██████▊   | 10250/14940 [00:55&lt;00:27, 172.41patch/s]
+ 69%|██████▊   | 10268/14940 [00:55&lt;00:28, 166.04patch/s]
+ 69%|██████▉   | 10285/14940 [00:55&lt;00:28, 161.85patch/s]
+ 69%|██████▉   | 10302/14940 [00:55&lt;00:28, 162.08patch/s]
+ 69%|██████▉   | 10319/14940 [00:55&lt;00:28, 163.82patch/s]
+ 69%|██████▉   | 10336/14940 [00:55&lt;00:28, 162.46patch/s]
+ 69%|██████▉   | 10353/14940 [00:55&lt;00:28, 162.99patch/s]
+ 69%|██████▉   | 10372/14940 [00:55&lt;00:26, 169.22patch/s]
+ 70%|██████▉   | 10391/14940 [00:55&lt;00:26, 173.05patch/s]
+ 70%|██████▉   | 10409/14940 [00:56&lt;00:25, 174.92patch/s]
+ 70%|██████▉   | 10428/14940 [00:56&lt;00:25, 177.38patch/s]
+ 70%|██████▉   | 10448/14940 [00:56&lt;00:24, 182.19patch/s]
+ 70%|███████   | 10469/14940 [00:56&lt;00:23, 190.04patch/s]
+ 70%|███████   | 10489/14940 [00:56&lt;00:25, 177.31patch/s]
+ 70%|███████   | 10507/14940 [00:56&lt;00:26, 170.15patch/s]
+ 70%|███████   | 10525/14940 [00:56&lt;00:26, 166.94patch/s]
+ 71%|███████   | 10543/14940 [00:56&lt;00:25, 169.61patch/s]
+ 71%|███████   | 10562/14940 [00:56&lt;00:25, 173.79patch/s]
+ 71%|███████   | 10580/14940 [00:57&lt;00:24, 175.21patch/s]
+ 71%|███████   | 10598/14940 [00:57&lt;00:25, 173.28patch/s]
+ 71%|███████   | 10616/14940 [00:57&lt;00:25, 168.84patch/s]
+ 71%|███████   | 10634/14940 [00:57&lt;00:25, 170.40patch/s]
+ 71%|███████▏  | 10652/14940 [00:57&lt;00:24, 171.86patch/s]
+ 71%|███████▏  | 10670/14940 [00:57&lt;00:25, 168.30patch/s]
+ 72%|███████▏  | 10687/14940 [00:57&lt;00:25, 168.03patch/s]
+ 72%|███████▏  | 10705/14940 [00:57&lt;00:24, 171.41patch/s]
+ 72%|███████▏  | 10723/14940 [00:57&lt;00:25, 167.01patch/s]
+ 72%|███████▏  | 10740/14940 [00:58&lt;00:25, 162.39patch/s]
+ 72%|███████▏  | 10757/14940 [00:58&lt;00:26, 158.83patch/s]
+ 72%|███████▏  | 10773/14940 [00:58&lt;00:26, 156.53patch/s]
+ 72%|███████▏  | 10789/14940 [00:58&lt;00:26, 155.19patch/s]
+ 72%|███████▏  | 10805/14940 [00:58&lt;00:26, 155.45patch/s]
+ 72%|███████▏  | 10822/14940 [00:58&lt;00:25, 159.30patch/s]
+ 73%|███████▎  | 10840/14940 [00:58&lt;00:24, 164.46patch/s]
+ 73%|███████▎  | 10859/14940 [00:58&lt;00:23, 170.75patch/s]
+ 73%|███████▎  | 10878/14940 [00:58&lt;00:23, 174.77patch/s]
+ 73%|███████▎  | 10897/14940 [00:58&lt;00:22, 177.76patch/s]
+ 73%|███████▎  | 10916/14940 [00:59&lt;00:22, 180.22patch/s]
+ 73%|███████▎  | 10935/14940 [00:59&lt;00:22, 181.84patch/s]
+ 73%|███████▎  | 10954/14940 [00:59&lt;00:21, 182.78patch/s]
+ 73%|███████▎  | 10973/14940 [00:59&lt;00:21, 183.33patch/s]
+ 74%|███████▎  | 10992/14940 [00:59&lt;00:21, 183.67patch/s]
+ 74%|███████▎  | 11011/14940 [00:59&lt;00:21, 183.24patch/s]
+ 74%|███████▍  | 11030/14940 [00:59&lt;00:22, 172.32patch/s]
+ 74%|███████▍  | 11048/14940 [00:59&lt;00:23, 166.58patch/s]
+ 74%|███████▍  | 11065/14940 [00:59&lt;00:23, 164.24patch/s]
+ 74%|███████▍  | 11084/14940 [01:00&lt;00:22, 170.88patch/s]
+ 74%|███████▍  | 11105/14940 [01:00&lt;00:21, 179.50patch/s]
+ 74%|███████▍  | 11126/14940 [01:00&lt;00:20, 185.73patch/s]
+ 75%|███████▍  | 11145/14940 [01:00&lt;00:20, 182.23patch/s]
+ 75%|███████▍  | 11164/14940 [01:00&lt;00:21, 178.38patch/s]
+ 75%|███████▍  | 11182/14940 [01:00&lt;00:21, 178.67patch/s]
+ 75%|███████▍  | 11202/14940 [01:00&lt;00:20, 183.42patch/s]
+ 75%|███████▌  | 11223/14940 [01:00&lt;00:19, 189.40patch/s]
+ 75%|███████▌  | 11242/14940 [01:00&lt;00:19, 187.96patch/s]
+ 75%|███████▌  | 11261/14940 [01:00&lt;00:19, 187.06patch/s]
+ 76%|███████▌  | 11280/14940 [01:01&lt;00:19, 186.68patch/s]
+ 76%|███████▌  | 11299/14940 [01:01&lt;00:19, 184.01patch/s]
+ 76%|███████▌  | 11318/14940 [01:01&lt;00:19, 182.42patch/s]
+ 76%|███████▌  | 11337/14940 [01:01&lt;00:19, 181.41patch/s]
+ 76%|███████▌  | 11356/14940 [01:01&lt;00:19, 182.24patch/s]
+ 76%|███████▌  | 11375/14940 [01:01&lt;00:19, 180.43patch/s]
+ 76%|███████▋  | 11394/14940 [01:01&lt;00:20, 173.47patch/s]
+ 76%|███████▋  | 11412/14940 [01:01&lt;00:20, 174.11patch/s]
+ 77%|███████▋  | 11431/14940 [01:01&lt;00:19, 177.41patch/s]
+ 77%|███████▋  | 11450/14940 [01:02&lt;00:19, 179.75patch/s]
+ 77%|███████▋  | 11469/14940 [01:02&lt;00:19, 178.39patch/s]
+ 77%|███████▋  | 11487/14940 [01:02&lt;00:19, 175.12patch/s]
+ 77%|███████▋  | 11505/14940 [01:02&lt;00:19, 172.79patch/s]
+ 77%|███████▋  | 11523/14940 [01:02&lt;00:20, 170.11patch/s]
+ 77%|███████▋  | 11541/14940 [01:02&lt;00:20, 164.20patch/s]
+ 77%|███████▋  | 11558/14940 [01:02&lt;00:20, 162.24patch/s]
+ 77%|███████▋  | 11575/14940 [01:02&lt;00:20, 163.80patch/s]
+ 78%|███████▊  | 11592/14940 [01:02&lt;00:20, 162.86patch/s]
+ 78%|███████▊  | 11609/14940 [01:02&lt;00:20, 161.56patch/s]
+ 78%|███████▊  | 11628/14940 [01:03&lt;00:19, 168.08patch/s]
+ 78%|███████▊  | 11647/14940 [01:03&lt;00:19, 172.83patch/s]
+ 78%|███████▊  | 11666/14940 [01:03&lt;00:18, 176.41patch/s]
+ 78%|███████▊  | 11685/14940 [01:03&lt;00:18, 179.09patch/s]
+ 78%|███████▊  | 11703/14940 [01:03&lt;00:18, 178.84patch/s]
+ 78%|███████▊  | 11721/14940 [01:03&lt;00:18, 172.29patch/s]
+ 79%|███████▊  | 11739/14940 [01:03&lt;00:18, 171.98patch/s]
+ 79%|███████▊  | 11758/14940 [01:03&lt;00:18, 175.67patch/s]
+ 79%|███████▉  | 11777/14940 [01:03&lt;00:17, 178.52patch/s]
+ 79%|███████▉  | 11796/14940 [01:04&lt;00:17, 180.44patch/s]
+ 79%|███████▉  | 11815/14940 [01:04&lt;00:17, 181.87patch/s]
+ 79%|███████▉  | 11834/14940 [01:04&lt;00:17, 178.53patch/s]
+ 79%|███████▉  | 11852/14940 [01:04&lt;00:17, 176.32patch/s]
+ 79%|███████▉  | 11873/14940 [01:04&lt;00:16, 183.58patch/s]
+ 80%|███████▉  | 11892/14940 [01:04&lt;00:16, 185.20patch/s]
+ 80%|███████▉  | 11911/14940 [01:04&lt;00:16, 185.23patch/s]
+ 80%|███████▉  | 11930/14940 [01:04&lt;00:16, 185.06patch/s]
+ 80%|███████▉  | 11950/14940 [01:04&lt;00:15, 187.01patch/s]
+ 80%|████████  | 11970/14940 [01:04&lt;00:15, 190.69patch/s]
+ 80%|████████  | 11990/14940 [01:05&lt;00:15, 187.02patch/s]
+ 80%|████████  | 12009/14940 [01:05&lt;00:15, 187.07patch/s]
+ 81%|████████  | 12029/14940 [01:05&lt;00:15, 190.41patch/s]
+ 81%|████████  | 12049/14940 [01:05&lt;00:15, 188.90patch/s]
+ 81%|████████  | 12068/14940 [01:05&lt;00:15, 187.56patch/s]
+ 81%|████████  | 12087/14940 [01:05&lt;00:15, 187.03patch/s]
+ 81%|████████  | 12106/14940 [01:05&lt;00:15, 186.37patch/s]
+ 81%|████████  | 12125/14940 [01:05&lt;00:15, 185.86patch/s]
+ 81%|████████▏ | 12144/14940 [01:05&lt;00:15, 185.43patch/s]
+ 81%|████████▏ | 12163/14940 [01:06&lt;00:15, 179.24patch/s]
+ 82%|████████▏ | 12181/14940 [01:06&lt;00:15, 173.14patch/s]
+ 82%|████████▏ | 12199/14940 [01:06&lt;00:15, 171.46patch/s]
+ 82%|████████▏ | 12217/14940 [01:06&lt;00:15, 171.99patch/s]
+ 82%|████████▏ | 12236/14940 [01:06&lt;00:15, 175.73patch/s]
+ 82%|████████▏ | 12256/14940 [01:06&lt;00:14, 181.86patch/s]
+ 82%|████████▏ | 12276/14940 [01:06&lt;00:14, 184.91patch/s]
+ 82%|████████▏ | 12295/14940 [01:06&lt;00:14, 183.50patch/s]
+ 82%|████████▏ | 12315/14940 [01:06&lt;00:14, 186.78patch/s]
+ 83%|████████▎ | 12335/14940 [01:06&lt;00:13, 188.81patch/s]
+ 83%|████████▎ | 12354/14940 [01:07&lt;00:13, 185.89patch/s]
+ 83%|████████▎ | 12373/14940 [01:07&lt;00:13, 183.78patch/s]
+ 83%|████████▎ | 12392/14940 [01:07&lt;00:13, 182.64patch/s]
+ 83%|████████▎ | 12411/14940 [01:07&lt;00:13, 183.74patch/s]
+ 83%|████████▎ | 12430/14940 [01:07&lt;00:13, 181.30patch/s]
+ 83%|████████▎ | 12449/14940 [01:07&lt;00:14, 176.86patch/s]
+ 83%|████████▎ | 12468/14940 [01:07&lt;00:13, 178.77patch/s]
+ 84%|████████▎ | 12487/14940 [01:07&lt;00:13, 180.55patch/s]
+ 84%|████████▎ | 12506/14940 [01:07&lt;00:13, 181.66patch/s]
+ 84%|████████▍ | 12525/14940 [01:08&lt;00:13, 182.42patch/s]
+ 84%|████████▍ | 12544/14940 [01:08&lt;00:13, 181.98patch/s]
+ 84%|████████▍ | 12563/14940 [01:08&lt;00:13, 177.32patch/s]
+ 84%|████████▍ | 12583/14940 [01:08&lt;00:12, 181.68patch/s]
+ 84%|████████▍ | 12604/14940 [01:08&lt;00:12, 188.84patch/s]
+ 85%|████████▍ | 12625/14940 [01:08&lt;00:12, 192.38patch/s]
+ 85%|████████▍ | 12646/14940 [01:08&lt;00:11, 196.78patch/s]
+ 85%|████████▍ | 12667/14940 [01:08&lt;00:11, 199.22patch/s]
+ 85%|████████▍ | 12687/14940 [01:08&lt;00:11, 199.35patch/s]
+ 85%|████████▌ | 12707/14940 [01:08&lt;00:11, 195.45patch/s]
+ 85%|████████▌ | 12727/14940 [01:09&lt;00:11, 191.49patch/s]
+ 85%|████████▌ | 12747/14940 [01:09&lt;00:11, 188.05patch/s]
+ 85%|████████▌ | 12766/14940 [01:09&lt;00:11, 185.16patch/s]
+ 86%|████████▌ | 12785/14940 [01:09&lt;00:11, 183.74patch/s]
+ 86%|████████▌ | 12804/14940 [01:09&lt;00:11, 184.02patch/s]
+ 86%|████████▌ | 12823/14940 [01:09&lt;00:11, 184.16patch/s]
+ 86%|████████▌ | 12842/14940 [01:09&lt;00:11, 184.12patch/s]
+ 86%|████████▌ | 12861/14940 [01:09&lt;00:11, 182.53patch/s]
+ 86%|████████▌ | 12880/14940 [01:09&lt;00:11, 182.08patch/s]
+ 86%|████████▋ | 12899/14940 [01:09&lt;00:11, 183.21patch/s]
+ 86%|████████▋ | 12918/14940 [01:10&lt;00:10, 184.01patch/s]
+ 87%|████████▋ | 12937/14940 [01:10&lt;00:10, 184.37patch/s]
+ 87%|████████▋ | 12956/14940 [01:10&lt;00:10, 184.56patch/s]
+ 87%|████████▋ | 12975/14940 [01:10&lt;00:10, 184.60patch/s]
+ 87%|████████▋ | 12994/14940 [01:10&lt;00:10, 185.78patch/s]
+ 87%|████████▋ | 13015/14940 [01:10&lt;00:10, 190.20patch/s]
+ 87%|████████▋ | 13036/14940 [01:10&lt;00:09, 194.74patch/s]
+ 87%|████████▋ | 13057/14940 [01:10&lt;00:09, 198.02patch/s]
+ 88%|████████▊ | 13078/14940 [01:10&lt;00:09, 198.72patch/s]
+ 88%|████████▊ | 13098/14940 [01:11&lt;00:09, 199.07patch/s]
+ 88%|████████▊ | 13119/14940 [01:11&lt;00:09, 199.49patch/s]
+ 88%|████████▊ | 13139/14940 [01:11&lt;00:09, 199.63patch/s]
+ 88%|████████▊ | 13160/14940 [01:11&lt;00:08, 201.97patch/s]
+ 88%|████████▊ | 13181/14940 [01:11&lt;00:08, 203.52patch/s]
+ 88%|████████▊ | 13202/14940 [01:11&lt;00:08, 204.59patch/s]
+ 89%|████████▊ | 13223/14940 [01:11&lt;00:08, 198.11patch/s]
+ 89%|████████▊ | 13243/14940 [01:11&lt;00:08, 190.32patch/s]
+ 89%|████████▉ | 13263/14940 [01:11&lt;00:09, 182.33patch/s]
+ 89%|████████▉ | 13282/14940 [01:12&lt;00:09, 172.64patch/s]
+ 89%|████████▉ | 13300/14940 [01:12&lt;00:09, 170.74patch/s]
+ 89%|████████▉ | 13318/14940 [01:12&lt;00:09, 173.17patch/s]
+ 89%|████████▉ | 13339/14940 [01:12&lt;00:08, 182.20patch/s]
+ 89%|████████▉ | 13360/14940 [01:12&lt;00:08, 188.30patch/s]
+ 90%|████████▉ | 13381/14940 [01:12&lt;00:08, 191.66patch/s]
+ 90%|████████▉ | 13401/14940 [01:12&lt;00:08, 189.35patch/s]
+ 90%|████████▉ | 13420/14940 [01:12&lt;00:08, 186.97patch/s]
+ 90%|████████▉ | 13439/14940 [01:12&lt;00:08, 184.68patch/s]
+ 90%|█████████ | 13458/14940 [01:12&lt;00:08, 184.77patch/s]
+ 90%|█████████ | 13478/14940 [01:13&lt;00:07, 187.40patch/s]
+ 90%|█████████ | 13499/14940 [01:13&lt;00:07, 193.43patch/s]
+ 90%|█████████ | 13520/14940 [01:13&lt;00:07, 198.14patch/s]
+ 91%|█████████ | 13540/14940 [01:13&lt;00:07, 197.10patch/s]
+ 91%|█████████ | 13560/14940 [01:13&lt;00:07, 193.30patch/s]
+ 91%|█████████ | 13580/14940 [01:13&lt;00:07, 178.49patch/s]
+ 91%|█████████ | 13599/14940 [01:13&lt;00:07, 173.64patch/s]
+ 91%|█████████ | 13617/14940 [01:13&lt;00:07, 175.33patch/s]
+ 91%|█████████▏| 13638/14940 [01:13&lt;00:07, 183.46patch/s]
+ 91%|█████████▏| 13658/14940 [01:14&lt;00:06, 186.79patch/s]
+ 92%|█████████▏| 13677/14940 [01:14&lt;00:06, 184.38patch/s]
+ 92%|█████████▏| 13696/14940 [01:14&lt;00:06, 179.44patch/s]
+ 92%|█████████▏| 13715/14940 [01:14&lt;00:06, 177.11patch/s]
+ 92%|█████████▏| 13734/14940 [01:14&lt;00:06, 179.50patch/s]
+ 92%|█████████▏| 13755/14940 [01:14&lt;00:06, 185.68patch/s]
+ 92%|█████████▏| 13776/14940 [01:14&lt;00:06, 191.29patch/s]
+ 92%|█████████▏| 13797/14940 [01:14&lt;00:05, 193.96patch/s]
+ 92%|█████████▏| 13818/14940 [01:14&lt;00:05, 197.50patch/s]
+ 93%|█████████▎| 13839/14940 [01:14&lt;00:05, 199.53patch/s]
+ 93%|█████████▎| 13860/14940 [01:15&lt;00:05, 199.86patch/s]
+ 93%|█████████▎| 13881/14940 [01:15&lt;00:05, 192.82patch/s]
+ 93%|█████████▎| 13901/14940 [01:15&lt;00:05, 191.82patch/s]
+ 93%|█████████▎| 13921/14940 [01:15&lt;00:05, 193.97patch/s]
+ 93%|█████████▎| 13941/14940 [01:15&lt;00:05, 191.15patch/s]
+ 93%|█████████▎| 13961/14940 [01:15&lt;00:05, 191.49patch/s]
+ 94%|█████████▎| 13982/14940 [01:15&lt;00:04, 194.32patch/s]
+ 94%|█████████▎| 14003/14940 [01:15&lt;00:04, 198.65patch/s]
+ 94%|█████████▍| 14024/14940 [01:15&lt;00:04, 199.80patch/s]
+ 94%|█████████▍| 14045/14940 [01:16&lt;00:04, 200.06patch/s]
+ 94%|█████████▍| 14066/14940 [01:16&lt;00:04, 200.02patch/s]
+ 94%|█████████▍| 14087/14940 [01:16&lt;00:04, 202.01patch/s]
+ 94%|█████████▍| 14108/14940 [01:16&lt;00:04, 203.98patch/s]
+ 95%|█████████▍| 14129/14940 [01:16&lt;00:03, 205.39patch/s]
+ 95%|█████████▍| 14150/14940 [01:16&lt;00:03, 199.28patch/s]
+ 95%|█████████▍| 14170/14940 [01:16&lt;00:03, 194.77patch/s]
+ 95%|█████████▍| 14190/14940 [01:16&lt;00:03, 191.90patch/s]
+ 95%|█████████▌| 14211/14940 [01:16&lt;00:03, 196.62patch/s]
+ 95%|█████████▌| 14232/14940 [01:16&lt;00:03, 198.47patch/s]
+ 95%|█████████▌| 14252/14940 [01:17&lt;00:03, 198.41patch/s]
+ 96%|█████████▌| 14272/14940 [01:17&lt;00:03, 194.17patch/s]
+ 96%|█████████▌| 14292/14940 [01:17&lt;00:03, 191.35patch/s]
+ 96%|█████████▌| 14312/14940 [01:17&lt;00:03, 189.94patch/s]
+ 96%|█████████▌| 14333/14940 [01:17&lt;00:03, 195.47patch/s]
+ 96%|█████████▌| 14354/14940 [01:17&lt;00:02, 199.41patch/s]
+ 96%|█████████▌| 14375/14940 [01:17&lt;00:02, 202.18patch/s]
+ 96%|█████████▋| 14396/14940 [01:17&lt;00:02, 204.15patch/s]
+ 96%|█████████▋| 14417/14940 [01:17&lt;00:02, 205.32patch/s]
+ 97%|█████████▋| 14438/14940 [01:17&lt;00:02, 204.87patch/s]
+ 97%|█████████▋| 14459/14940 [01:18&lt;00:02, 203.47patch/s]
+ 97%|█████████▋| 14480/14940 [01:18&lt;00:02, 197.59patch/s]
+ 97%|█████████▋| 14500/14940 [01:18&lt;00:02, 196.99patch/s]
+ 97%|█████████▋| 14521/14940 [01:18&lt;00:02, 200.00patch/s]
+ 97%|█████████▋| 14542/14940 [01:18&lt;00:01, 199.69patch/s]
+ 97%|█████████▋| 14562/14940 [01:18&lt;00:01, 199.58patch/s]
+ 98%|█████████▊| 14582/14940 [01:18&lt;00:01, 199.48patch/s]
+ 98%|█████████▊| 14602/14940 [01:18&lt;00:01, 199.49patch/s]
+ 98%|█████████▊| 14622/14940 [01:18&lt;00:01, 199.28patch/s]
+ 98%|█████████▊| 14642/14940 [01:19&lt;00:01, 199.24patch/s]
+ 98%|█████████▊| 14662/14940 [01:19&lt;00:01, 199.45patch/s]
+ 98%|█████████▊| 14683/14940 [01:19&lt;00:01, 199.69patch/s]
+ 98%|█████████▊| 14704/14940 [01:19&lt;00:01, 200.26patch/s]
+ 99%|█████████▊| 14725/14940 [01:19&lt;00:01, 202.81patch/s]
+ 99%|█████████▊| 14746/14940 [01:19&lt;00:00, 202.53patch/s]
+ 99%|█████████▉| 14767/14940 [01:19&lt;00:00, 202.49patch/s]
+ 99%|█████████▉| 14788/14940 [01:19&lt;00:00, 204.44patch/s]
+ 99%|█████████▉| 14809/14940 [01:19&lt;00:00, 196.57patch/s]
+ 99%|█████████▉| 14829/14940 [01:19&lt;00:00, 193.85patch/s]
+ 99%|█████████▉| 14850/14940 [01:20&lt;00:00, 195.86patch/s]
+100%|█████████▉| 14870/14940 [01:20&lt;00:00, 192.36patch/s]
+100%|█████████▉| 14890/14940 [01:20&lt;00:00, 193.42patch/s]
+100%|█████████▉| 14911/14940 [01:20&lt;00:00, 197.07patch/s]
+100%|█████████▉| 14931/14940 [01:20&lt;00:00, 187.30patch/s]
+100%|██████████| 14940/14940 [01:20&lt;00:00, 185.47patch/s]
+
+&lt;mne.viz._brain._brain.Brain object at 0x7f90ca551a90&gt;
+</pre></div>
+</div>
+<p>Plot the RSA timecourse at the peak vertex</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="matplotlib.pyplot.figure" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">()</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="matplotlib.pyplot.plot" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><a href="https://mne.tools/stable/generated/mne.SourceEstimate.html#mne.SourceEstimate.times" title="mne.SourceEstimate.times" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-property"><span class="n">rsa_vals</span><span class="o">.</span><span class="n">times</span></a><span class="p">,</span> <a href="https://mne.tools/stable/generated/mne.SourceEstimate.html#mne.SourceEstimate.data" title="mne.SourceEstimate.data" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-property"><span class="n">rsa_vals</span><span class="o">.</span><span class="n">data</span></a><span class="p">[</span><a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.int64" title="numpy.int64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">peak_vertex</span></a><span class="p">])</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.xlabel.html#matplotlib.pyplot.xlabel" title="matplotlib.pyplot.xlabel" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span></a><span class="p">(</span><span class="s2">&quot;Time (s)&quot;</span><span class="p">)</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.ylabel.html#matplotlib.pyplot.ylabel" title="matplotlib.pyplot.ylabel" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span></a><span class="p">(</span><span class="s2">&quot;Kendall-Tau (alpha)&quot;</span><span class="p">)</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.title.html#matplotlib.pyplot.title" title="matplotlib.pyplot.title" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">title</span></a><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;RSA values at vert </span><span class="si">{</span><a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.int64" title="numpy.int64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">peak_vertex</span></a><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_surface_003.png" srcset="../../_images/sphx_glr_plot_surface_003.png" alt="RSA values at vert 80" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;RSA values at vert 80&#39;)
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (1 minutes 30.631 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-source-level-plot-surface-py">
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/8c1de0da2b256fe18b8a435e8ee28571/plot_surface.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_surface.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/dad6339eb678faa62a9c81a97396ad0f/plot_surface.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_surface.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-zip docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/98af300d2ddb4032eb858b3bbbeded9e/plot_surface.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">plot_surface.zip</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="plot_rsa_roi.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Source-level RSA using ROI’s</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="plot_volume.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Source-level RSA using a searchlight on volumetric data</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Marijn van Vliet, Aalto University.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
