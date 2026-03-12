@@ -6,11 +6,14 @@ Authors
 Marijn van Vliet <marijn.vanvliet@aalto.fi>
 """
 
+from functools import partial
+from warnings import warn
+
 import numpy as np
 from joblib import Parallel, delayed
 from scipy.spatial import distance
 
-from .folds import create_folds, _match_order
+from .folds import _match_order, create_folds
 from .searchlight import searchlight
 
 
@@ -34,8 +37,13 @@ def compute_rdm(data, metric="correlation", **kwargs):
 
     Returns
     -------
-    rdm : ndarray, shape (n_classes * n_classes-1,)
+    rdm : ndarray, shape (n_items * n_items-1,)
         The RDM, in condensed form. See :func:`scipy.spatial.distance.squareform`.
+
+    Notes
+    -----
+    The distance metrics "euclidean" and "sqeuclidean" will use a custom implementation
+    instead of :func:`scipy.spatial.distance.pdist`.
 
     See Also
     --------
@@ -54,7 +62,15 @@ def compute_rdm(data, metric="correlation", **kwargs):
             "instead."
         )
 
-    return distance.pdist(X, metric, **kwargs)
+    # Use optimized versions of some distance metrics.
+    if metric == "sqeuclidean":
+        func = _sqeuclidean
+    elif metric == "euclidean":
+        func = lambda X: np.sqrt(_sqeuclidean(X))  # noqa E731
+    else:
+        # Use scikit learn's distance computation.
+        func = partial(distance.pdist, metric, **kwargs)
+    return func(X)
 
 
 def compute_rdm_cv(folds, metric="correlation", **kwargs):
@@ -73,10 +89,10 @@ def compute_rdm_cv(folds, metric="correlation", **kwargs):
         will be flattened and treated as features.
     metric : str | function
         The distance metric to use to compute the RDM. Can be any metric supported by
-        :func:`scipy.spatial.distance.pdist`. When a function is specified, it needs to
-        take in two vectors and output a single number. See also the ``dist_params``
-        parameter to specify and additional parameter for the distance function.
-        Defaults to 'correlation'.
+        :func:`scipy.spatial.distance.pdist` and also 'crossnobis'. When a function is
+        specified, it needs to take in two vectors and output a single number. See also
+        the ``dist_params`` parameter to specify and additional parameter for the
+        distance function. Defaults to 'correlation'.
     **kwargs : dict, optional
         Extra arguments for the distance metric. Refer to :mod:`scipy.spatial.distance`
         for a list of all other metrics and their arguments.
@@ -91,6 +107,11 @@ def compute_rdm_cv(folds, metric="correlation", **kwargs):
     --------
     compute_rdm
 
+    Notes
+    -----
+    The distance metrics "euclidean", "sqeuclidean" and "crossnobis" will use a custom
+    implementation instead of :func:`scipy.spatial.distance.pdist`.
+
     """
     X = np.reshape(folds, (folds.shape[0], folds.shape[1], -1))
     n_folds, n_items, n_features = X.shape[:3]
@@ -104,19 +125,46 @@ def compute_rdm_cv(folds, metric="correlation", **kwargs):
             "instead."
         )
 
-    rdm = np.zeros((n_items * (n_items - 1)) // 2)
+    # Use optimized versions of some distance metrics.
+    if metric == "sqeuclidean" or metric == "crossnobis":
+        func = _sqeuclidean
+    elif metric == "euclidean":
+        func = lambda X: np.sqrt(_sqeuclidean(X))  # noqa E731
+    else:
+        # Use scikit learn's distance computation.
+        warn(f"Using a hacky way of cross-validation for distance metric '{metric}'.")
+        func = partial(distance.pdist, metric, **kwargs)
 
-    X_mean = X.mean(axis=0)
+    D_mean = func(folds.mean(axis=0))
+    D_within = np.zeros_like(D_mean)
+    for fold in folds:
+        D_within += func(fold)
+    D = (n_folds / (n_folds - 1)) * D_mean - (1 / (n_folds * (n_folds - 1))) * D_within
+    return D
 
-    # Do cross-validation
-    for test_fold in range(n_folds):
-        X_test = X[test_fold]
-        X_train = X_mean - (X_mean - X_test) / (n_folds - 1)
 
-        dist = distance.cdist(X_train, X_test, metric, **kwargs)
-        rdm += dist[np.triu_indices_from(dist, 1)]
+def _sqeuclidean(X):
+    """Fast squared item-to-item Euclidean distance.
 
-    return rdm / n_folds
+    This uses the trick:
+        (x - y)² = x² - 2xy + y²
+
+    Parameters
+    ----------
+    X : ndarray, shape (n_items, n_features
+        For each item, all the features.
+
+    Returns
+    -------
+    D : ndarray, shape (n_items * n_items)
+        The item-to-item distance matrix
+
+    """
+    # Compute item-to-item Gram matrix
+    G = X @ X.T
+    G_diag = np.diag(G)
+    D = G_diag[:, np.newaxis] - 2 * G + G_diag[np.newaxis, :]
+    return D[np.triu_indices_from(D, 1)]
 
 
 def _ensure_condensed(rdm, var_name):
