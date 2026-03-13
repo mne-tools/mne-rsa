@@ -7,7 +7,7 @@ from mne_rsa.rdm import _ensure_condensed, _n_items_from_rdm
 from numpy.testing import assert_allclose, assert_equal
 
 
-class TestDsm:
+class TestRDM:
     """Test computing a RDM."""
 
     def test_basic(self):
@@ -31,7 +31,7 @@ class TestDsm:
         assert_allclose(rdm, 5.477226)
 
 
-class TestDsmCV:
+class TestRDMCV:
     """Test computing a RDM with cross-validation."""
 
     def test_basic(self):
@@ -40,6 +40,30 @@ class TestDsmCV:
         rdm = compute_rdm_cv(data)
         assert rdm.shape == (1,)
         assert_allclose(rdm, 0, atol=1e-15)
+
+    def test_valid(self):
+        from scipy.spatial.distance import cdist
+
+        rng = np.random.RandomState(0)
+        data = rng.randn(3, 2, 10)
+        data[:, 1, :] += 1
+
+        # Squared Euclidean distance
+        D = np.mean([
+            np.sum((data[0][1] - data[0][0]) * (data[1][1] - data[1][0])),
+            np.sum((data[0][1] - data[0][0]) * (data[2][1] - data[2][0])),
+            np.sum((data[1][1] - data[1][0]) * (data[2][1] - data[2][0])),
+        ], axis=0)
+        assert_allclose(compute_rdm_cv(data, metric="sqeuclidean"), D)
+
+        # Pearson correlation
+        D = np.mean([
+            np.sum((data[0][1] - data[0][0]) * (data[1][1] - data[1][0])),
+            np.sum((data[0][1] - data[0][0]) * (data[2][1] - data[2][0])),
+            np.sum((data[1][1] - data[1][0]) * (data[2][1] - data[2][0])),
+        ], axis=0)
+        assert_allclose(compute_rdm_cv(data, metric="sqeuclidean"), D)
+
 
     def test_invalid_input(self):
         """Test giving invalid input to compute_rdm."""

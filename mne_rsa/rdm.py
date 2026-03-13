@@ -133,7 +133,7 @@ def compute_rdm_cv(folds, metric="correlation", **kwargs):
     else:
         # Use scikit learn's distance computation.
         warn(f"Using a hacky way of cross-validation for distance metric '{metric}'.")
-        func = partial(distance.pdist, metric, **kwargs)
+        func = partial(distance.pdist, metric=metric, **kwargs)
 
     D_mean = func(folds.mean(axis=0))
     D_within = np.zeros_like(D_mean)
