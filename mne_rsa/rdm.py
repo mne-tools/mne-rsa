@@ -69,7 +69,7 @@ def compute_rdm(data, metric="correlation", **kwargs):
         func = lambda X: np.sqrt(_sqeuclidean(X))  # noqa E731
     else:
         # Use scikit learn's distance computation.
-        func = partial(distance.pdist, metric, **kwargs)
+        func = partial(distance.pdist, metric=metric, **kwargs)
     return func(X)
 
 
@@ -135,9 +135,9 @@ def compute_rdm_cv(folds, metric="correlation", **kwargs):
         warn(f"Using a hacky way of cross-validation for distance metric '{metric}'.")
         func = partial(distance.pdist, metric=metric, **kwargs)
 
-    D_mean = func(folds.mean(axis=0))
+    D_mean = func(X.mean(axis=0))
     D_within = np.zeros_like(D_mean)
-    for fold in folds:
+    for fold in X:
         D_within += func(fold)
     D = (n_folds / (n_folds - 1)) * D_mean - (1 / (n_folds * (n_folds - 1))) * D_within
     return D
