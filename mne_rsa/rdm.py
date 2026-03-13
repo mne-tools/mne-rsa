@@ -6,7 +6,6 @@ Authors
 Marijn van Vliet <marijn.vanvliet@aalto.fi>
 """
 
-from functools import partial
 from warnings import warn
 
 import numpy as np
@@ -64,13 +63,12 @@ def compute_rdm(data, metric="correlation", **kwargs):
 
     # Use optimized versions of some distance metrics.
     if metric == "sqeuclidean":
-        func = _sqeuclidean
+        return distance.squareform(_sqeuclidean(X))
     elif metric == "euclidean":
-        func = lambda X: np.sqrt(_sqeuclidean(X))  # noqa E731
-    else:
-        # Use scikit learn's distance computation.
-        func = partial(distance.pdist, metric=metric, **kwargs)
-    return func(X)
+        return np.sqrt(distance.squareform(_sqeuclidean(X)))
+
+    # Use scikit learn's distance computation.
+    return distance.pdist(X, metric=metric, **kwargs)
 
 
 def compute_rdm_cv(folds, metric="correlation", **kwargs):
@@ -127,20 +125,28 @@ def compute_rdm_cv(folds, metric="correlation", **kwargs):
 
     # Use optimized versions of some distance metrics.
     if metric == "sqeuclidean" or metric == "crossnobis":
-        func = _sqeuclidean
+        rdm = _crossnobis(X)
     elif metric == "euclidean":
-        func = lambda X: np.sqrt(_sqeuclidean(X))  # noqa E731
+        rdm = np.sqrt(_crossnobis(X))
+    elif metric == "cosine":
+        rdm = _cv_cosine(X)
+    elif metric == "correlation":
+        rdm = _cv_correlation(X)
     else:
         # Use scikit learn's distance computation.
         warn(f"Using a hacky way of cross-validation for distance metric '{metric}'.")
-        func = partial(distance.pdist, metric=metric, **kwargs)
+        rdm_mean = distance.pdist(X.mean(axis=0), metric=metric, **kwargs)
+        rdm_within = np.zeros_like(rdm_mean)
+        for fold in X:
+            rdm_within += distance.pdist(fold, metric=metric, **kwargs)
+        part = n_folds / (n_folds - 1)
+        rdm = part * rdm_mean - (1 / part) * rdm_within
 
-    D_mean = func(X.mean(axis=0))
-    D_within = np.zeros_like(D_mean)
-    for fold in X:
-        D_within += func(fold)
-    D = (n_folds / (n_folds - 1)) * D_mean - (1 / (n_folds * (n_folds - 1))) * D_within
-    return D
+    if rdm.ndim == 2:
+        # Can't use distance.squareform here because we cannot guarantee that the
+        # diagonal is exactly zero.
+        rdm = rdm[np.triu_indices_from(rdm, k=1)]
+    return rdm
 
 
 def _sqeuclidean(X):
@@ -151,7 +157,7 @@ def _sqeuclidean(X):
 
     Parameters
     ----------
-    X : ndarray, shape (n_items, n_features
+    X : ndarray, shape (n_items, n_features)
         For each item, all the features.
 
     Returns
@@ -164,7 +170,84 @@ def _sqeuclidean(X):
     G = X @ X.T
     G_diag = np.diag(G)
     D = G_diag[:, np.newaxis] - 2 * G + G_diag[np.newaxis, :]
-    return D[np.triu_indices_from(D, 1)]
+    return D
+
+
+def _crossnobis(X):
+    """Fast cross-validated item-to-item squared Euclidean distance (crossnobis).
+
+    This uses the trick:
+        (x - y)² = x² - 2xy + y²
+
+    Parameters
+    ----------
+    X : ndarray, shape (n_folds, n_items, n_features)
+        For each item, all the features. The first dimension are the folds used for
+        cross-validation, items are along the second dimension, and the features are
+        along the third dimension.
+
+    Returns
+    -------
+    D : ndarray, shape (n_items * n_items)
+        The item-to-item distance matrix
+
+    """
+    n_folds, n_items, n_features = X.shape
+    D_mean = _sqeuclidean(X.mean(axis=0))
+    D_within = np.zeros_like(D_mean)
+    for fold in X:
+        D_within += _sqeuclidean(fold)
+    D = (n_folds / (n_folds - 1)) * D_mean - (1 / (n_folds * (n_folds - 1))) * D_within
+    return D
+
+
+def _cv_cosine(X):
+    """Fast cross-validated item-to-item cosine distance.
+
+    Parameters
+    ----------
+    X : ndarray, shape (n_folds, n_items, n_features)
+        For each item, all the features. The first dimension are the folds used for
+        cross-validation, items are along the second dimension, and the features are
+        along the third dimension.
+
+    Returns
+    -------
+    D : ndarray, shape (n_items * n_items)
+        The item-to-item distance matrix
+
+    """
+    n_folds, n_items, n_features = X.shape
+    D = np.zeros((n_items, n_items))
+    for test_ind, X_test in enumerate(X):
+        train_ind = [i for i in range(n_folds) if i != test_ind]
+        X_train = X[train_ind].mean(axis=0)
+        G = X_train @ X_test.T
+        denom = np.sqrt(np.diag(G))
+        G /= denom[:, np.newaxis] * denom[np.newaxis, :]
+        D += (G + G.T) / 2
+    D /= n_folds
+    return 1 - D
+
+
+def _cv_correlation(X):
+    """Fast cross-validated item-to-item Pearson correlation distance.
+
+    Parameters
+    ----------
+    X : ndarray, shape (n_folds, n_items, n_features)
+        For each item, all the features. The first dimension are the folds used for
+        cross-validation, items are along the second dimension, and the features are
+        along the third dimension.
+
+    Returns
+    -------
+    D : ndarray, shape (n_items * n_items)
+        The item-to-item distance matrix
+
+    """
+    # Correlation is the same as cosine distance, but with the data centered on zero.
+    return _cv_cosine(X - X.mean(axis=2, keepdims=True))
 
 
 def _ensure_condensed(rdm, var_name):
