@@ -63,12 +63,18 @@ def compute_rdm(data, metric="correlation", **kwargs):
 
     # Use optimized versions of some distance metrics.
     if metric == "sqeuclidean":
-        return distance.squareform(_sqeuclidean(X))
+        rdm = _sqeuclidean(X)
     elif metric == "euclidean":
-        return np.sqrt(distance.squareform(_sqeuclidean(X)))
+        rdm = np.sqrt(_sqeuclidean(X))
+    else:
+        # Use scikit learn's distance computation.
+        rdm = distance.pdist(X, metric=metric, **kwargs)
 
-    # Use scikit learn's distance computation.
-    return distance.pdist(X, metric=metric, **kwargs)
+    if rdm.ndim == 2:
+        # Can't use distance.squareform here because we cannot guarantee that the
+        # diagonal is exactly zero.
+        rdm = rdm[np.triu_indices_from(rdm, k=1)]
+    return rdm
 
 
 def compute_rdm_cv(folds, metric="correlation", **kwargs):
@@ -129,9 +135,9 @@ def compute_rdm_cv(folds, metric="correlation", **kwargs):
     elif metric == "euclidean":
         rdm = np.sqrt(_crossnobis(X))
     elif metric == "cosine":
-        rdm = _cv_cosine(X)
+        rdm = _cv_cosine(X, **kwargs)
     elif metric == "correlation":
-        rdm = _cv_correlation(X)
+        rdm = _cv_correlation(X, **kwargs)
     else:
         # Use scikit learn's distance computation.
         warn(f"Using a hacky way of cross-validation for distance metric '{metric}'.")
@@ -201,8 +207,92 @@ def _crossnobis(X):
     return D
 
 
-def _cv_cosine(X):
+def _cv_cosine(X, reg_var=0.1, reg_denom=0.25, bounded=True):
     """Fast cross-validated item-to-item cosine distance.
+
+    Parameters
+    ----------
+    X : ndarray, shape (n_folds, n_items, n_features)
+        For each item, all the features. The first dimension are the folds used for
+        cross-validation, items are along the second dimension, and the features are
+        along the third dimension.
+    reg_var : float
+        Amount (0-1) to regularize the estimated variance.
+    reg_denom : float
+        Amount (0-1) to regularize the estimated denominator.
+    bounded : bool
+        Whether to bound the computed cosine distance between 0 and 2 for each
+        fold.
+
+    Returns
+    -------
+    D : ndarray, shape (n_items * n_items)
+        The item-to-item distance matrix
+
+    """
+    n_folds, n_items, n_features = X.shape
+
+    if reg_var > 0 or reg_denom > 0:
+        var = np.sum(X.mean(axis=0) ** 2, axis=1)
+        denom_noncv = var.mean()
+
+    D = np.zeros((n_items, n_items))
+    for test_ind, X_test in enumerate(X):
+        train_ind = [i for i in range(n_folds) if i != test_ind]
+        X_train = X[train_ind].mean(axis=0)
+        G = X_train @ X_test.T
+        denom = np.diag(G)
+        if reg_var > 0:
+            denom = np.maximum(denom, reg_var * var)
+        denom = np.sqrt(denom)
+        denom = denom[:, np.newaxis] * denom[np.newaxis, :]
+        if reg_denom > 0:
+            denom = np.maximum(denom, reg_denom * denom_noncv)
+        G /= denom
+        D_fold = (G + G.T) / 2
+        if bounded:
+            D_fold = np.clip(D_fold, -1, 1)
+        D += D_fold
+    D /= n_folds
+    return 1 - D
+
+
+def _cv_correlation(X, reg_var=0.1, reg_denom=0.25, bounded=True):
+    """Fast cross-validated item-to-item Pearson correlation distance.
+
+    Parameters
+    ----------
+    X : ndarray, shape (n_folds, n_items, n_features)
+        For each item, all the features. The first dimension are the folds used for
+        cross-validation, items are along the second dimension, and the features are
+        along the third dimension.
+    reg_var : float
+        Amount (0-1) to regularize the estimated variance.
+    reg_denom : float
+        Amount (0-1) to regularize the estimated denominator.
+    bounded : bool
+        Whether to bound the computed cosine distance between 0 and 2 for each
+        fold.
+
+    Returns
+    -------
+    D : ndarray, shape (n_items * n_items)
+        The item-to-item distance matrix
+
+    """
+    # Correlation is the same as cosine distance, but with the data centered on zero.
+    return _cv_cosine(
+        X - X.mean(axis=2, keepdims=True),
+        reg_var=reg_var,
+        reg_denom=reg_denom,
+        bounded=bounded,
+    )
+
+
+def _cv_correlation2(X):
+    """Fast cross-validated item-to-item Pearson correlation distance.
+
+    This uses a slightly different implementation.
 
     Parameters
     ----------
@@ -218,36 +308,27 @@ def _cv_cosine(X):
 
     """
     n_folds, n_items, n_features = X.shape
-    D = np.zeros((n_items, n_items))
-    for test_ind, X_test in enumerate(X):
-        train_ind = [i for i in range(n_folds) if i != test_ind]
-        X_train = X[train_ind].mean(axis=0)
-        G = X_train @ X_test.T
-        denom = np.sqrt(np.diag(G))
-        G /= denom[:, np.newaxis] * denom[np.newaxis, :]
-        D += (G + G.T) / 2
-    D /= n_folds
+    X = X - X.mean(axis=2, keepdims=True)
+
+    # mean pattern across folds
+    mean_pattern = X.mean(axis=0)
+
+    Gm = mean_pattern @ mean_pattern.T
+    norm = np.sqrt(np.diag(Gm))
+    D_mean = Gm / (norm[:, np.newaxis] * norm[np.newaxis, :])
+
+    # within-fold correlations
+    D_within = np.zeros((n_items, n_items))
+
+    for fold in X:
+        G = fold @ fold.T
+        norm = np.sqrt(np.diag(G))
+        D_within += G / (norm[:, np.newaxis] * norm[np.newaxis, :])
+
+    part = n_folds / (n_folds - 1)
+    D = part * D_mean - (1 / part) * D_within
+
     return 1 - D
-
-
-def _cv_correlation(X):
-    """Fast cross-validated item-to-item Pearson correlation distance.
-
-    Parameters
-    ----------
-    X : ndarray, shape (n_folds, n_items, n_features)
-        For each item, all the features. The first dimension are the folds used for
-        cross-validation, items are along the second dimension, and the features are
-        along the third dimension.
-
-    Returns
-    -------
-    D : ndarray, shape (n_items * n_items)
-        The item-to-item distance matrix
-
-    """
-    # Correlation is the same as cosine distance, but with the data centered on zero.
-    return _cv_cosine(X - X.mean(axis=2, keepdims=True))
 
 
 def _ensure_condensed(rdm, var_name):
