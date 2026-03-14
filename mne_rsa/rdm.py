@@ -41,8 +41,8 @@ def compute_rdm(data, metric="correlation", **kwargs):
 
     Notes
     -----
-    The distance metrics "euclidean" and "sqeuclidean" will use a custom implementation
-    instead of :func:`scipy.spatial.distance.pdist`.
+    The distance metrics "euclidean", "sqeuclidean", "cosine", and "correlation" will
+    use a custom implementation instead of :func:`scipy.spatial.distance.pdist`.
 
     See Also
     --------
@@ -66,6 +66,10 @@ def compute_rdm(data, metric="correlation", **kwargs):
         rdm = _sqeuclidean(X)
     elif metric == "euclidean":
         rdm = np.sqrt(_sqeuclidean(X))
+    elif metric == "cosine":
+        rdm = _cosine(X)
+    elif metric == "correlation":
+        rdm = _correlation(X)
     else:
         # Use scikit learn's distance computation.
         rdm = distance.pdist(X, metric=metric, **kwargs)
@@ -113,8 +117,9 @@ def compute_rdm_cv(folds, metric="correlation", **kwargs):
 
     Notes
     -----
-    The distance metrics "euclidean", "sqeuclidean" and "crossnobis" will use a custom
-    implementation instead of :func:`scipy.spatial.distance.pdist`.
+    The distance metrics "euclidean", "sqeuclidean", "crossnobis", "cosine", and
+    "correlation" will use a custom implementation instead of
+    :func:`scipy.spatial.distance.pdist`.
 
     """
     X = np.reshape(folds, (folds.shape[0], folds.shape[1], -1))
@@ -177,6 +182,42 @@ def _sqeuclidean(X):
     G_diag = np.diag(G)
     D = G_diag[:, np.newaxis] - 2 * G + G_diag[np.newaxis, :]
     return D
+
+
+def _cosine(X):
+    """Fast item-to-item cosine distance.
+
+    Parameters
+    ----------
+    X : ndarray, shape (n_items, n_features)
+        For each item, all the features.
+
+    Returns
+    -------
+    D : ndarray, shape (n_items * n_items)
+        The item-to-item distance matrix
+
+    """
+    return _sqeuclidean(X / np.linalg.norm(X, axis=1, keepdims=True))
+
+
+def _correlation(X):
+    """Fast item-to-item Pearson correlation distance.
+
+    Parameters
+    ----------
+    X : ndarray, shape (n_items, n_features)
+        For each item, all the features.
+
+    Returns
+    -------
+    D : ndarray, shape (n_items * n_items)
+        The item-to-item distance matrix
+
+    """
+    X = X - X.mean(axis=1, keepdims=True)
+    X /= np.linalg.norm(X, axis=1, keepdims=True)
+    return _sqeuclidean(X)
 
 
 def _crossnobis(X):
