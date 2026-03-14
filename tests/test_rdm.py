@@ -2,7 +2,14 @@
 
 import numpy as np
 import pytest
-from mne_rsa import compute_rdm, compute_rdm_cv, pick_rdm, rdm_array, searchlight
+from mne_rsa import (
+    compute_rdm,
+    compute_rdm_cv,
+    pick_rdm,
+    rdm_array,
+    searchlight,
+    create_folds,
+)
 from mne_rsa.rdm import _ensure_condensed, _n_items_from_rdm
 from numpy.testing import assert_allclose, assert_equal
 
@@ -41,13 +48,13 @@ class TestRDMCV:
         assert rdm.shape == (1,)
         assert_allclose(rdm, 0, atol=1e-15)
 
-    def test_valid(self):
-        """Test whether the computation is valid."""
+    def test_cv_euclidean(self):
+        """Test whether the crossvalidated euclidean distance is valid."""
         rng = np.random.RandomState(0)
         data = rng.randn(3, 2, 10)
         data[:, 1, :] += 1
 
-        # Squared Euclidean distance
+        # Euclidean distance
         D = np.mean(
             [
                 np.sum((data[0][1] - data[0][0]) * (data[1][1] - data[1][0])),
@@ -57,17 +64,51 @@ class TestRDMCV:
             axis=0,
         )
         assert_allclose(compute_rdm_cv(data, metric="sqeuclidean"), D)
+        assert_allclose(compute_rdm_cv(data, metric="euclidean"), np.sqrt(D))
 
-        # Pearson correlation
-        D = np.mean(
-            [
-                np.sum((data[0][1] - data[0][0]) * (data[1][1] - data[1][0])),
-                np.sum((data[0][1] - data[0][0]) * (data[2][1] - data[2][0])),
-                np.sum((data[1][1] - data[1][0]) * (data[2][1] - data[2][0])),
-            ],
-            axis=0,
+    def test_cv_correlation(self):
+        """Test whether the crossvalidated Pearson correlation distance is valid."""
+        X1 = np.arange(10)
+        X2 = np.arange(10)
+        X3 = np.arange(10)[::-1]
+        X = np.array([X1, X2, X3])
+        y = np.array([0, 1, 2])
+
+        n_folds = 10
+        X = np.repeat(X, n_folds, axis=0)
+        y = np.repeat(y, n_folds)
+
+        # without any noise
+        data = create_folds(X, y, n_folds=n_folds)
+        assert_equal(compute_rdm_cv(data, metric="correlation"), [0, 2, 2])
+
+        # with a little noise
+        rng = np.random.RandomState(0)
+        noise = rng.randn(*X.shape)
+        data = create_folds(X + 0.1 * noise, y, n_folds=n_folds)
+        assert_allclose(
+            compute_rdm_cv(data, metric="correlation"), [0, 2, 2], atol=1E-4
         )
-        assert_allclose(compute_rdm_cv(data, metric="sqeuclidean"), D)
+
+        # with a lot of noise
+        data = create_folds(X + 1 * noise, y, n_folds=n_folds)
+        assert_allclose(
+            compute_rdm_cv(data, metric="correlation"), [0, 2, 2], atol=1E-2
+        )
+
+        # increasing the number of repetitions should help
+        X = np.repeat(X, 20, axis=0)
+        y = np.repeat(y, 20)
+        n_folds = 200  # we had 10 before and repeated them 20 times
+        noise = rng.randn(*X.shape)
+        data = create_folds(X + 0.1 * noise, y, n_folds=n_folds)
+        assert_allclose(
+            compute_rdm_cv(data, metric="correlation"), [0, 2, 2], atol=1E-5
+        )
+        data = create_folds(X + 1 * noise, y, n_folds=n_folds)
+        assert_allclose(
+            compute_rdm_cv(data, metric="correlation"), [0, 2, 2], atol=1E-3
+        )
 
     def test_invalid_input(self):
         """Test giving invalid input to compute_rdm."""
