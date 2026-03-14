@@ -198,7 +198,8 @@ def _cosine(X):
         The item-to-item distance matrix
 
     """
-    return _sqeuclidean(X / np.linalg.norm(X, axis=1, keepdims=True))
+    X = X / np.linalg.norm(X, axis=1, keepdims=True)
+    return 1 - X @ X.T
 
 
 def _correlation(X):
@@ -216,8 +217,7 @@ def _correlation(X):
 
     """
     X = X - X.mean(axis=1, keepdims=True)
-    X /= np.linalg.norm(X, axis=1, keepdims=True)
-    return _sqeuclidean(X)
+    return _cosine(X)
 
 
 def _crossnobis(X):

@@ -37,6 +37,29 @@ class TestRDM:
         assert rdm.shape == (1,)
         assert_allclose(rdm, 5.477226)
 
+    def test_optimized_path(self):
+        """Test the optimized metrics against scipy's pdist."""
+        from scipy.spatial.distance import pdist
+        rng = np.random.RandomState(0)
+        data = rng.randn(10, 50)
+        assert_allclose(
+            compute_rdm(data, metric="euclidean"),
+            pdist(data, metric="euclidean"),
+        )
+        assert_allclose(
+            compute_rdm(data, metric="sqeuclidean"),
+            pdist(data, metric="sqeuclidean"),
+        )
+        assert_allclose(
+            compute_rdm(data, metric="cosine"),
+            pdist(data, metric="cosine"),
+        )
+        assert_allclose(
+            compute_rdm(data, metric="correlation"),
+            pdist(data, metric="correlation"),
+        )
+
+
 
 class TestRDMCV:
     """Test computing a RDM with cross-validation."""
