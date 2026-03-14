@@ -30,12 +30,12 @@ class TestRDM:
         with pytest.raises(ValueError, match="single feature"):
             compute_rdm(data, metric="correlation")
 
-    def test_set_metric(self):
-        """Test setting distance metric for computing RDMs."""
+    def test_use_pdist(self):
+        """Test setting distance metric to something which uses scipy's pdist."""
         data = np.array([[1, 2, 3, 4], [2, 4, 6, 8]])
-        rdm = compute_rdm(data, metric="euclidean")
+        rdm = compute_rdm(data, metric="seuclidean")
         assert rdm.shape == (1,)
-        assert_allclose(rdm, 5.477226)
+        assert_allclose(rdm, 2.828427)
 
     def test_optimized_path(self):
         """Test the optimized metrics against scipy's pdist."""
