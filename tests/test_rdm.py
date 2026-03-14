@@ -40,6 +40,7 @@ class TestRDM:
     def test_optimized_path(self):
         """Test the optimized metrics against scipy's pdist."""
         from scipy.spatial.distance import pdist
+
         rng = np.random.RandomState(0)
         data = rng.randn(10, 50)
         VI = 0.1 * rng.randn(50, 50) + np.eye(50)
@@ -64,7 +65,6 @@ class TestRDM:
             compute_rdm(data, metric="correlation"),
             pdist(data, metric="correlation"),
         )
-
 
 
 class TestRDMCV:
@@ -125,20 +125,20 @@ class TestRDMCV:
         data = create_folds(X + 0.1 * noise, y, n_folds=n_folds)
         data_centered = data - data.mean(axis=2, keepdims=True)
         assert_allclose(
-            compute_rdm_cv(data, metric="correlation"), [0, 2, 2], atol=1E-4
+            compute_rdm_cv(data, metric="correlation"), [0, 2, 2], atol=1e-4
         )
         assert_allclose(
-            compute_rdm_cv(data_centered, metric="cosine"), [0, 2, 2], atol=1E-4
+            compute_rdm_cv(data_centered, metric="cosine"), [0, 2, 2], atol=1e-4
         )
 
         # with a lot of noise
         data = create_folds(X + 1 * noise, y, n_folds=n_folds)
         data_centered = data - data.mean(axis=2, keepdims=True)
         assert_allclose(
-            compute_rdm_cv(data, metric="correlation"), [0, 2, 2], atol=1E-2
+            compute_rdm_cv(data, metric="correlation"), [0, 2, 2], atol=1e-2
         )
         assert_allclose(
-            compute_rdm_cv(data_centered, metric="cosine"), [0, 2, 2], atol=1E-2
+            compute_rdm_cv(data_centered, metric="cosine"), [0, 2, 2], atol=1e-2
         )
 
         # increasing the number of repetitions should help
@@ -149,18 +149,18 @@ class TestRDMCV:
         data = create_folds(X + 0.1 * noise, y, n_folds=n_folds)
         data_centered = data - data.mean(axis=2, keepdims=True)
         assert_allclose(
-            compute_rdm_cv(data, metric="correlation"), [0, 2, 2], atol=1E-5
+            compute_rdm_cv(data, metric="correlation"), [0, 2, 2], atol=1e-5
         )
         assert_allclose(
-            compute_rdm_cv(data_centered, metric="cosine"), [0, 2, 2], atol=1E-5
+            compute_rdm_cv(data_centered, metric="cosine"), [0, 2, 2], atol=1e-5
         )
         data = create_folds(X + 1 * noise, y, n_folds=n_folds)
         data_centered = data - data.mean(axis=2, keepdims=True)
         assert_allclose(
-            compute_rdm_cv(data, metric="correlation"), [0, 2, 2], atol=1E-3
+            compute_rdm_cv(data, metric="correlation"), [0, 2, 2], atol=1e-3
         )
         assert_allclose(
-            compute_rdm_cv(data_centered, metric="cosine"), [0, 2, 2], atol=1E-3
+            compute_rdm_cv(data_centered, metric="cosine"), [0, 2, 2], atol=1e-3
         )
 
     def test_cv_pdist(self):

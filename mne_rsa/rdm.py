@@ -294,50 +294,6 @@ def _cv_cosine(X, reg_var=0.1, reg_denom=0.25, bounded=True):
     return 1 - D
 
 
-def _cv_correlation2(X):
-    """Fast cross-validated item-to-item Pearson correlation distance.
-
-    This uses a slightly different implementation that doesn't suffer from
-    trying to compute the sqrt on negative numbers, so it doesn't need the
-    messy regularization. However, I don't know if this is valid.
-
-    Parameters
-    ----------
-    X : ndarray, shape (n_folds, n_items, n_features)
-        For each item, all the features. The first dimension are the folds used for
-        cross-validation, items are along the second dimension, and the features are
-        along the third dimension.
-
-    Returns
-    -------
-    D : ndarray, shape (n_items * n_items)
-        The item-to-item distance matrix
-
-    """
-    n_folds, n_items, n_features = X.shape
-    X = X - X.mean(axis=2, keepdims=True)
-
-    # mean pattern across folds
-    mean_pattern = X.mean(axis=0)
-
-    Gm = mean_pattern @ mean_pattern.T
-    norm = np.sqrt(np.diag(Gm))
-    D_mean = Gm / (norm[:, np.newaxis] * norm[np.newaxis, :])
-
-    # within-fold correlations
-    D_within = np.zeros((n_items, n_items))
-
-    for fold in X:
-        G = fold @ fold.T
-        norm = np.sqrt(np.diag(G))
-        D_within += G / (norm[:, np.newaxis] * norm[np.newaxis, :])
-
-    part = n_folds / (n_folds - 1)
-    D = part * D_mean - (1 / part) * D_within
-
-    return 1 - D
-
-
 def _ensure_condensed(rdm, var_name):
     """Convert a RDM to condensed form if needed."""
     if isinstance(rdm, list):
