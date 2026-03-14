@@ -42,6 +42,8 @@ class TestRDM:
         from scipy.spatial.distance import pdist
         rng = np.random.RandomState(0)
         data = rng.randn(10, 50)
+        VI = 0.1 * rng.randn(50, 50) + np.eye(50)
+        VI += VI.T
         assert_allclose(
             compute_rdm(data, metric="euclidean"),
             pdist(data, metric="euclidean"),
@@ -49,6 +51,10 @@ class TestRDM:
         assert_allclose(
             compute_rdm(data, metric="sqeuclidean"),
             pdist(data, metric="sqeuclidean"),
+        )
+        assert_allclose(
+            compute_rdm(data, metric="mahalanobis", VI=VI),
+            pdist(data, metric="mahalanobis", VI=VI),
         )
         assert_allclose(
             compute_rdm(data, metric="cosine"),
@@ -88,6 +94,12 @@ class TestRDMCV:
         )
         assert_allclose(compute_rdm_cv(data, metric="sqeuclidean"), D)
         assert_allclose(compute_rdm_cv(data, metric="euclidean"), np.sqrt(D))
+        assert_allclose(
+            compute_rdm_cv(data, metric="mahalanobis", VI=np.eye(10)), np.sqrt(D)
+        )
+        assert_allclose(
+            compute_rdm_cv(data, metric="crossnobis", VI=np.eye(10)), np.sqrt(D)
+        )
 
     def test_cv_correlation(self):
         """Test whether the crossvalidated Pearson correlation distance is valid."""
@@ -103,20 +115,30 @@ class TestRDMCV:
 
         # without any noise
         data = create_folds(X, y, n_folds=n_folds)
+        data_centered = data - data.mean(axis=2, keepdims=True)
         assert_equal(compute_rdm_cv(data, metric="correlation"), [0, 2, 2])
+        assert_equal(compute_rdm_cv(data_centered, metric="cosine"), [0, 2, 2])
 
         # with a little noise
         rng = np.random.RandomState(0)
         noise = rng.randn(*X.shape)
         data = create_folds(X + 0.1 * noise, y, n_folds=n_folds)
+        data_centered = data - data.mean(axis=2, keepdims=True)
         assert_allclose(
             compute_rdm_cv(data, metric="correlation"), [0, 2, 2], atol=1E-4
+        )
+        assert_allclose(
+            compute_rdm_cv(data_centered, metric="cosine"), [0, 2, 2], atol=1E-4
         )
 
         # with a lot of noise
         data = create_folds(X + 1 * noise, y, n_folds=n_folds)
+        data_centered = data - data.mean(axis=2, keepdims=True)
         assert_allclose(
             compute_rdm_cv(data, metric="correlation"), [0, 2, 2], atol=1E-2
+        )
+        assert_allclose(
+            compute_rdm_cv(data_centered, metric="cosine"), [0, 2, 2], atol=1E-2
         )
 
         # increasing the number of repetitions should help
@@ -125,13 +147,32 @@ class TestRDMCV:
         n_folds = 200  # we had 10 before and repeated them 20 times
         noise = rng.randn(*X.shape)
         data = create_folds(X + 0.1 * noise, y, n_folds=n_folds)
+        data_centered = data - data.mean(axis=2, keepdims=True)
         assert_allclose(
             compute_rdm_cv(data, metric="correlation"), [0, 2, 2], atol=1E-5
         )
+        assert_allclose(
+            compute_rdm_cv(data_centered, metric="cosine"), [0, 2, 2], atol=1E-5
+        )
         data = create_folds(X + 1 * noise, y, n_folds=n_folds)
+        data_centered = data - data.mean(axis=2, keepdims=True)
         assert_allclose(
             compute_rdm_cv(data, metric="correlation"), [0, 2, 2], atol=1E-3
         )
+        assert_allclose(
+            compute_rdm_cv(data_centered, metric="cosine"), [0, 2, 2], atol=1E-3
+        )
+
+    def test_cv_pdist(self):
+        """Test whether crossvalidation using scipy's pdist is valid ."""
+        rng = np.random.RandomState(0)
+        data = rng.randn(3, 2, 10)
+        data[:, 1, :] += 1
+        with pytest.warns(UserWarning, match="hacky"):
+            assert_allclose(
+                compute_rdm_cv(data, metric="seuclidean", V=np.ones(10)),
+                compute_rdm_cv(data, metric="euclidean"),
+            )
 
     def test_invalid_input(self):
         """Test giving invalid input to compute_rdm."""
