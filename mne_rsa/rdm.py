@@ -64,15 +64,15 @@ def compute_rdm(data, metric="correlation", **kwargs):
 
     # Use optimized versions of some distance metrics.
     if metric == "sqeuclidean":
-        rdm = _sqeuclidean(X)
+        rdm = _sqmahalanobis(X, VI=None)
     elif metric == "euclidean":
-        rdm = _euclidean(X)
+        rdm = np.sqrt(_sqmahalanobis(X, VI=None))
     elif metric == "mahalanobis":
-        rdm = _mahalanobis(X, kwargs["VI"])
+        rdm = np.sqrt(_sqmahalanobis(X, VI=kwargs["VI"]))
     elif metric == "cosine":
         rdm = _cosine(X)
     elif metric == "correlation":
-        rdm = _correlation(X)
+        rdm = _cosine(X - X.mean(axis=1, keepdims=True))
     else:
         # Use scikit learn's distance computation.
         rdm = distance.pdist(X, metric=metric, **kwargs)
@@ -139,15 +139,15 @@ def compute_rdm_cv(folds, metric="correlation", **kwargs):
 
     # Use optimized versions of some distance metrics.
     if metric == "sqeuclidean":
-        rdm = _cv_sqeuclidean(X)
+        rdm = _cv_sq_general(X, _sqmahalanobis, VI=None)
     elif metric == "euclidean":
-        rdm = _cv_euclidean(X)
+        rdm = np.sqrt(_cv_sq_general(X, _sqmahalanobis, VI=None))
     elif metric == "mahalanobis" or metric == "crossnobis":
-        rdm = _crossnobis(X, kwargs["VI"])
+        rdm = np.sqrt(_cv_sq_general(X, _sqmahalanobis, VI=kwargs["VI"]))
     elif metric == "cosine":
         rdm = _cv_cosine(X, **kwargs)
     elif metric == "correlation":
-        rdm = _cv_correlation(X, **kwargs)
+        rdm = _cv_cosine(X - X.mean(axis=2, keepdims=True), **kwargs)
     else:
         # Use scikit learn's distance computation.
         warn(f"Using a hacky way of cross-validation for distance metric '{metric}'.")
@@ -164,59 +164,20 @@ def compute_rdm_cv(folds, metric="correlation", **kwargs):
     return rdm
 
 
-def _sqeuclidean(X):
-    """Fast squared item-to-item Euclidean distance.
-
-    This uses the trick:
-        (x - y)² = x² - 2xy + y²
-
-    Parameters
-    ----------
-    X : ndarray, shape (n_items, n_features)
-        For each item, all the features.
-
-    Returns
-    -------
-    D : ndarray, shape (n_items * n_items)
-        The item-to-item distance matrix
-
-    """
-    # Compute item-to-item Gram matrix
-    G = X @ X.T
-    G_diag = np.diag(G)
-    D = G_diag[:, np.newaxis] - 2 * G + G_diag[np.newaxis, :]
-    return D
-
-
-def _euclidean(X):
-    """Fast item-to-item Euclidean distance.
-
-    This uses the trick:
-        (x - y)² = x² - 2xy + y²
-
-    Parameters
-    ----------
-    X : ndarray, shape (n_items, n_features)
-        For each item, all the features.
-
-    Returns
-    -------
-    D : ndarray, shape (n_items * n_items)
-        The item-to-item distance matrix
-
-    """
-    return np.sqrt(_sqeuclidean(X))
-
-
-def _sqmahalanobis(X, VI):
+def _sqmahalanobis(X, VI=None):
     """Fast squared item-to-item Mahalanobis distance.
 
+    This uses the trick:
+        (x - y)² = x² - 2xy + y²
+
     Parameters
     ----------
     X : ndarray, shape (n_items, n_features)
         For each item, all the features.
-    VI : nparray, shape (n_features, n_features)
+    VI : nparray, shape (n_features, n_features) | None
         The inverse of the covariance matrix of the features.
+        If not specified, an identity matrix is used and this metric becomes
+        squared Euclidean distance.
 
     Returns
     -------
@@ -225,29 +186,13 @@ def _sqmahalanobis(X, VI):
 
     """
     # Compute item-to-item Gram matrix
-    G = X @ VI @ X.T
+    if VI is not None:
+        G = X @ VI @ X.T
+    else:
+        G = X @ X.T
     G_diag = np.diag(G)
     D = G_diag[:, np.newaxis] - 2 * G + G_diag[np.newaxis, :]
     return D
-
-
-def _mahalanobis(X, VI):
-    """Fast item-to-item Mahalanobis distance.
-
-    Parameters
-    ----------
-    X : ndarray, shape (n_items, n_features)
-        For each item, all the features.
-    VI : nparray, shape (n_features, n_features)
-        The inverse of the covariance matrix of the features.
-
-    Returns
-    -------
-    D : ndarray, shape (n_items * n_items)
-        The item-to-item distance matrix
-
-    """
-    return np.sqrt(_sqmahalanobis(X, VI))
 
 
 def _cosine(X):
@@ -266,24 +211,6 @@ def _cosine(X):
     """
     X = X / np.linalg.norm(X, axis=1, keepdims=True)
     return 1 - X @ X.T
-
-
-def _correlation(X):
-    """Fast item-to-item Pearson correlation distance.
-
-    Parameters
-    ----------
-    X : ndarray, shape (n_items, n_features)
-        For each item, all the features.
-
-    Returns
-    -------
-    D : ndarray, shape (n_items * n_items)
-        The item-to-item distance matrix
-
-    """
-    X = X - X.mean(axis=1, keepdims=True)
-    return _cosine(X)
 
 
 def _cv_sq_general(X, func, **kwargs):
@@ -315,65 +242,6 @@ def _cv_sq_general(X, func, **kwargs):
         D_within += func(fold, **kwargs)
     D = (n_folds / (n_folds - 1)) * D_mean - (1 / (n_folds * (n_folds - 1))) * D_within
     return D
-
-
-def _cv_sqeuclidean(X):
-    """Fast cross-validated item-to-item squared Euclidean distance.
-
-    Parameters
-    ----------
-    X : ndarray, shape (n_folds, n_items, n_features)
-        For each item, all the features. The first dimension are the folds used for
-        cross-validation, items are along the second dimension, and the features are
-        along the third dimension.
-
-    Returns
-    -------
-    D : ndarray, shape (n_items * n_items)
-        The item-to-item distance matrix
-
-    """
-    return _cv_sq_general(X, _sqeuclidean)
-
-
-def _cv_euclidean(X):
-    """Fast cross-validated item-to-item Euclidean distance.
-
-    Parameters
-    ----------
-    X : ndarray, shape (n_folds, n_items, n_features)
-        For each item, all the features. The first dimension are the folds used for
-        cross-validation, items are along the second dimension, and the features are
-        along the third dimension.
-
-    Returns
-    -------
-    D : ndarray, shape (n_items * n_items)
-        The item-to-item distance matrix
-
-    """
-    return np.sqrt(_cv_sq_general(X, _sqeuclidean))
-
-
-def _crossnobis(X, VI):
-    """Fast cross-validated item-to-item Mahalanobis distance (crossnobis).
-
-    Parameters
-    ----------
-    X : ndarray, shape (n_folds, n_items, n_features)
-        For each item, all the features. The first dimension are the folds used for
-        cross-validation, items are along the second dimension, and the features are
-        along the third dimension.
-    VI : nparray, shape (n_features, n_features) | None
-        The inverse of the covariance matrix of the features.
-
-    Returns
-    -------
-    D : ndarray, shape (n_items * n_items)
-        The item-to-item distance matrix
-
-    """
-    return np.sqrt(_cv_sq_general(X, _sqmahalanobis, VI=VI))
 
 
 def _cv_cosine(X, reg_var=0.1, reg_denom=0.25, bounded=True):
@@ -424,38 +292,6 @@ def _cv_cosine(X, reg_var=0.1, reg_denom=0.25, bounded=True):
         D += D_fold
     D /= n_folds
     return 1 - D
-
-
-def _cv_correlation(X, reg_var=0.1, reg_denom=0.25, bounded=True):
-    """Fast cross-validated item-to-item Pearson correlation distance.
-
-    Parameters
-    ----------
-    X : ndarray, shape (n_folds, n_items, n_features)
-        For each item, all the features. The first dimension are the folds used for
-        cross-validation, items are along the second dimension, and the features are
-        along the third dimension.
-    reg_var : float
-        Amount (0-1) to regularize the estimated variance.
-    reg_denom : float
-        Amount (0-1) to regularize the estimated denominator.
-    bounded : bool
-        Whether to bound the computed cosine distance between 0 and 2 for each
-        fold.
-
-    Returns
-    -------
-    D : ndarray, shape (n_items * n_items)
-        The item-to-item distance matrix
-
-    """
-    # Correlation is the same as cosine distance, but with the data centered on zero.
-    return _cv_cosine(
-        X - X.mean(axis=2, keepdims=True),
-        reg_var=reg_var,
-        reg_denom=reg_denom,
-        bounded=bounded,
-    )
 
 
 def _cv_correlation2(X):
