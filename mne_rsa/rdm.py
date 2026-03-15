@@ -274,9 +274,9 @@ def _cv_cosine(X, reg_var=0.1, reg_denom=0.25, bounded=True):
         denom_noncv = var.mean()
 
     D = np.zeros((n_items, n_items))
+    X_mean = X.mean(axis=0)
     for test_ind, X_test in enumerate(X):
-        train_ind = [i for i in range(n_folds) if i != test_ind]
-        X_train = X[train_ind].mean(axis=0)
+        X_train = (X_mean * n_folds - X_test) / (n_folds - 1)
         G = X_train @ X_test.T
         denom = np.diag(G)
         if reg_var > 0:
