@@ -269,12 +269,12 @@ def _cv_cosine(X, reg_var=0.1, reg_denom=0.25, bounded=True):
     """
     n_folds, n_items, n_features = X.shape
 
+    X_mean = X.mean(axis=0)
     if reg_var > 0 or reg_denom > 0:
-        var = np.sum(X.mean(axis=0) ** 2, axis=1)
+        var = np.sum(X_mean**2, axis=1)
         denom_noncv = var.mean()
 
     D = np.zeros((n_items, n_items))
-    X_mean = X.mean(axis=0)
     for test_ind, X_test in enumerate(X):
         X_train = (X_mean * n_folds - X_test) / (n_folds - 1)
         G = X_train @ X_test.T
