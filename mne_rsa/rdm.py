@@ -6,11 +6,13 @@ Authors
 Marijn van Vliet <marijn.vanvliet@aalto.fi>
 """
 
+from warnings import warn
+
 import numpy as np
 from joblib import Parallel, delayed
 from scipy.spatial import distance
 
-from .folds import create_folds, _match_order
+from .folds import _match_order, create_folds
 from .searchlight import searchlight
 
 
@@ -34,8 +36,14 @@ def compute_rdm(data, metric="correlation", **kwargs):
 
     Returns
     -------
-    rdm : ndarray, shape (n_classes * n_classes-1,)
+    rdm : ndarray, shape (n_items * n_items-1,)
         The RDM, in condensed form. See :func:`scipy.spatial.distance.squareform`.
+
+    Notes
+    -----
+    The distance metrics "euclidean", "sqeuclidean", "mahalanobis", "cosine", and
+    "correlation" will use a custom implementation instead of
+    :func:`scipy.spatial.distance.pdist`.
 
     See Also
     --------
@@ -54,7 +62,26 @@ def compute_rdm(data, metric="correlation", **kwargs):
             "instead."
         )
 
-    return distance.pdist(X, metric, **kwargs)
+    # Use optimized versions of some distance metrics.
+    if metric == "sqeuclidean":
+        rdm = _sqmahalanobis(X, VI=None)
+    elif metric == "euclidean":
+        rdm = np.sqrt(_sqmahalanobis(X, VI=None))
+    elif metric == "mahalanobis":
+        rdm = np.sqrt(_sqmahalanobis(X, VI=kwargs["VI"]))
+    elif metric == "cosine":
+        rdm = _cosine(X)
+    elif metric == "correlation":
+        rdm = _cosine(X - X.mean(axis=1, keepdims=True))
+    else:
+        # Use scikit learn's distance computation.
+        rdm = distance.pdist(X, metric=metric, **kwargs)
+
+    if rdm.ndim == 2:
+        # Can't use distance.squareform here because we cannot guarantee that the
+        # diagonal is exactly zero.
+        rdm = rdm[np.triu_indices_from(rdm, k=1)]
+    return rdm
 
 
 def compute_rdm_cv(folds, metric="correlation", **kwargs):
@@ -73,10 +100,10 @@ def compute_rdm_cv(folds, metric="correlation", **kwargs):
         will be flattened and treated as features.
     metric : str | function
         The distance metric to use to compute the RDM. Can be any metric supported by
-        :func:`scipy.spatial.distance.pdist`. When a function is specified, it needs to
-        take in two vectors and output a single number. See also the ``dist_params``
-        parameter to specify and additional parameter for the distance function.
-        Defaults to 'correlation'.
+        :func:`scipy.spatial.distance.pdist` and also 'crossnobis'. When a function is
+        specified, it needs to take in two vectors and output a single number. See also
+        the ``dist_params`` parameter to specify and additional parameter for the
+        distance function. Defaults to 'correlation'.
     **kwargs : dict, optional
         Extra arguments for the distance metric. Refer to :mod:`scipy.spatial.distance`
         for a list of all other metrics and their arguments.
@@ -91,6 +118,12 @@ def compute_rdm_cv(folds, metric="correlation", **kwargs):
     --------
     compute_rdm
 
+    Notes
+    -----
+    The distance metrics "euclidean", "sqeuclidean", "mahalanobis", "crossnobis",
+    "cosine", and "correlation" will use a custom implementation instead of
+    :func:`scipy.spatial.distance.pdist`.
+
     """
     X = np.reshape(folds, (folds.shape[0], folds.shape[1], -1))
     n_folds, n_items, n_features = X.shape[:3]
@@ -104,19 +137,161 @@ def compute_rdm_cv(folds, metric="correlation", **kwargs):
             "instead."
         )
 
-    rdm = np.zeros((n_items * (n_items - 1)) // 2)
+    # Use optimized versions of some distance metrics.
+    if metric == "sqeuclidean":
+        rdm = _cv_sq_general(X, _sqmahalanobis, VI=None)
+    elif metric == "euclidean":
+        rdm = np.sqrt(_cv_sq_general(X, _sqmahalanobis, VI=None))
+    elif metric == "mahalanobis" or metric == "crossnobis":
+        rdm = np.sqrt(_cv_sq_general(X, _sqmahalanobis, VI=kwargs["VI"]))
+    elif metric == "cosine":
+        rdm = _cv_cosine(X, **kwargs)
+    elif metric == "correlation":
+        rdm = _cv_cosine(X - X.mean(axis=2, keepdims=True), **kwargs)
+    else:
+        # Use scikit learn's distance computation.
+        warn(f"Using a hacky way of cross-validation for distance metric '{metric}'.")
+
+        def func(X):
+            return distance.pdist(X, metric=metric, **kwargs) ** 2
+
+        rdm = np.sqrt(_cv_sq_general(X, func))
+
+    if rdm.ndim == 2:
+        # Can't use distance.squareform here because we cannot guarantee that the
+        # diagonal is exactly zero.
+        rdm = rdm[np.triu_indices_from(rdm, k=1)]
+    return rdm
+
+
+def _sqmahalanobis(X, VI=None):
+    """Fast squared item-to-item Mahalanobis distance.
+
+    This uses the trick:
+        (x - y)² = x² - 2xy + y²
+
+    Parameters
+    ----------
+    X : ndarray, shape (n_items, n_features)
+        For each item, all the features.
+    VI : nparray, shape (n_features, n_features) | None
+        The inverse of the covariance matrix of the features.
+        If not specified, an identity matrix is used and this metric becomes
+        squared Euclidean distance.
+
+    Returns
+    -------
+    D : ndarray, shape (n_items * n_items)
+        The item-to-item distance matrix
+
+    """
+    # Compute item-to-item Gram matrix
+    if VI is not None:
+        G = X @ VI @ X.T
+    else:
+        G = X @ X.T
+    G_diag = np.diag(G)
+    D = G_diag[:, np.newaxis] - 2 * G + G_diag[np.newaxis, :]
+    return D
+
+
+def _cosine(X):
+    """Fast item-to-item cosine distance.
+
+    Parameters
+    ----------
+    X : ndarray, shape (n_items, n_features)
+        For each item, all the features.
+
+    Returns
+    -------
+    D : ndarray, shape (n_items * n_items)
+        The item-to-item distance matrix
+
+    """
+    X = X / np.linalg.norm(X, axis=1, keepdims=True)
+    return 1 - X @ X.T
+
+
+def _cv_sq_general(X, func, **kwargs):
+    """General-purpose cross-validated squared distance algorithm.
+
+    Does not work for non-squared distances.
+
+    Parameters
+    ----------
+    X : ndarray, shape (n_folds, n_items, n_features)
+        For each item, all the features. The first dimension are the folds used for
+        cross-validation, items are along the second dimension, and the features are
+        along the third dimension.
+    func : function
+        Distance function to use. Should return squared distance.
+    **kwargs : dict, optional
+        Any arguments to pass along to the distance function.
+
+    Returns
+    -------
+    D : ndarray, shape (n_items * n_items)
+        The item-to-item distance matrix
+
+    """
+    n_folds, n_items, n_features = X.shape
+    D_mean = func(X.mean(axis=0), **kwargs)
+    D_within = np.zeros_like(D_mean)
+    for fold in X:
+        D_within += func(fold, **kwargs)
+    D = (n_folds / (n_folds - 1)) * D_mean - (1 / (n_folds * (n_folds - 1))) * D_within
+    return D
+
+
+def _cv_cosine(X, reg_var=0.1, reg_denom=0.25, bounded=True):
+    """Fast cross-validated item-to-item cosine distance.
+
+    Parameters
+    ----------
+    X : ndarray, shape (n_folds, n_items, n_features)
+        For each item, all the features. The first dimension are the folds used for
+        cross-validation, items are along the second dimension, and the features are
+        along the third dimension.
+    reg_var : float
+        Amount (0-1) to regularize the estimated variance.
+    reg_denom : float
+        Amount (0-1) to regularize the estimated denominator.
+    bounded : bool
+        Whether to bound the computed cosine distance between 0 and 2 for each
+        fold.
+
+    Returns
+    -------
+    D : ndarray, shape (n_items * n_items)
+        The item-to-item distance matrix
+
+    """
+    n_folds, n_items, n_features = X.shape
 
     X_mean = X.mean(axis=0)
+    if reg_var > 0 or reg_denom > 0:
+        var = np.sum(X_mean**2, axis=1)
+        denom_noncv = var.mean()
 
-    # Do cross-validation
-    for test_fold in range(n_folds):
-        X_test = X[test_fold]
-        X_train = X_mean - (X_mean - X_test) / (n_folds - 1)
-
-        dist = distance.cdist(X_train, X_test, metric, **kwargs)
-        rdm += dist[np.triu_indices_from(dist, 1)]
-
-    return rdm / n_folds
+    D = np.zeros((n_items, n_items))
+    for test_ind, X_test in enumerate(X):
+        X_train = (X_mean * n_folds - X_test) / (n_folds - 1)
+        G = X_train @ X_test.T
+        denom = np.diag(G)
+        if reg_var > 0:
+            denom = np.maximum(denom, reg_var * var)
+        denom = np.sqrt(denom)
+        denom = denom[:, np.newaxis] * denom[np.newaxis, :]
+        if reg_denom > 0:
+            denom = np.maximum(denom, reg_denom * denom_noncv)
+        G /= denom
+        D_fold = (G + G.T) / 2
+        if bounded:
+            D_fold = np.clip(D_fold, -1, 1)
+        D += D_fold
+    D /= n_folds
+    return 1 - D
 
 
 def _ensure_condensed(rdm, var_name):
