@@ -5,8 +5,7 @@
 [![joss](https://joss.theoj.org/papers/224328eb22eab91aaae44579fb00fdaa/status.svg)](https://joss.theoj.org/papers/224328eb22eab91aaae44579fb00fdaa)
 
 This is a Python package for performing representational similarity analysis (RSA) using [MNE-Python](https://martinos.org/mne/stable/index.html>) data structures.
-The main use-case is to perform RSA using a “searchlight” approach through time and/or a
-volumetric or surface source space.
+The main use-case is to perform RSA using a “searchlight” approach through time and/or a volumetric or surface source space.
 
 Read more on RSA in the paper that introduced the technique:
 
@@ -48,8 +47,7 @@ Supported metrics for comparing RDMs:
 
 ## Installation
 
-The package can be installed either through PIP: `pip install mne-rsa`  
-or through conda using the conda-forge channel: `conda install -c conda-forge mne-rsa`
+The package can be installed either through PIP: `pip install mne-rsa` or through conda using the conda-forge channel: `conda install -c conda-forge mne-rsa`
 
 Installing through either channel will pull in [MNE-Python](https://mne.tools) as a dependency, along with [Qt 6](https://www.qt.io), [PyVista](https://pyvista.org) and [Scikit-Learn](https://scikit-learn.org). See [`requirements.txt`](requirements.txt) for the full list of packages.
 
@@ -122,7 +120,6 @@ To build the documentation, execute `make html` in the `mne-rsa/doc` folder (or 
 Windows: `sphinx-build . _build/html`).
 
 ## Citation
-If you end up using this package for the data analysis that is part of a scientific
-article, please cite:
+If you end up using this package for the data analysis that is part of a scientific article, please cite:
 
 Marijn van Vliet, Stefan Appelhoff, Takao Shimizu, Egor Eremin, Annika Hultén, Yuanfang Zhao, and Richard Höchenberger, (2025). MNE-RSA: Representational Similarity Analysis on EEG, MEG and fMRI data. Journal of Open Source Software, 10(116), 9148, https://doi.org/10.21105/joss.09148
