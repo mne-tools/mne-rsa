@@ -40,7 +40,7 @@ class TestPlotRDMs:
         with pytest.raises(ValueError, match="Number of given names"):
             plot_rdms(rdm, names=["A", "B"])
 
-        # Invalid RDM.
+        # Test invalid RDM.
         with pytest.raises(ValueError, match="Invalid shape"):
             plot_rdms(np.array([[[1]]]))
 
