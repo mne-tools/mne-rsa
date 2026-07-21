@@ -37,7 +37,9 @@ def compute_rdm(data, metric="correlation", **kwargs):
     Returns
     -------
     rdm : ndarray, shape (n_items * n_items-1,)
-        The RDM, in condensed form. See :func:`scipy.spatial.distance.squareform`.
+        The RDM, in condensed form containing only the upper triangular part of the
+        matrix. Use :func:`squareform` to convert to a full matrix. The order of the
+        items in the RDM matches the order of the items in ``data``.
 
     Notes
     -----
