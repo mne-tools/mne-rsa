@@ -184,6 +184,7 @@ def rsa_stcs(
     See Also
     --------
     compute_rdm
+
     """  # noqa E501
     # Check for compatibility of the source estimates and the model features
     one_model = type(rdm_model) is np.ndarray
@@ -1088,6 +1089,7 @@ def rdm_nifti(
     See Also
     --------
     rdm_stcs
+
     """
     if (
         not isinstance(image, tuple(nib.imageclasses.all_image_classes))

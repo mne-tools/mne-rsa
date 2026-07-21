@@ -811,6 +811,7 @@ def rdm_epochs(
     See Also
     --------
     rdm_evokeds
+
     """
     if labels is None and y is not None:
         labels = y
