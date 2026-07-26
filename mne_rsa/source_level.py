@@ -184,6 +184,7 @@ def rsa_stcs(
     See Also
     --------
     compute_rdm
+
     """  # noqa E501
     # Check for compatibility of the source estimates and the model features
     one_model = type(rdm_model) is np.ndarray
@@ -391,9 +392,9 @@ def rdm_stcs(
         corresponds. Multiple source estimates may correspond to the same item, in which
         case they should have the same label and will either be averaged when computing
         the data RDM (``n_folds=1``) or used for cross-validation (``n_folds>1``).
-        Labels may be of any python type that can be compared with ``==`` (int, float,
-        string, tuple, etc). By default (``None``), the integers ``0:len(evokeds)`` are
-        used as labels.
+        Labels may be of any python type that can be compared with ``==``, ``<`` and
+        ``>`` (int, float, string, tuple, etc).
+        By default (``None``), the integers ``0:len(evokeds)`` are used as labels.
 
         .. versionadded:: 0.10
     n_folds : int | sklearn.model_selection.BaseCrollValidator | None
@@ -438,7 +439,14 @@ def rdm_stcs(
     Yields
     ------
     rdm : ndarray, shape (n_items, n_items)
-        A RDM for each searchlight patch.
+        A RDM for each searchlight patch, in condensed form containing only the upper
+        triangular part of the matrix (use :func:`squareform` to convert to a full
+        matrix). The order of the items in the RDMs matches the order of
+        ``sorted(labels)``.
+
+    See Also
+    --------
+    rdm_nifti
 
     """
     _check_stcs_compatibility(stcs)
@@ -1035,8 +1043,9 @@ def rdm_nifti(
         in which case they should have the same label and will either be averaged when
         computing the data RDM (``n_folds=1``) or used for cross-validation
         (``n_folds>1``). Labels may be of any python type that can be compared with
-        ``==`` (int, float, string, tuple, etc). By default (``None``), the integers
-        ``0:image.shape[3]`` are used as labels.
+        ``==``, ``<`` and ``>`` (int, float, string, tuple, etc). In the resulting RDM,
+        the rows and columns are in the order of ``sorted(labels)``.
+        By default (``None``), the integers ``0:image.shape[3]`` are used as labels.
 
         .. versionadded:: 0.10
     n_folds : int | sklearn.model_selection.BaseCrollValidator | None
@@ -1071,8 +1080,15 @@ def rdm_nifti(
 
     Yields
     ------
-    rdm : ndarray, shape (n_items, n_items)
-        A RDM for each searchlight patch.
+    rdm : ndarray, shape (n_items * (n_items - 1),)
+        A RDM for each searchlight patch, in condensed form containing only the upper
+        triangular part of the matrix (use :func:`squareform` to convert to a full
+        matrix). The order of the items in the RDMs matches the order of
+        ``sorted(labels)``.
+
+    See Also
+    --------
+    rdm_stcs
 
     """
     if (
