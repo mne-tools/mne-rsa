@@ -11,6 +11,8 @@ from functools import partial
 
 import matplotlib.pyplot as plt
 import numpy as np
+import mne
+from mne.fixes import _compare_version
 from mne.viz import Brain
 from mne.viz.topo import _iter_topography
 from scipy.spatial import distance
@@ -260,22 +262,32 @@ def plot_roi_map(values, rois, subject, subjects_dir, cmap="plasma", alpha=1.0):
     brain = Brain(
         subject=subject, subjects_dir=subjects_dir, surf="inflated", hemi="both"
     )
-    labels_lh = np.zeros(len(brain.geo["lh"].coords), dtype=int)
-    labels_rh = np.zeros(len(brain.geo["rh"].coords), dtype=int)
-    ctab_lh = list()
-    ctab_rh = list()
-    for i, (roi, value) in enumerate(zip(rois, values), 1):
-        if roi.hemi == "lh":
-            labels = labels_lh
-            ctab = ctab_lh
-        else:
-            labels = labels_rh
-            ctab = ctab_rh
-        labels[roi.vertices] = i
-        ctab.append([int(x * 255) for x in cmap(value / max_val)[:4]] + [i])
-    ctab_lh = np.array(ctab_lh)
-    ctab_rh = np.array(ctab_rh)
-    brain.add_annotation(
-        [(labels_lh, ctab_lh), (labels_rh, ctab_rh)], borders=False, alpha=alpha
-    )
+    if _compare_version(mne.__version__, "<", "1.13"):
+        # Deprecated API
+        labels_lh = np.zeros(len(brain.geo["lh"].coords), dtype=int)
+        labels_rh = np.zeros(len(brain.geo["rh"].coords), dtype=int)
+        ctab_lh = list()
+        ctab_rh = list()
+        for i, (roi, value) in enumerate(zip(rois, values), 1):
+            if roi.hemi == "lh":
+                labels = labels_lh
+                ctab = ctab_lh
+            else:
+                labels = labels_rh
+                ctab = ctab_rh
+            labels[roi.vertices] = i
+            ctab.append([int(x * 255) for x in cmap(value / max_val)[:4]] + [i])
+        ctab_lh = np.array(ctab_lh)
+        ctab_rh = np.array(ctab_rh)
+        brain.add_annotation(
+            [(labels_lh, ctab_lh), (labels_rh, ctab_rh)], borders=False, alpha=alpha
+        )
+    else:
+        # Modern API
+        labels = list()
+        for val, roi in zip(values, rois):
+            label = roi.copy()
+            label.color = cmap(val / max_val)
+            labels.append(label)
+        brain.add_annotation(labels, borders=False, alpha=alpha)
     return brain
