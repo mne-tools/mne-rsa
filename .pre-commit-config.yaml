@@ -1,7 +1,7 @@
 repos:
   # Ruff mne-rsa
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.16.0
+    rev: v0.16.1
     hooks:
       - id: ruff
         name: ruff-lint
@@ -21,7 +21,7 @@ repos:
 
   # rstcheck
   - repo: https://github.com/rstcheck/rstcheck.git
-    rev: v6.2.5
+    rev: v6.3.0
     hooks:
       - id: rstcheck
         additional_dependencies:
