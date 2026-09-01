@@ -1,0 +1,12 @@
+﻿mne_rsa.rsa_array
+=================
+
+.. currentmodule:: mne_rsa
+
+.. autofunction:: rsa_array
+
+.. include:: mne_rsa.rsa_array.examples
+
+.. raw:: html
+
+    <div style='clear:both'></div>
