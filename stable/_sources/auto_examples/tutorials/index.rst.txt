@@ -1,0 +1,83 @@
+
+
+.. _sphx_glr_auto_examples_tutorials:
+
+Tutorials
+---------
+
+These three tutorials provide an in-depth introduction to representational similarity analysis (RSA) on MEG data.
+Together, they cover a complete RSA pipeline, starting with sensor-level analysis, then source-level analysis and finally group-level statistics.
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbnails">
+
+.. thumbnail-parent-div-open
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="We will explore how representational similarity analysis (RSA) can be used to study the neural representational code within visual cortex. We will start with performing RSA on the sensor level data, followed by source level and finally we will perform group level statistical analysis. Along the way, we will encounter many of the functions and classes offered by MNE-RSA, which will always be presented in the form of links to the api_documentation which you are encouraged to explore.">
+
+.. only:: html
+
+  .. image:: /auto_examples/tutorials/images/thumb/sphx_glr_01_sensor_level_tutorial_thumb.png
+    :alt:
+
+  :doc:`/auto_examples/tutorials/01_sensor_level_tutorial`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Tutorial part 1: RSA on sensor-level MEG data</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="In this tutorial, we will perform source-level RSA analysis on MEG data.">
+
+.. only:: html
+
+  .. image:: /auto_examples/tutorials/images/thumb/sphx_glr_02_source_level_tutorial_thumb.png
+    :alt:
+
+  :doc:`/auto_examples/tutorials/02_source_level_tutorial`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Tutorial part 2: RSA on source-level MEG data</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="In this tutorial, we&#x27;ll dive into cluster-based permutation testing for group-level statistical analysis.">
+
+.. only:: html
+
+  .. image:: /auto_examples/tutorials/images/thumb/sphx_glr_03_statistics_tutorial_thumb.png
+    :alt:
+
+  :doc:`/auto_examples/tutorials/03_statistics_tutorial`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Tutorial part 3: statistical analysis of group-level RSA results</div>
+    </div>
+
+
+.. thumbnail-parent-div-close
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/tutorials/01_sensor_level_tutorial
+   /auto_examples/tutorials/02_source_level_tutorial
+   /auto_examples/tutorials/03_statistics_tutorial
+

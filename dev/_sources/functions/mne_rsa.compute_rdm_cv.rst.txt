@@ -1,0 +1,12 @@
+﻿mne_rsa.compute_rdm_cv
+======================
+
+.. currentmodule:: mne_rsa
+
+.. autofunction:: compute_rdm_cv
+
+.. include:: mne_rsa.compute_rdm_cv.examples
+
+.. raw:: html
+
+    <div style='clear:both'></div>

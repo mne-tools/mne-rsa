@@ -1,0 +1,100 @@
+
+
+.. _sphx_glr_auto_examples_source_level:
+
+Source-Level RSA
+----------------
+
+These examples showcase how to perform RSA on source-level data.
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbnails">
+
+.. thumbnail-parent-div-open
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to perform representational similarity analysis (RSA) on volumetric fMRI data, using a searchlight approach.">
+
+.. only:: html
+
+  .. image:: /auto_examples/source_level/images/thumb/sphx_glr_plot_nifti_thumb.png
+    :alt:
+
+  :doc:`/auto_examples/source_level/plot_nifti`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Source-level RSA using a searchlight on fMRI data</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="In this example, we use anatomical labels as Regions Of Interest (ROIs). Rather than using a searchlight, we compute RDMs for each ROI and then compute RSA with a single model RDM.">
+
+.. only:: html
+
+  .. image:: /auto_examples/source_level/images/thumb/sphx_glr_plot_rsa_roi_thumb.png
+    :alt:
+
+  :doc:`/auto_examples/source_level/plot_rsa_roi`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Source-level RSA using ROI's</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to perform representational similarity analysis (RSA) on source localized MEG data, using a searchlight approach.">
+
+.. only:: html
+
+  .. image:: /auto_examples/source_level/images/thumb/sphx_glr_plot_surface_thumb.png
+    :alt:
+
+  :doc:`/auto_examples/source_level/plot_surface`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Source-level RSA using a searchlight on surface data</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to perform representational similarity analysis (RSA) on volumetric source localized MEG data, using a searchlight approach.">
+
+.. only:: html
+
+  .. image:: /auto_examples/source_level/images/thumb/sphx_glr_plot_volume_thumb.png
+    :alt:
+
+  :doc:`/auto_examples/source_level/plot_volume`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Source-level RSA using a searchlight on volumetric data</div>
+    </div>
+
+
+.. thumbnail-parent-div-close
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/source_level/plot_nifti
+   /auto_examples/source_level/plot_rsa_roi
+   /auto_examples/source_level/plot_surface
+   /auto_examples/source_level/plot_volume
+
