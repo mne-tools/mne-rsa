@@ -1,0 +1,567 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" data-theme="auto">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>mne_rsa.folds &#8212; mne-rsa 0.10 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "auto";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "auto";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=ac14934e"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/mne_rsa/folds';</script>
+    <link rel="canonical" href="https://mne.tools/mne-rsa/_modules/mne_rsa/folds.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.10" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="auto">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">mne-rsa 0.10 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../auto_examples/tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../auto_examples/index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/mne-tools/mne-rsa" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../auto_examples/tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../auto_examples/index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/mne-tools/mne-rsa" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none"></div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for mne_rsa.folds</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Functions concerning the creation of cross-validation folds.</span>
+
+<span class="sd">Authors</span>
+<span class="sd">-------</span>
+<span class="sd">Marijn van Vliet &lt;marijn.vanvliet@aalto.fi&gt;</span>
+<span class="sd">Yuan-Fang Zhao &lt;distancejay@gmail.com&gt;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mne.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">logger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">StratifiedKFold</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">OneHotEncoder</span>
+
+
+<div class="viewcode-block" id="create_folds">
+<a class="viewcode-back" href="../../functions/mne_rsa.create_folds.html#mne_rsa.create_folds">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_folds</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_folds</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Group individual items into folds suitable for cross-validation.</span>
+
+<span class="sd">    The ``y`` list should contain an integer label for each item in ``X``. Repetitions</span>
+<span class="sd">    of the same item have the same integer label. Repeated items are distributed evenly</span>
+<span class="sd">    across the folds, and averaged within a fold.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X : ndarray, shape (n_items, ...)</span>
+<span class="sd">        For each item, all the features. The first dimension are the items and all other</span>
+<span class="sd">        dimensions will be flattened and treated as features.</span>
+<span class="sd">    y : ndarray of int, shape (n_items, [n_classes]) | None</span>
+<span class="sd">        For each item, a number indicating the class to which the item belongs.</span>
+<span class="sd">        Alternatively, for each item, a one-hot encoded row vector incidating the class</span>
+<span class="sd">        to which the item belongs. When ``None``, each item is assumed to belong to a</span>
+<span class="sd">        different class. Defaults to ``None``.</span>
+<span class="sd">    n_folds : int | sklearn.BaseCrossValidator | None</span>
+<span class="sd">        Number of cross-validation folds to use when computing the distance metric.</span>
+<span class="sd">        Folds are created based on the ``y`` parameter. Specify ``None`` to use the</span>
+<span class="sd">        maximum number of folds possible, given the data. Alternatively, you can pass a</span>
+<span class="sd">        Scikit-Learn cross validator object (e.g. ``sklearn.model_selection.KFold``) to</span>
+<span class="sd">        assert fine-grained control over how folds are created. Defaults to ``None``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    folds : ndarray, shape (n_folds, n_items, ...)</span>
+<span class="sd">        The folded data.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">y</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># No folding</span>
+        <span class="k">return</span> <span class="n">X</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;The length of y (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="si">}</span><span class="s2">) does not match the number of items (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="si">}</span><span class="s2">).&quot;</span>
+        <span class="p">)</span>
+
+    <span class="n">y_one_hot</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">_convert_to_one_hot</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">n_items</span> <span class="o">=</span> <span class="n">y_one_hot</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">n_folds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Set n_folds to maximum value</span>
+        <span class="n">n_folds</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">//</span> <span class="n">n_items</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Automatic dermination of folds: </span><span class="si">{</span><span class="n">n_folds</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot; (no cross-validation)&quot;</span>
+            <span class="k">if</span> <span class="n">n_folds</span> <span class="o">==</span> <span class="mi">1</span>
+            <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">n_folds</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># Making one fold is easy</span>
+        <span class="n">folds</span> <span class="o">=</span> <span class="p">[</span><span class="n">_compute_item_means</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y_one_hot</span><span class="p">)]</span>
+    <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">n_folds</span><span class="p">,</span> <span class="s2">&quot;split&quot;</span><span class="p">):</span>
+        <span class="c1"># Scikit-learn object passed as `n_folds`</span>
+        <span class="n">folds</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">fold</span> <span class="ow">in</span> <span class="n">n_folds</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+            <span class="n">folds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_compute_item_means</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y_one_hot</span><span class="p">,</span> <span class="n">fold</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Use StratifiedKFold as folding strategy</span>
+        <span class="n">folds</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">fold</span> <span class="ow">in</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_folds</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+            <span class="n">folds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_compute_item_means</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y_one_hot</span><span class="p">,</span> <span class="n">fold</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">folds</span><span class="p">)</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_convert_to_one_hot</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert the labels in y to one-hot encoding.&quot;&quot;&quot;</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">y</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">y</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># y needs to be converted</span>
+        <span class="n">enc</span> <span class="o">=</span> <span class="n">OneHotEncoder</span><span class="p">(</span><span class="n">categories</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">enc</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">toarray</span><span class="p">(),</span> <span class="n">y</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">y</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Wrong number of dimensions for `y`.&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># y is probably already in one-hot form. We&#39;re not going to test this</span>
+        <span class="c1"># explicitly, as it would take too long.</span>
+        <span class="k">return</span> <span class="n">y</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">y</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_compute_item_means</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y_one_hot</span><span class="p">,</span> <span class="n">fold</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">)):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the mean data for each item inside a fold.&quot;&quot;&quot;</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">fold</span><span class="p">]</span>
+    <span class="n">y_one_hot</span> <span class="o">=</span> <span class="n">y_one_hot</span><span class="p">[</span><span class="n">fold</span><span class="p">]</span>
+    <span class="n">n_per_class</span> <span class="o">=</span> <span class="n">y_one_hot</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># The following computations go much faster when X is flattened.</span>
+    <span class="n">orig_shape</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">X_flat</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># Compute the mean for each item using matrix multiplication</span>
+    <span class="n">means</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_one_hot</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">X_flat</span><span class="p">)</span> <span class="o">/</span> <span class="n">n_per_class</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+
+    <span class="c1"># Undo the flattening of X</span>
+    <span class="k">return</span> <span class="n">means</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">means</span><span class="p">),)</span> <span class="o">+</span> <span class="n">orig_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_match_order</span><span class="p">(</span>
+    <span class="n">len_X</span><span class="p">,</span> <span class="n">len_rdm_model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">labels_X</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">labels_rdm_model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">var</span><span class="o">=</span><span class="s2">&quot;labels_X&quot;</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Find ordering y to re-order labels_X to match labels_rdm_model.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">labels_X</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">labels_rdm_model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;When using `labels_rdm_model`, you must also specify `</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s2">`.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># use the shortcut of not re-ordering anything</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels_X</span><span class="p">)</span> <span class="o">!=</span> <span class="n">len_X</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;The number of labels in `</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s2">` does not match the number of items &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;in the data (</span><span class="si">{</span><span class="n">len_X</span><span class="si">}</span><span class="s2">).&quot;</span>
+        <span class="p">)</span>
+
+    <span class="c1"># If we don&#39;t need to align with labels_rdm_model, we can take a shortcut.</span>
+    <span class="k">if</span> <span class="n">labels_X</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">len_rdm_model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">mapping</span> <span class="o">=</span> <span class="p">{</span><span class="n">label</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">labels_X</span><span class="p">)))}</span>
+        <span class="n">y_one_hot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">len_X</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">mapping</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;int&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">labels_X</span><span class="p">):</span>
+            <span class="n">y_one_hot</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">mapping</span><span class="p">[</span><span class="n">label</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">y_one_hot</span>
+
+    <span class="c1"># We need to align with labels_rdm_model.</span>
+    <span class="k">if</span> <span class="n">labels_rdm_model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">labels_rdm_model</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">labels_X</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels_rdm_model</span><span class="p">)</span> <span class="o">!=</span> <span class="n">len_rdm_model</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;The number of unique labels in `</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s2">` does not match the number of &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;items in the model RDM.&quot;</span>
+            <span class="p">)</span>
+    <span class="c1"># labels_X = np.asarray(labels_X)</span>
+    <span class="c1"># labels_rdm_model = np.asarray(labels_rdm_model)</span>
+
+    <span class="c1"># Perform sanity checks. It&#39;s easy to get these labels wrong.</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels_rdm_model</span><span class="p">)</span> <span class="o">!=</span> <span class="n">len_rdm_model</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;The number of labels in `labels_rdm_model` does not match the number of &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;items in the model RDM (</span><span class="si">{</span><span class="n">len_rdm_model</span><span class="si">}</span><span class="s2">).&quot;</span>
+        <span class="p">)</span>
+
+    <span class="n">unique_labels_rdm_model</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">labels_rdm_model</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">unique_labels_rdm_model</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels_rdm_model</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Not all labels in `labels_rdm_model` are unique.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">setdiff1d</span><span class="p">(</span><span class="n">labels_X</span><span class="p">,</span> <span class="n">labels_rdm_model</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Some labels in `</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s2">` are not present in `labels_rdm_model`.&quot;</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">labels_rdm_model</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">labels_X</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Some labels in `labels_rdm_model` are not present in `</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s2">`.&quot;</span>
+        <span class="p">)</span>
+    <span class="n">order</span> <span class="o">=</span> <span class="p">{</span><span class="n">label</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">labels_rdm_model</span><span class="p">)}</span>
+    <span class="n">y_one_hot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">len_X</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">order</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;int&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">labels_X</span><span class="p">):</span>
+        <span class="n">y_one_hot</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">order</span><span class="p">[</span><span class="n">label</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">y_one_hot</span>
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Marijn van Vliet, Aalto University.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
