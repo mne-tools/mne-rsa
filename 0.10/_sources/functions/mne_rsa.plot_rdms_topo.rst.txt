@@ -1,0 +1,12 @@
+﻿mne_rsa.plot_rdms_topo
+======================
+
+.. currentmodule:: mne_rsa
+
+.. autofunction:: plot_rdms_topo
+
+.. include:: mne_rsa.plot_rdms_topo.examples
+
+.. raw:: html
+
+    <div style='clear:both'></div>
