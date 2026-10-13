@@ -1,0 +1,12 @@
+﻿mne_rsa.rsa_stcs
+================
+
+.. currentmodule:: mne_rsa
+
+.. autofunction:: rsa_stcs
+
+.. include:: mne_rsa.rsa_stcs.examples
+
+.. raw:: html
+
+    <div style='clear:both'></div>

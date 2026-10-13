@@ -1,0 +1,83 @@
+
+
+.. _sphx_glr_auto_examples_core:
+
+Core RSA functionality
+----------------------
+
+These examples cover the basics of creating representational dissimilarity matrices (RDMs) and performing representational similarity analysis (RSA) between them.
+
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbnails">
+
+.. thumbnail-parent-div-open
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example shows how to create RDMs from arbitrary data. A common use case for this is to construct a &quot;model&quot; RDM to RSA against the brain data. In this example, we will create a RDM based on the length of the words shown during an EEG experiment.">
+
+.. only:: html
+
+  .. image:: /auto_examples/core/images/thumb/sphx_glr_plot_construct_model_rdm_thumb.png
+    :alt:
+
+  :doc:`/auto_examples/core/plot_construct_model_rdm`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Construct a model RDM</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to perform cross-validation when computing dissimilarity matrices (RDMs). When the data has repeated measurements of the same stimulus type, cross-validation can be used to provide much more robust distance estimates between stimulus types. Repeated measurements can for example be actual repetitions of the same stimulus within the same recording, or recordings on multiple volunteers with the same stimuli.">
+
+.. only:: html
+
+  .. image:: /auto_examples/core/images/thumb/sphx_glr_plot_cross_validation_thumb.png
+    :alt:
+
+  :doc:`/auto_examples/core/plot_cross_validation`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Using cross-validation when computing RDMs</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example showcases the most basic version of RSA: computing the similarity between two RDMs. Then we continue with computing RSA between many RDMs efficiently.">
+
+.. only:: html
+
+  .. image:: /auto_examples/core/images/thumb/sphx_glr_plot_rsa_between_rdms_thumb.png
+    :alt:
+
+  :doc:`/auto_examples/core/plot_rsa_between_rdms`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Compute RSA between RDMs</div>
+    </div>
+
+
+.. thumbnail-parent-div-close
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/core/plot_construct_model_rdm
+   /auto_examples/core/plot_cross_validation
+   /auto_examples/core/plot_rsa_between_rdms
+
