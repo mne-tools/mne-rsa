@@ -1,0 +1,17 @@
+[
+    {
+        "name": "1.1 (dev)",
+        "version": "dev",
+        "url": "https://mne.tools/mne-rsa/dev/"
+    },
+    {
+        "name": "1.0 (stable)",
+        "version": "stable",
+        "url": "https://mne.tools/mne-rsa/stable/"
+    },
+    {
+        "name": "0.10",
+        "version": "0.10",
+        "url": "https://mne.tools/mne-rsa/0.10/"
+    }
+]

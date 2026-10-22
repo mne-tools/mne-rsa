@@ -1,0 +1,590 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" data-theme="auto">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>API Documentation &#8212; mne-rsa 0.10 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "auto";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "auto";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="_static/documentation_options.js?v=ac14934e"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api';</script>
+    <link rel="canonical" href="https://mne.tools/mne-rsa/api.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="mne_rsa.rsa_epochs" href="functions/mne_rsa.rsa_epochs.html" />
+    <link rel="prev" title="Source-level RSA using a searchlight on volumetric data" href="auto_examples/source_level/plot_volume.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.10" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="auto">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">mne-rsa 0.10 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="auto_examples/tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="auto_examples/index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/mne-tools/mne-rsa" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="auto_examples/tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="auto_examples/index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/mne-tools/mne-rsa" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="functions/mne_rsa.rsa_epochs.html">mne_rsa.rsa_epochs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/mne_rsa.rsa_evokeds.html">mne_rsa.rsa_evokeds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/mne_rsa.rsa_stcs.html">mne_rsa.rsa_stcs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/mne_rsa.rsa_nifti.html">mne_rsa.rsa_nifti</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="functions/mne_rsa.compute_rdm.html">mne_rsa.compute_rdm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/mne_rsa.compute_rdm_cv.html">mne_rsa.compute_rdm_cv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/mne_rsa.rdm_epochs.html">mne_rsa.rdm_epochs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/mne_rsa.rdm_stcs.html">mne_rsa.rdm_stcs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/mne_rsa.rdm_nifti.html">mne_rsa.rdm_nifti</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="functions/mne_rsa.rdm_array.html">mne_rsa.rdm_array</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="functions/mne_rsa.rsa.html">mne_rsa.rsa</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/mne_rsa.rsa_array.html">mne_rsa.rsa_array</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/mne_rsa.rsa_gen.html">mne_rsa.rsa_gen</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="functions/mne_rsa.searchlight.html">mne_rsa.searchlight</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="functions/mne_rsa.plot_rdms.html">mne_rsa.plot_rdms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/mne_rsa.plot_rdms_topo.html">mne_rsa.plot_rdms_topo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/mne_rsa.plot_roi_map.html">mne_rsa.plot_roi_map</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="functions/mne_rsa.create_folds.html">mne_rsa.create_folds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/mne_rsa.squareform.html">mne_rsa.squareform</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none"></div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="api-documentation">
+<span id="id1"></span><h1>API Documentation<a class="headerlink" href="#api-documentation" title="Link to this heading">#</a></h1>
+<section id="main-mne-rsa-functions">
+<h2>Main MNE-RSA functions<a class="headerlink" href="#main-mne-rsa-functions" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/mne_rsa.rsa_epochs.html#mne_rsa.rsa_epochs" title="mne_rsa.rsa_epochs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rsa_epochs</span></code></a>(epochs, rdm_model[, noise_cov, ...])</p></td>
+<td><p>Perform RSA in a searchlight pattern on epochs.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/mne_rsa.rsa_evokeds.html#mne_rsa.rsa_evokeds" title="mne_rsa.rsa_evokeds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rsa_evokeds</span></code></a>(evokeds, rdm_model[, noise_cov, ...])</p></td>
+<td><p>Perform RSA in a searchlight pattern on evokeds.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/mne_rsa.rsa_stcs.html#mne_rsa.rsa_stcs" title="mne_rsa.rsa_stcs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rsa_stcs</span></code></a>(stcs, rdm_model[, src, ...])</p></td>
+<td><p>Perform RSA in a searchlight pattern on MNE-Python source estimates.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/mne_rsa.rsa_nifti.html#mne_rsa.rsa_nifti" title="mne_rsa.rsa_nifti"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rsa_nifti</span></code></a>(image, rdm_model[, ...])</p></td>
+<td><p>Perform RSA in a searchlight pattern on Nibabel Nifti-like images.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="constructing-rdms">
+<h2>Constructing RDMs<a class="headerlink" href="#constructing-rdms" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/mne_rsa.compute_rdm.html#mne_rsa.compute_rdm" title="mne_rsa.compute_rdm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_rdm</span></code></a>(data[, metric])</p></td>
+<td><p>Compute a dissimilarity matrix (RDM).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/mne_rsa.compute_rdm_cv.html#mne_rsa.compute_rdm_cv" title="mne_rsa.compute_rdm_cv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_rdm_cv</span></code></a>(folds[, metric])</p></td>
+<td><p>Compute a dissimilarity matrix (RDM) using cross-validation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/mne_rsa.rdm_epochs.html#mne_rsa.rdm_epochs" title="mne_rsa.rdm_epochs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rdm_epochs</span></code></a>(epochs[, noise_cov, ...])</p></td>
+<td><p>Generate RDMs in a searchlight pattern on epochs.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/mne_rsa.rdm_stcs.html#mne_rsa.rdm_stcs" title="mne_rsa.rdm_stcs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rdm_stcs</span></code></a>(stcs[, src, spatial_radius, ...])</p></td>
+<td><p>Generate RDMs in a searchlight pattern on MNE-Python source estimates.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/mne_rsa.rdm_nifti.html#mne_rsa.rdm_nifti" title="mne_rsa.rdm_nifti"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rdm_nifti</span></code></a>(image[, spatial_radius, ...])</p></td>
+<td><p>Generate RDMs in a searchlight pattern on Nibabel Nifty-like images.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/mne_rsa.rdm_array.html#mne_rsa.rdm_array" title="mne_rsa.rdm_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rdm_array</span></code></a>(X[, patches, dist_metric, ...])</p></td>
+<td><p>Generate RDMs from an array of data, possibly in a searchlight pattern.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="performing-rsa">
+<h2>Performing RSA<a class="headerlink" href="#performing-rsa" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/mne_rsa.rsa.html#mne_rsa.rsa" title="mne_rsa.rsa"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rsa</span></code></a>(rdm_data, rdm_model[, metric, ...])</p></td>
+<td><p>Perform RSA between data and model RDMs.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/mne_rsa.rsa_array.html#mne_rsa.rsa_array" title="mne_rsa.rsa_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rsa_array</span></code></a>(X, rdm_model[, patches, ...])</p></td>
+<td><p>Perform RSA on an array of data, possibly in a searchlight pattern.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/mne_rsa.rsa_gen.html#mne_rsa.rsa_gen" title="mne_rsa.rsa_gen"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rsa_gen</span></code></a>(rdm_data_gen, rdm_model[, metric, ...])</p></td>
+<td><p>Generate RSA values between data and model RDMs.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="making-searchlight-patches">
+<h2>Making searchlight patches<a class="headerlink" href="#making-searchlight-patches" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/mne_rsa.searchlight.html#mne_rsa.searchlight" title="mne_rsa.searchlight"><code class="xref py py-obj docutils literal notranslate"><span class="pre">searchlight</span></code></a>(shape[, dist, spatial_radius, ...])</p></td>
+<td><p>Generate indices for searchlight patches.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="visualization">
+<h2>Visualization<a class="headerlink" href="#visualization" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/mne_rsa.plot_rdms.html#mne_rsa.plot_rdms" title="mne_rsa.plot_rdms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_rdms</span></code></a>(rdms[, names, items, n_rows, ...])</p></td>
+<td><p>Plot one or more RDMs.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/mne_rsa.plot_rdms_topo.html#mne_rsa.plot_rdms_topo" title="mne_rsa.plot_rdms_topo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_rdms_topo</span></code></a>(rdms, info[, time, layout, ...])</p></td>
+<td><p>Plot RDMs on 2D sensor topography.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/mne_rsa.plot_roi_map.html#mne_rsa.plot_roi_map" title="mne_rsa.plot_roi_map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_roi_map</span></code></a>(values, rois, subject, subjects_dir)</p></td>
+<td><p>Plot ROI values on a FreeSurfer brain.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="utility-functions">
+<h2>Utility functions<a class="headerlink" href="#utility-functions" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/mne_rsa.create_folds.html#mne_rsa.create_folds" title="mne_rsa.create_folds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_folds</span></code></a>(X[, y, n_folds])</p></td>
+<td><p>Group individual items into folds suitable for cross-validation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/mne_rsa.squareform.html#mne_rsa.squareform" title="mne_rsa.squareform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">squareform</span></code></a>(X[, force, checks])</p></td>
+<td><p>Convert a vector-form distance vector to a square-form distance matrix, and vice-versa.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="auto_examples/source_level/plot_volume.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Source-level RSA using a searchlight on volumetric data</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="functions/mne_rsa.rsa_epochs.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">mne_rsa.rsa_epochs</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#main-mne-rsa-functions">Main MNE-RSA functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#constructing-rdms">Constructing RDMs</a><ul class="visible nav section-nav flex-column">
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#performing-rsa">Performing RSA</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#making-searchlight-patches">Making searchlight patches</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualization">Visualization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#utility-functions">Utility functions</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Marijn van Vliet, Aalto University.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

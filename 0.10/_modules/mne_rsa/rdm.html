@@ -1,0 +1,730 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" data-theme="auto">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>mne_rsa.rdm &#8212; mne-rsa 0.10 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "auto";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "auto";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=ac14934e"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/mne_rsa/rdm';</script>
+    <link rel="canonical" href="https://mne.tools/mne-rsa/_modules/mne_rsa/rdm.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.10" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="auto">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">mne-rsa 0.10 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../auto_examples/tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../auto_examples/index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/mne-tools/mne-rsa" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../auto_examples/tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../auto_examples/index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/mne-tools/mne-rsa" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none"></div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for mne_rsa.rdm</h1><div class="highlight"><pre>
+<span></span><span class="c1"># encoding: utf-8</span>
+<span class="sd">&quot;&quot;&quot;Methods to compute representational dissimilarity matrices (RDMs).</span>
+
+<span class="sd">Authors</span>
+<span class="sd">-------</span>
+<span class="sd">Marijn van Vliet &lt;marijn.vanvliet@aalto.fi&gt;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">joblib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.spatial</span><span class="w"> </span><span class="kn">import</span> <span class="n">distance</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.folds</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_folds</span><span class="p">,</span> <span class="n">_match_order</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.searchlight</span><span class="w"> </span><span class="kn">import</span> <span class="n">searchlight</span>
+
+
+<div class="viewcode-block" id="compute_rdm">
+<a class="viewcode-back" href="../../functions/mne_rsa.compute_rdm.html#mne_rsa.compute_rdm">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_rdm</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;correlation&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute a dissimilarity matrix (RDM).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : ndarray, shape (n_items, ...)</span>
+<span class="sd">        For each item, all the features. The first dimension are the items and all other</span>
+<span class="sd">        dimensions will be flattened and treated as features.</span>
+<span class="sd">    metric : str | function</span>
+<span class="sd">        The distance metric to use to compute the RDM. Can be any metric supported by</span>
+<span class="sd">        :func:`scipy.spatial.distance.pdist`. When a function is specified, it needs to</span>
+<span class="sd">        take in two vectors and output a single number. See also the ``dist_params``</span>
+<span class="sd">        parameter to specify and additional parameter for the distance function.</span>
+<span class="sd">        Defaults to &#39;correlation&#39;.</span>
+<span class="sd">    **kwargs : dict, optional</span>
+<span class="sd">        Extra arguments for the distance metric. Refer to :mod:`scipy.spatial.distance`</span>
+<span class="sd">        for a list of all other metrics and their arguments.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    rdm : ndarray, shape (n_classes * n_classes-1,)</span>
+<span class="sd">        The RDM, in condensed form. See :func:`scipy.spatial.distance.squareform`.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    compute_rdm_cv</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">n_items</span><span class="p">,</span> <span class="n">n_features</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+
+    <span class="c1"># Be careful with certain metrics</span>
+    <span class="k">if</span> <span class="n">n_features</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">metric</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;correlation&quot;</span><span class="p">,</span> <span class="s2">&quot;cosine&quot;</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;There is only a single feature, so &quot;</span>
+            <span class="s2">&quot;&#39;correlation&#39; and &#39;cosine&#39; can not be &quot;</span>
+            <span class="s2">&quot;used as RDM metric. Consider using &#39;sqeuclidean&#39; &quot;</span>
+            <span class="s2">&quot;instead.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">distance</span><span class="o">.</span><span class="n">pdist</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">metric</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="compute_rdm_cv">
+<a class="viewcode-back" href="../../functions/mne_rsa.compute_rdm_cv.html#mne_rsa.compute_rdm_cv">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_rdm_cv</span><span class="p">(</span><span class="n">folds</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;correlation&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute a dissimilarity matrix (RDM) using cross-validation.</span>
+
+<span class="sd">    The distance computation is performed from the average of all-but-one &quot;training&quot;</span>
+<span class="sd">    folds to the remaining &quot;test&quot; fold. This is repeated with each fold acting as the</span>
+<span class="sd">    &quot;test&quot; fold once. The resulting distances are averaged and the result used in the</span>
+<span class="sd">    final RDM.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    folds : ndarray, shape (n_folds, n_items, ...)</span>
+<span class="sd">        For each item, all the features. The first dimension are the folds used for</span>
+<span class="sd">        cross-validation, items are along the second dimension, and all other dimensions</span>
+<span class="sd">        will be flattened and treated as features.</span>
+<span class="sd">    metric : str | function</span>
+<span class="sd">        The distance metric to use to compute the RDM. Can be any metric supported by</span>
+<span class="sd">        :func:`scipy.spatial.distance.pdist`. When a function is specified, it needs to</span>
+<span class="sd">        take in two vectors and output a single number. See also the ``dist_params``</span>
+<span class="sd">        parameter to specify and additional parameter for the distance function.</span>
+<span class="sd">        Defaults to &#39;correlation&#39;.</span>
+<span class="sd">    **kwargs : dict, optional</span>
+<span class="sd">        Extra arguments for the distance metric. Refer to :mod:`scipy.spatial.distance`</span>
+<span class="sd">        for a list of all other metrics and their arguments.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    rdm : ndarray, shape (n_classes * n_classes-1,)</span>
+<span class="sd">        The cross-validated RDM, in condensed form.</span>
+<span class="sd">        See :func:`scipy.spatial.distance.squareform`.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    compute_rdm</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">folds</span><span class="p">,</span> <span class="p">(</span><span class="n">folds</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">folds</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">n_folds</span><span class="p">,</span> <span class="n">n_items</span><span class="p">,</span> <span class="n">n_features</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
+
+    <span class="c1"># Be careful with certain metrics</span>
+    <span class="k">if</span> <span class="n">n_features</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">metric</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;correlation&quot;</span><span class="p">,</span> <span class="s2">&quot;cosine&quot;</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;There is only a single feature, so &quot;</span>
+            <span class="s2">&quot;&#39;correlataion&#39; and &#39;cosine&#39; can not be &quot;</span>
+            <span class="s2">&quot;used as RDM metric. Consider using &#39;sqeuclidean&#39; &quot;</span>
+            <span class="s2">&quot;instead.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="n">rdm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_items</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_items</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">X_mean</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># Do cross-validation</span>
+    <span class="k">for</span> <span class="n">test_fold</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_folds</span><span class="p">):</span>
+        <span class="n">X_test</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">test_fold</span><span class="p">]</span>
+        <span class="n">X_train</span> <span class="o">=</span> <span class="n">X_mean</span> <span class="o">-</span> <span class="p">(</span><span class="n">X_mean</span> <span class="o">-</span> <span class="n">X_test</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">n_folds</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">dist</span> <span class="o">=</span> <span class="n">distance</span><span class="o">.</span><span class="n">cdist</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">metric</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">rdm</span> <span class="o">+=</span> <span class="n">dist</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">triu_indices_from</span><span class="p">(</span><span class="n">dist</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span>
+
+    <span class="k">return</span> <span class="n">rdm</span> <span class="o">/</span> <span class="n">n_folds</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_ensure_condensed</span><span class="p">(</span><span class="n">rdm</span><span class="p">,</span> <span class="n">var_name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a RDM to condensed form if needed.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rdm</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">_ensure_condensed</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">var_name</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">rdm</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rdm</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+            <span class="s2">&quot;A single RDM should be a NumPy array. &quot;</span>
+            <span class="s2">&quot;Multiple RDMs should be a list of NumPy arrays.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">rdm</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">rdm</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">rdm</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;Invalid dimensions for &quot;</span><span class="si">{</span><span class="n">var_name</span><span class="si">}</span><span class="s1">&quot; &#39;</span>
+                <span class="s2">&quot;(</span><span class="si">{rdm.shape}</span><span class="s2">). The RDM should either be a &quot;</span>
+                <span class="s2">&quot;square matrix, or a one dimensional array when &quot;</span>
+                <span class="s2">&quot;in condensed form.&quot;</span>
+            <span class="p">)</span>
+        <span class="n">rdm</span> <span class="o">=</span> <span class="n">distance</span><span class="o">.</span><span class="n">squareform</span><span class="p">(</span><span class="n">rdm</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">rdm</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;Invalid dimensions for &quot;</span><span class="si">{</span><span class="n">var_name</span><span class="si">}</span><span class="s1">&quot; (</span><span class="si">{</span><span class="n">rdm</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">). &#39;</span>
+            <span class="s2">&quot;The RDM should either be a square matrix, or a one &quot;</span>
+            <span class="s2">&quot;dimensional array when in condensed form.&quot;</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">rdm</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_n_items_from_rdm</span><span class="p">(</span><span class="n">rdm</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the number of items, given a RDM.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">rdm</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">rdm</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">rdm</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">distance</span><span class="o">.</span><span class="n">squareform</span><span class="p">(</span><span class="n">rdm</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Wrong number of dimensions for RDM (</span><span class="si">{</span><span class="n">rdm</span><span class="o">.</span><span class="n">ndim</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">pick_rdm</span><span class="p">(</span><span class="n">rdm</span><span class="p">,</span> <span class="n">sel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Select items from an RDM.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    rdm : ndarray, shape (n, n) | (n * (n - 1) // 2,)</span>
+<span class="sd">        The RDM to pick items from.</span>
+<span class="sd">    sel : int | list of int | boolean mask | slice</span>
+<span class="sd">        The items to pick. These items will be selected from both rows and columns of</span>
+<span class="sd">        the RDM.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    rdm : ndarray, shape (n, n) | (n * (n - 1) // 2,)</span>
+<span class="sd">        A new RDM with only the selected items. If the original RDM was in condensed</span>
+<span class="sd">        form, the returned RDM will be as well.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isscalar</span><span class="p">(</span><span class="n">sel</span><span class="p">):</span>
+        <span class="n">sel</span> <span class="o">=</span> <span class="p">[</span><span class="n">sel</span><span class="p">]</span>  <span class="c1"># to avoid dropping a dimension</span>
+    <span class="k">if</span> <span class="n">rdm</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">rdm</span><span class="p">[</span><span class="n">sel</span><span class="p">,</span> <span class="p">:][:,</span> <span class="n">sel</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">rdm</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">distance</span><span class="o">.</span><span class="n">squareform</span><span class="p">(</span><span class="n">distance</span><span class="o">.</span><span class="n">squareform</span><span class="p">(</span><span class="n">rdm</span><span class="p">)[</span><span class="n">sel</span><span class="p">,</span> <span class="p">:][:,</span> <span class="n">sel</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Wrong number of dimensions for RDM (</span><span class="si">{</span><span class="n">rdm</span><span class="o">.</span><span class="n">ndim</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="rdm_array">
+<a class="viewcode-back" href="../../functions/mne_rsa.rdm_array.html#mne_rsa.rdm_array">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">rdm_array</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate RDMs from an array of data, possibly in a searchlight pattern.</span>
+
+<span class="sd">    First use :class:`searchlight` to compute the searchlight patches. Then you can use</span>
+<span class="sd">    this function to compute RDMs for each searchlight patch.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X : ndarray, shape (n_items, n_series, n_times)</span>
+<span class="sd">        An array containing the data.</span>
+<span class="sd">    patches : generator of tuples | None</span>
+<span class="sd">        Searchlight patches as generated by :class:`searchlight`. If ``None``, no</span>
+<span class="sd">        searchlight is used. Defaults to ``None``.</span>
+<span class="sd">    dist_metric : str | function</span>
+<span class="sd">        The distance metric to use to compute the RDMs. Can be any metric supported by</span>
+<span class="sd">        :func:`scipy.spatial.distance.pdist`. When a function is specified, it needs to</span>
+<span class="sd">        take in two vectors and output a single number. See also the ``dist_params``</span>
+<span class="sd">        parameter to specify and additional parameter for the distance function.</span>
+<span class="sd">        Defaults to &#39;correlation&#39;.</span>
+<span class="sd">    dist_params : dict</span>
+<span class="sd">        Extra arguments for the distance metric used to compute the RDMs. Refer to</span>
+<span class="sd">        :mod:`scipy.spatial.distance` for a list of all other metrics and their</span>
+<span class="sd">        arguments. Defaults to an empty dictionary.</span>
+<span class="sd">    y : ndarray of int, shape (n_items,) | None</span>
+<span class="sd">        Deprecated, use ``labels`` instead.</span>
+<span class="sd">        For each item, a number indicating the class to which the item belongs.</span>
+<span class="sd">        Defaults to ``None``, in which case ``labels`` is used.</span>
+<span class="sd">    labels : list | None</span>
+<span class="sd">        For each element in ``X`` (=the first dimension), a label that identifies the</span>
+<span class="sd">        item to which it corresponds. Multiple elements in ``X`` may correspond to the</span>
+<span class="sd">        same item, in which case they should have the same label and will either be</span>
+<span class="sd">        averaged when computing the data RDM (``n_folds=1``) or used for</span>
+<span class="sd">        cross-validation (``n_folds&gt;1``). Labels may be of any python type that can be</span>
+<span class="sd">        compared with ``==`` (int, float, string, tuple, etc). By default (``None``),</span>
+<span class="sd">        the integers ``0:len(X)`` are used as labels.</span>
+
+<span class="sd">        .. versionadded:: 0.10</span>
+<span class="sd">    n_folds : int | sklearn.model_selection.BaseCrollValidator | None</span>
+<span class="sd">        Number of cross-validation folds to use when computing the distance metric.</span>
+<span class="sd">        Folds are created based on the ``y`` parameter. Specify ``None`` to use the</span>
+<span class="sd">        maximum number of folds possible, given the data. Alternatively, you can pass a</span>
+<span class="sd">        Scikit-Learn cross validator object (e.g. ``sklearn.model_selection.KFold``) to</span>
+<span class="sd">        assert fine-grained control over how folds are created.</span>
+<span class="sd">        Defaults to 1 (no cross-validation).</span>
+
+<span class="sd">    Yields</span>
+<span class="sd">    ------</span>
+<span class="sd">    rdm : ndarray, shape (n_patches, n_items * (n_items - 1))</span>
+<span class="sd">        A RDM (in condensed form) for each searchlight patch.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    shape : tuple of int</span>
+<span class="sd">        Multidimensional shape of the generated RDMs.</span>
+
+<span class="sd">        This is useful for re-shaping the result obtained after consuming the this</span>
+<span class="sd">        generator.</span>
+
+<span class="sd">        For a spatio-temporal searchlight:</span>
+<span class="sd">            Three elements: the number of time-series, number of time samples and length</span>
+<span class="sd">            of a consensed RDM.</span>
+<span class="sd">        For a spatial searchlight:</span>
+<span class="sd">            Two element: the number of time-series and length of a condensed RDM.</span>
+<span class="sd">        For a temporal searchlight:</span>
+<span class="sd">            Two elements: the number of time-samples and length of a condensed RDM.</span>
+<span class="sd">        For no searchlight:</span>
+<span class="sd">            One element: the length of a condensed RDM.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    rdm</span>
+<span class="sd">    rsa</span>
+<span class="sd">    searchlight</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">X</span><span class="p">,</span>
+        <span class="n">patches</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">dist_metric</span><span class="o">=</span><span class="s2">&quot;correlation&quot;</span><span class="p">,</span>
+        <span class="n">dist_params</span><span class="o">=</span><span class="nb">dict</span><span class="p">(),</span>
+        <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">n_folds</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="n">patches</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">patches</span> <span class="o">=</span> <span class="n">searchlight</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">y</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">_match_order</span><span class="p">(</span><span class="n">len_X</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">labels_X</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">var</span><span class="o">=</span><span class="s2">&quot;labels&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Create folds for cross-validated RDM metrics</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">create_folds</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">n_folds</span><span class="p">)</span>
+        <span class="c1"># The data is now folds x items x n_series x ...</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">patches</span> <span class="o">=</span> <span class="n">patches</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dist_metric</span> <span class="o">=</span> <span class="n">dist_metric</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dist_params</span> <span class="o">=</span> <span class="n">dist_params</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_cv</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span>  <span class="c1"># More than one fold present</span>
+
+        <span class="c1"># Target shape for an array that would hold all of the generated RDMs.</span>
+        <span class="n">rdm_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">triu_indices</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="n">patches</span><span class="o">.</span><span class="n">shape</span> <span class="o">+</span> <span class="p">(</span><span class="n">rdm_length</span><span class="p">,)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span> <span class="o">=</span> <span class="n">n_jobs</span>
+
+        <span class="c1"># Setup the generator that will be producing the RDMs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_generator</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+<div class="viewcode-block" id="rdm_array.__iter__">
+<a class="viewcode-back" href="../../functions/mne_rsa.rdm_array.html#mne_rsa.rdm_array.__iter__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Build a new iterator that starts from the beginning.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_iter_rdms</span><span class="p">()</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate a RDM for each patch.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_generator</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_iter_rdms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">par</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">return_as</span><span class="o">=</span><span class="s2">&quot;generator&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_cv</span><span class="p">:</span>
+            <span class="k">yield from</span> <span class="n">par</span><span class="p">(</span>
+                <span class="n">delayed</span><span class="p">(</span><span class="n">compute_rdm_cv</span><span class="p">)(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">[(</span><span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">),)</span> <span class="o">+</span> <span class="n">patch</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dist_metric</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">dist_params</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">patch</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">patches</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">yield from</span> <span class="n">par</span><span class="p">(</span>
+                <span class="n">delayed</span><span class="p">(</span><span class="n">compute_rdm</span><span class="p">)(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">patch</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dist_metric</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">dist_params</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">patch</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">patches</span>
+            <span class="p">)</span>
+
+<div class="viewcode-block" id="rdm_array.__len__">
+<a class="viewcode-back" href="../../functions/mne_rsa.rdm_array.html#mne_rsa.rdm_array.__len__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get total number of RDMs that will be generated.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">patches</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Marijn van Vliet, Aalto University.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
