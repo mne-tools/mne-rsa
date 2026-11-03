@@ -1,0 +1,751 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" data-theme="auto">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Sensor-level RSA using a searchlight &#8212; mne-rsa 0.10 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "auto";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "auto";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=ac14934e"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'auto_examples/sensor_level/plot_sensor_level';</script>
+    <link rel="canonical" href="https://mne.tools/mne-rsa/auto_examples/sensor_level/plot_sensor_level.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Plot sensor-level RDMs" href="plot_sensor_rdms.html" />
+    <link rel="prev" title="Sensor-Level RSA" href="index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.10" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="auto">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">mne-rsa 0.10 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/mne-tools/mne-rsa" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorials/index.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/mne-tools/mne-rsa" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../core/index.html">Core RSA functionality</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../core/plot_construct_model_rdm.html">Construct a model RDM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/plot_cross_validation.html">Using cross-validation when computing RDMs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/plot_rsa_between_rdms.html">Compute RSA between RDMs</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Sensor-Level RSA</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Sensor-level RSA using a searchlight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_sensor_rdms.html">Plot sensor-level RDMs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_whitening.html">Sensor-level RSA using mixed sensor types</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../source_level/index.html">Source-Level RSA</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../source_level/plot_nifti.html">Source-level RSA using a searchlight on fMRI data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../source_level/plot_rsa_roi.html">Source-level RSA using ROI’s</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../source_level/plot_surface.html">Source-level RSA using a searchlight on surface data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../source_level/plot_volume.html">Source-level RSA using a searchlight on volumetric data</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials/index.html">Tutorials</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/01_sensor_level_tutorial.html">Tutorial part 1: RSA on sensor-level MEG data</a></li>
+
+
+
+
+
+
+
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/02_source_level_tutorial.html">Tutorial part 2: RSA on source-level MEG data</a></li>
+
+
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/03_statistics_tutorial.html">Tutorial part 3: statistical analysis of group-level RSA results</a></li>
+
+
+
+
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none"></div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-auto-examples-sensor-level-plot-sensor-level-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code.</p>
+</div>
+<section class="sphx-glr-example-title" id="sensor-level-rsa-using-a-searchlight">
+<span id="sphx-glr-auto-examples-sensor-level-plot-sensor-level-py"></span><h1>Sensor-level RSA using a searchlight<a class="headerlink" href="#sensor-level-rsa-using-a-searchlight" title="Link to this heading">#</a></h1>
+<p>This example demonstrates how to perform representational similarity analysis (RSA) on
+EEG data, using a searchlight approach.</p>
+<p>In the searchlight approach, representational similarity is computed between the model
+and searchlight “patches”. A patch is defined by a seed point (e.g. sensor Pz) and
+everything within the given radius (e.g. all sensors within 4 cm. of Pz). Patches are
+created for all possible seed points (e.g. all sensors), so you can think of it as a
+“searchlight” that moves from seed point to seed point and everything that is in the
+spotlight is used in the computation.</p>
+<p>The radius of a searchlight can be defined in space, in time, or both. In this example,
+our searchlight will have a spatial radius of 4.5 cm. and a temporal radius of 50 ms.</p>
+<dl class="simple">
+<dt>..warning::</dt><dd><p>A searchlight across MEG sensors does not make a lot of sense, as the magnetic field
+pattern does not lend itself well to circular searchlight patches.</p>
+</dd>
+</dl>
+<p>The dataset will be the kiloword dataset <a class="footnote-reference brackets" href="#id2" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>: approximately 1,000 words were presented
+to 75 participants in a go/no-go lexical decision task while event-related potentials
+(ERPs) were recorded.</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id2" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Dufau, S., Grainger, J., Midgley, KJ., Holcomb, PJ (2015). A thousand words are
+worth a picture: Snapshots of printed-word processing in an event-related
+potential megastudy. Psychological science.</p>
+</aside>
+</aside>
+<div class="line-block">
+<div class="line">Authors:</div>
+<div class="line">Marijn van Vliet &lt;<a class="reference external" href="mailto:marijn&#46;vanvliet&#37;&#52;&#48;aalto&#46;fi">marijn<span>&#46;</span>vanvliet<span>&#64;</span>aalto<span>&#46;</span>fi</a>&gt;</div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># sphinx_gallery_thumbnail_number=2</span>
+
+<span class="c1"># Import required packages</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">mne</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">mne_rsa</span>
+</pre></div>
+</div>
+<p>MNE-Python contains a built-in data loader for the kiloword dataset. We use it here to
+read it as 960 epochs. Each epoch represents the brain response to a single word,
+averaged across all the participants. For this example, we speed up the computation,
+at a cost of temporal precision, by downsampling the data from the original 250 Hz. to
+100 Hz.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a> <span class="o">=</span> <a href="https://mne.tools/stable/generated/mne.datasets.kiloword.data_path.html#mne.datasets.kiloword.data_path" title="mne.datasets.kiloword.data_path" class="sphx-glr-backref-module-mne-datasets-kiloword sphx-glr-backref-type-py-function"><span class="n">mne</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">kiloword</span><span class="o">.</span><span class="n">data_path</span></a><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">epochs</span> <span class="o">=</span> <a href="https://mne.tools/stable/generated/mne.read_epochs.html#mne.read_epochs" title="mne.read_epochs" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-function"><span class="n">mne</span><span class="o">.</span><span class="n">read_epochs</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a> <span class="o">/</span> <span class="s2">&quot;kword_metadata-epo.fif&quot;</span><span class="p">)</span>
+<span class="n">epochs</span> <span class="o">=</span> <span class="n">epochs</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Reading /home/runner/mne_data/MNE-kiloword-data/kword_metadata-epo.fif ...
+Isotrak not found
+    Found the data of interest:
+        t =    -100.00 ...     920.00 ms
+        0 CTF compensation matrices available
+Adding metadata with 8 columns
+960 matching events found
+No baseline correction applied
+0 projection items activated
+</pre></div>
+</div>
+<p>The kiloword dataset was erroneously stored with sensor locations given in centimeters
+instead of meters. We will fix it now. For your own data, the sensor locations are
+likely properly stored in meters, so you can skip this step.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ch</span></a> <span class="ow">in</span> <a href="https://mne.tools/stable/generated/mne.Info.html#mne.Info" title="mne._fiff.meas_info.Info" class="sphx-glr-backref-module-mne-_fiff-meas_info sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">epochs</span><span class="o">.</span><span class="n">info</span></a><span class="p">[</span><span class="s2">&quot;chs&quot;</span><span class="p">]:</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ch</span></a><span class="p">[</span><span class="s2">&quot;loc&quot;</span><span class="p">]</span> <span class="o">/=</span> <span class="mi">100</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">epochs</span></code> object contains a <code class="docutils literal notranslate"><span class="pre">.metadata</span></code> field that contains information about
+the 960 words that were used in the experiment. Let’s have a look at the metadata for
+10 random words:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">epochs</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>WORD</th>
+      <th>Concreteness</th>
+      <th>WordFrequency</th>
+      <th>OrthographicDistance</th>
+      <th>NumberOfLetters</th>
+      <th>BigramFrequency</th>
+      <th>ConsonantVowelProportion</th>
+      <th>VisualComplexity</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>716</th>
+      <td>emissary</td>
+      <td>4.941176</td>
+      <td>1.301030</td>
+      <td>3.35</td>
+      <td>8.0</td>
+      <td>243.500000</td>
+      <td>0.500000</td>
+      <td>67.482950</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>gaze</td>
+      <td>3.800000</td>
+      <td>2.432969</td>
+      <td>1.10</td>
+      <td>4.0</td>
+      <td>173.000000</td>
+      <td>0.500000</td>
+      <td>78.553425</td>
+    </tr>
+    <tr>
+      <th>124</th>
+      <td>saddle</td>
+      <td>6.000000</td>
+      <td>2.173186</td>
+      <td>1.70</td>
+      <td>6.0</td>
+      <td>519.666667</td>
+      <td>0.666667</td>
+      <td>72.100254</td>
+    </tr>
+    <tr>
+      <th>642</th>
+      <td>holding</td>
+      <td>3.800000</td>
+      <td>3.228400</td>
+      <td>1.85</td>
+      <td>7.0</td>
+      <td>867.000000</td>
+      <td>0.714286</td>
+      <td>66.252681</td>
+    </tr>
+    <tr>
+      <th>350</th>
+      <td>forest</td>
+      <td>5.950000</td>
+      <td>3.086360</td>
+      <td>1.90</td>
+      <td>6.0</td>
+      <td>815.833333</td>
+      <td>0.666667</td>
+      <td>59.502529</td>
+    </tr>
+    <tr>
+      <th>198</th>
+      <td>property</td>
+      <td>4.850000</td>
+      <td>3.087781</td>
+      <td>2.75</td>
+      <td>8.0</td>
+      <td>882.750000</td>
+      <td>0.625000</td>
+      <td>64.681534</td>
+    </tr>
+    <tr>
+      <th>806</th>
+      <td>sheen</td>
+      <td>4.000000</td>
+      <td>1.662758</td>
+      <td>1.80</td>
+      <td>5.0</td>
+      <td>592.000000</td>
+      <td>0.600000</td>
+      <td>72.735896</td>
+    </tr>
+    <tr>
+      <th>218</th>
+      <td>prestige</td>
+      <td>2.750000</td>
+      <td>2.454845</td>
+      <td>2.75</td>
+      <td>8.0</td>
+      <td>724.500000</td>
+      <td>0.625000</td>
+      <td>67.401006</td>
+    </tr>
+    <tr>
+      <th>220</th>
+      <td>abstract</td>
+      <td>1.800000</td>
+      <td>2.587711</td>
+      <td>2.65</td>
+      <td>8.0</td>
+      <td>481.875000</td>
+      <td>0.750000</td>
+      <td>63.201725</td>
+    </tr>
+    <tr>
+      <th>598</th>
+      <td>senate</td>
+      <td>5.550000</td>
+      <td>2.418301</td>
+      <td>1.95</td>
+      <td>6.0</td>
+      <td>686.333333</td>
+      <td>0.500000</td>
+      <td>69.405055</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /><p>Let’s pick something obvious for this example and build a dissimilarity matrix (RDM)
+based on the number of letters in each word.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">rdm_vis</span></a> <span class="o">=</span> <span class="n">mne_rsa</span><span class="o">.</span><span class="n">compute_rdm</span><span class="p">(</span><span class="n">epochs</span><span class="o">.</span><span class="n">metadata</span><span class="p">[[</span><span class="s2">&quot;NumberOfLetters&quot;</span><span class="p">]],</span> <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;euclidean&quot;</span><span class="p">)</span>
+<span class="n">mne_rsa</span><span class="o">.</span><span class="n">plot_rdms</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">rdm_vis</span></a><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_sensor_level_001.png" srcset="../../_images/sphx_glr_plot_sensor_level_001.png" alt="plot sensor level" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;Figure size 200x200 with 2 Axes&gt;
+</pre></div>
+</div>
+<p>The above RDM will serve as our “model” RDM. In this example RSA analysis, we are
+going to compare the model RDM against RDMs created from the EEG data. The EEG RDMs
+will be created using a “searchlight” pattern. We are using squared Euclidean distance
+for our RDM metric, since we only have a few data points in each searchlight patch.
+Feel free to play around with other metrics.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://mne.tools/stable/generated/mne.EvokedArray.html#mne.EvokedArray" title="mne.EvokedArray" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">rsa_result</span></a> <span class="o">=</span> <span class="n">mne_rsa</span><span class="o">.</span><span class="n">rsa_epochs</span><span class="p">(</span>
+    <span class="n">epochs</span><span class="p">,</span>  <span class="c1"># The EEG data</span>
+    <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">rdm_vis</span></a><span class="p">,</span>  <span class="c1"># The model RDM</span>
+    <span class="n">epochs_rdm_metric</span><span class="o">=</span><span class="s2">&quot;sqeuclidean&quot;</span><span class="p">,</span>  <span class="c1"># Metric to compute the EEG RDMs</span>
+    <span class="n">rsa_metric</span><span class="o">=</span><span class="s2">&quot;kendall-tau-a&quot;</span><span class="p">,</span>  <span class="c1"># Metric to compare model and EEG RDMs</span>
+    <span class="n">spatial_radius</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>  <span class="c1"># Spatial radius of the searchlight patch in meters.</span>
+    <span class="n">temporal_radius</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>  <span class="c1"># Temporal radius of the searchlight path in seconds.</span>
+    <span class="n">tmin</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span>
+    <span class="n">tmax</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span>  <span class="c1"># To save time, only analyze this time interval</span>
+    <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>  <span class="c1"># Only use one CPU core. Increase this for more speed.</span>
+    <span class="n">n_folds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># Don&#39;t use any cross-validation</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>  <span class="c1"># Set to True to display a progress bar</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Performing RSA between Epochs and 1 model RDM(s)
+    Spatial radius: 0.05 meters
+    Using 29 sensors
+    Temporal radius: 5 samples
+    Time interval: 0.15-0.25 seconds
+Automatic dermination of folds: 1 (no cross-validation)
+Creating spatio-temporal searchlight patches
+</pre></div>
+</div>
+<p>The result is packed inside an MNE-Python <a class="reference external" href="https://mne.tools/stable/generated/mne.Evoked.html#mne.Evoked" title="(in MNE v1.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mne.Evoked</span></code></a> object. This object
+defines many plotting functions, for example <a class="reference external" href="https://mne.tools/stable/generated/mne.Evoked.html#mne.Evoked.plot_topomap" title="(in MNE v1.9)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">mne.Evoked.plot_topomap()</span></code></a> to look
+at the spatial distribution of the RSA values. By default, the signal is assumed to
+represent micro-Volts, so we need to explicitly inform the plotting function we are
+plotting RSA values and tweak the range of the colormap.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://mne.tools/stable/generated/mne.EvokedArray.html#mne.EvokedArray.plot_topomap" title="mne.EvokedArray.plot_topomap" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-method"><span class="n">rsa_result</span><span class="o">.</span><span class="n">plot_topomap</span></a><span class="p">(</span>
+    <a href="https://mne.tools/stable/generated/mne.EvokedArray.html#mne.EvokedArray.times" title="mne.EvokedArray.times" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-property"><span class="n">rsa_result</span><span class="o">.</span><span class="n">times</span></a><span class="p">,</span>
+    <span class="n">units</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">eeg</span><span class="o">=</span><span class="s2">&quot;kendall-tau-a&quot;</span><span class="p">),</span>
+    <span class="n">scalings</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">eeg</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="n">cbar_fmt</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%.4f</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="n">vlim</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+    <span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">sphere</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_sensor_level_002.png" srcset="../../_images/sphx_glr_plot_sensor_level_002.png" alt="0.150 s, 0.160 s, 0.170 s, 0.180 s, 0.190 s, 0.200 s, 0.210 s, 0.220 s, 0.230 s, 0.240 s, 0.250 s, AU" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;MNEFigure size 900x415 with 12 Axes&gt;
+</pre></div>
+</div>
+<p>Unsurprisingly, we get the highest correspondence between number of letters and EEG
+signal in areas in the <a class="reference external" href="https://en.wikipedia.org/wiki/Visual_word_form_area">visual word form area</a>.</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 30.446 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-sensor-level-plot-sensor-level-py">
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/bf1ef69324a9f46d23a5055b9f5acd08/plot_sensor_level.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_sensor_level.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/5e4ec4f39d84abfd49e3941cbcc9e139/plot_sensor_level.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_sensor_level.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-zip docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/bac387b34e101c2c8a5e0e2188d945ee/plot_sensor_level.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">plot_sensor_level.zip</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Sensor-Level RSA</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="plot_sensor_rdms.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Plot sensor-level RDMs</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Marijn van Vliet, Aalto University.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

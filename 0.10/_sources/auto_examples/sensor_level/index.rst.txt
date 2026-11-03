@@ -1,0 +1,82 @@
+
+
+.. _sphx_glr_auto_examples_sensor_level:
+
+Sensor-Level RSA
+----------------
+
+These examples showcase how to perform RSA on sensor-level MEG data.
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbnails">
+
+.. thumbnail-parent-div-open
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to perform representational similarity analysis (RSA) on EEG data, using a searchlight approach.">
+
+.. only:: html
+
+  .. image:: /auto_examples/sensor_level/images/thumb/sphx_glr_plot_sensor_level_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_sensor_level_plot_sensor_level.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Sensor-level RSA using a searchlight</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to visualize representational dissimilarity matrices (RDMs) computed from EEG data. We will compute them using a spatial searchlight and plot the RDM computed for each searchlight-patch.">
+
+.. only:: html
+
+  .. image:: /auto_examples/sensor_level/images/thumb/sphx_glr_plot_sensor_rdms_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_sensor_level_plot_sensor_rdms.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Plot sensor-level RDMs</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to perform representational similarity analysis (RSA) on MEEG data containing magnetometers, gradiometers and EEG channels. In this scenario there are important things we need to keep in mind:">
+
+.. only:: html
+
+  .. image:: /auto_examples/sensor_level/images/thumb/sphx_glr_plot_whitening_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_sensor_level_plot_whitening.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Sensor-level RSA using mixed sensor types</div>
+    </div>
+
+
+.. thumbnail-parent-div-close
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/sensor_level/plot_sensor_level
+   /auto_examples/sensor_level/plot_sensor_rdms
+   /auto_examples/sensor_level/plot_whitening
+
