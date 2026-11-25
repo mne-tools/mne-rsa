@@ -1,0 +1,350 @@
+:orphan:
+
+Examples
+========
+
+Here are some common use cases for MNE-RSA and how you can use the API to achieve them.
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbnails">
+
+.. thumbnail-parent-div-open
+
+.. thumbnail-parent-div-close
+
+.. raw:: html
+
+    </div>
+
+Core RSA functionality
+----------------------
+
+These examples cover the basics of creating representational dissimilarity matrices (RDMs) and performing representational similarity analysis (RSA) between them.
+
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbnails">
+
+.. thumbnail-parent-div-open
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example shows how to create RDMs from arbitrary data. A common use case for this is to construct a &quot;model&quot; RDM to RSA against the brain data. In this example, we will create a RDM based on the length of the words shown during an EEG experiment.">
+
+.. only:: html
+
+  .. image:: /auto_examples/core/images/thumb/sphx_glr_plot_construct_model_rdm_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_core_plot_construct_model_rdm.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Construct a model RDM</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to perform cross-validation when computing dissimilarity matrices (RDMs). When the data has repeated measurements of the same stimulus type, cross-validation can be used to provide much more robust distance estimates between stimulus types. Repeated measurements can for example be actual repetitions of the same stimulus within the same recording, or recordings on multiple volunteers with the same stimuli.">
+
+.. only:: html
+
+  .. image:: /auto_examples/core/images/thumb/sphx_glr_plot_cross_validation_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_core_plot_cross_validation.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Using cross-validation when computing RDMs</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example showcases the most basic version of RSA: computing the similarity between two RDMs. Then we continue with computing RSA between many RDMs efficiently.">
+
+.. only:: html
+
+  .. image:: /auto_examples/core/images/thumb/sphx_glr_plot_rsa_between_rdms_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_core_plot_rsa_between_rdms.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Compute RSA between RDMs</div>
+    </div>
+
+
+.. thumbnail-parent-div-close
+
+.. raw:: html
+
+    </div>
+
+Sensor-Level RSA
+----------------
+
+These examples showcase how to perform RSA on sensor-level MEG data.
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbnails">
+
+.. thumbnail-parent-div-open
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to perform representational similarity analysis (RSA) on EEG data, using a searchlight approach.">
+
+.. only:: html
+
+  .. image:: /auto_examples/sensor_level/images/thumb/sphx_glr_plot_sensor_level_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_sensor_level_plot_sensor_level.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Sensor-level RSA using a searchlight</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to visualize representational dissimilarity matrices (RDMs) computed from EEG data. We will compute them using a spatial searchlight and plot the RDM computed for each searchlight-patch.">
+
+.. only:: html
+
+  .. image:: /auto_examples/sensor_level/images/thumb/sphx_glr_plot_sensor_rdms_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_sensor_level_plot_sensor_rdms.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Plot sensor-level RDMs</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to perform representational similarity analysis (RSA) on MEEG data containing magnetometers, gradiometers and EEG channels. In this scenario there are important things we need to keep in mind:">
+
+.. only:: html
+
+  .. image:: /auto_examples/sensor_level/images/thumb/sphx_glr_plot_whitening_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_sensor_level_plot_whitening.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Sensor-level RSA using mixed sensor types</div>
+    </div>
+
+
+.. thumbnail-parent-div-close
+
+.. raw:: html
+
+    </div>
+
+Source-Level RSA
+----------------
+
+These examples showcase how to perform RSA on source-level data.
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbnails">
+
+.. thumbnail-parent-div-open
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to perform representational similarity analysis (RSA) on volumetric fMRI data, using a searchlight approach.">
+
+.. only:: html
+
+  .. image:: /auto_examples/source_level/images/thumb/sphx_glr_plot_nifti_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_source_level_plot_nifti.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Source-level RSA using a searchlight on fMRI data</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="In this example, we use anatomical labels as Regions Of Interest (ROIs). Rather than using a searchlight, we compute RDMs for each ROI and then compute RSA with a single model RDM.">
+
+.. only:: html
+
+  .. image:: /auto_examples/source_level/images/thumb/sphx_glr_plot_rsa_roi_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_source_level_plot_rsa_roi.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Source-level RSA using ROI's</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to perform representational similarity analysis (RSA) on source localized MEG data, using a searchlight approach.">
+
+.. only:: html
+
+  .. image:: /auto_examples/source_level/images/thumb/sphx_glr_plot_surface_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_source_level_plot_surface.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Source-level RSA using a searchlight on surface data</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to perform representational similarity analysis (RSA) on volumetric source localized MEG data, using a searchlight approach.">
+
+.. only:: html
+
+  .. image:: /auto_examples/source_level/images/thumb/sphx_glr_plot_volume_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_source_level_plot_volume.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Source-level RSA using a searchlight on volumetric data</div>
+    </div>
+
+
+.. thumbnail-parent-div-close
+
+.. raw:: html
+
+    </div>
+
+Tutorials
+---------
+
+These three tutorials provide an in-depth introduction to representational similarity analysis (RSA) on MEG data.
+Together, they cover a complete RSA pipeline, starting with sensor-level analysis, then source-level analysis and finally group-level statistics.
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbnails">
+
+.. thumbnail-parent-div-open
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="We will explore how representational similarity analysis (RSA) can be used to study the neural representational code within visual cortex. We will start with performing RSA on the sensor level data, followed by source level and finally we will perform group level statistical analysis. Along the way, we will encounter many of the functions and classes offered by MNE-RSA, which will always be presented in the form of links to the api_documentation which you are encouraged to explore.">
+
+.. only:: html
+
+  .. image:: /auto_examples/tutorials/images/thumb/sphx_glr_01_sensor_level_tutorial_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_tutorials_01_sensor_level_tutorial.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Tutorial part 1: RSA on sensor-level MEG data</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="In this tutorial, we will perform source-level RSA analysis on MEG data.">
+
+.. only:: html
+
+  .. image:: /auto_examples/tutorials/images/thumb/sphx_glr_02_source_level_tutorial_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_tutorials_02_source_level_tutorial.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Tutorial part 2: RSA on source-level MEG data</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="In this tutorial, we&#x27;ll dive into cluster-based permutation testing for group-level statistical analysis.">
+
+.. only:: html
+
+  .. image:: /auto_examples/tutorials/images/thumb/sphx_glr_03_statistics_tutorial_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_examples_tutorials_03_statistics_tutorial.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Tutorial part 3: statistical analysis of group-level RSA results</div>
+    </div>
+
+
+.. thumbnail-parent-div-close
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+   :includehidden:
+
+
+   /auto_examples/core/index.rst
+   /auto_examples/sensor_level/index.rst
+   /auto_examples/source_level/index.rst
+   /auto_examples/tutorials/index.rst
+
+
+.. only:: html
+
+  .. container:: sphx-glr-footer sphx-glr-footer-gallery
+
+    .. container:: sphx-glr-download sphx-glr-download-python
+
+      :download:`Download all examples in Python source code: auto_examples_python.zip </auto_examples/auto_examples_python.zip>`
+
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
+
+      :download:`Download all examples in Jupyter notebooks: auto_examples_jupyter.zip </auto_examples/auto_examples_jupyter.zip>`
+
+
+.. only:: html
+
+ .. rst-class:: sphx-glr-signature
+
+    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_

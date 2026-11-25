@@ -1,0 +1,12 @@
+﻿mne_rsa.squareform
+==================
+
+.. currentmodule:: mne_rsa
+
+.. autofunction:: squareform
+
+.. include:: mne_rsa.squareform.examples
+
+.. raw:: html
+
+    <div style='clear:both'></div>
